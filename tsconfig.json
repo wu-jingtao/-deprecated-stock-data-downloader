@@ -9,9 +9,7 @@
         "noEmitOnError": true,
         "strict": true,
         "lib": [
-            "es2016",
-            "dom",
-            "dom.iterable"
+            "es2016"
         ]
     },
     "exclude": [
