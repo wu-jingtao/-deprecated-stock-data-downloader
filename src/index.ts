@@ -1,5 +1,6 @@
 import { DockerServicesManager } from 'service-starter';
-import { MysqlConnection } from './MysqlConnection';
+
+import { MysqlConnection } from './modules/MysqlConnection/MysqlConnection';
 
 class StockDataDownloader extends DockerServicesManager { }
 
