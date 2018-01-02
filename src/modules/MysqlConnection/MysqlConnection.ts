@@ -1,16 +1,19 @@
 import * as mysql from 'mysql';
-import { BaseServiceModule } from "service-starter";
+import { BaseServiceModule, RunningStatus } from "service-starter";
 
+/**
+ * 连接mysql并创建数据库
+ */
 export class MysqlConnection extends BaseServiceModule {
 
     connection: mysql.Connection;
 
     /**
-     * 对mysql的query方法进行了一下包装
+     * 对mysql的query方法进行了一下包装，使之支持Promise
      */
-    asyncQuery(sql: string) {
+    asyncQuery(sql: string, values?: any[]) {
         return new Promise<any>((resolve, reject) => {
-            this.connection.query(sql, function (err, result, filed) {
+            this.connection.query(sql, values, function (err, result, filed) {
                 err ? reject(err) : resolve(result);
             });
         });
@@ -25,9 +28,21 @@ export class MysqlConnection extends BaseServiceModule {
                 password: process.env.MYSQL_PASSWORD || 'root'      //登陆密码
             });
 
-            this.connection.connect(err => err ? reject(err) : resolve());
+            this.connection.connect(err => {
+                if (err) {
+                    reject(err);
+                } else {    //创建系统所需的数据库
+                    this.connection.query("CREATE SCHEMA IF NOT EXISTS `stock`;", err => err ? reject(err) : resolve());
+                }
+            });
 
-            this.connection.on("end", err => err && this.emit("error", err));
+            this.connection.on("end", (err) => {
+                if (err) this.emit('error', err);
+
+                if (this.servicesManager.status !== RunningStatus.stopping && this.servicesManager.status !== RunningStatus.stopped)
+                    this.servicesManager.stop();
+            });
+
             this.connection.on("error", err => this.emit("error", err));
         });
     }

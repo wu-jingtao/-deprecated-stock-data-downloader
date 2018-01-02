@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const service_starter_1 = require("service-starter");
+/**
+ * 股票代码下载器
+ */
+class StockCodeDownloader extends service_starter_1.BaseServiceModule {
+    onStart() {
+        throw new Error("Method not implemented.");
+    }
+}
+exports.StockCodeDownloader = StockCodeDownloader;
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1vZHVsZXMvU3RvY2tDb2RlRG93bmxvYWRlci9TdG9ja0NvZGVEb3dubG9hZGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEscURBQW9EO0FBRXBEOztHQUVHO0FBQ0gseUJBQWlDLFNBQVEsbUNBQWlCO0lBRXRELE9BQU87UUFDSCxNQUFNLElBQUksS0FBSyxDQUFDLHlCQUF5QixDQUFDLENBQUM7SUFDL0MsQ0FBQztDQUNKO0FBTEQsa0RBS0MiLCJmaWxlIjoibW9kdWxlcy9TdG9ja0NvZGVEb3dubG9hZGVyL1N0b2NrQ29kZURvd25sb2FkZXIuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBCYXNlU2VydmljZU1vZHVsZSB9IGZyb20gXCJzZXJ2aWNlLXN0YXJ0ZXJcIjtcclxuXHJcbi8qKlxyXG4gKiDogqHnpajku6PnoIHkuIvovb3lmahcclxuICovXHJcbmV4cG9ydCBjbGFzcyBTdG9ja0NvZGVEb3dubG9hZGVyIGV4dGVuZHMgQmFzZVNlcnZpY2VNb2R1bGUge1xyXG5cclxuICAgIG9uU3RhcnQoKTogUHJvbWlzZTx2b2lkPiB7XHJcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKFwiTWV0aG9kIG5vdCBpbXBsZW1lbnRlZC5cIik7XHJcbiAgICB9XHJcbn1cclxuIl19

@@ -41,6 +41,7 @@
         "lodash": "^4.17.4",
         "log-formatter": "^0.1.5",
         "mysql": "^2.15.0",
+        "node-crontab": "0.0.8",
         "service-starter": "^1.0.3"
     }
 }
