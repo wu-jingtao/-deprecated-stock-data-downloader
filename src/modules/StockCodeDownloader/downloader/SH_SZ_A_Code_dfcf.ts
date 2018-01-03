@@ -4,7 +4,7 @@ import * as $ from 'cheerio';
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
 import { StockMarket } from '../../StockMarketDownloader/StockMarket';
-import { DownloadedData } from '../DownloadedData';
+import { StockCodeDownloadedData } from '../StockCodeDownloadedData';
 import { Retry3 } from '../../../tools/Retry';
 
 /**
@@ -18,11 +18,11 @@ import { Retry3 } from '../../../tools/Retry';
 const address = 'http://quote.eastmoney.com/stocklist.html';
 
 //下载数据
-async function download(): Promise<DownloadedData[]> {
+async function download(): Promise<StockCodeDownloadedData[]> {
     const file = await HttpDownloader.Get(address);
     const data = iconv.decode(file, 'gbk');     //转码
 
-    const result: DownloadedData[] = [];
+    const result: StockCodeDownloadedData[] = [];
 
     $("#quotesearch ul li a[target]", data).each(function (this: CheerioElement) {
         const href = $(this).attr('href') as any;
@@ -44,7 +44,7 @@ async function download(): Promise<DownloadedData[]> {
 }
 
 //检测下载的数据是否正确
-function test(data: DownloadedData[]) {
+function test(data: StockCodeDownloadedData[]) {
     expect(data.length).to.greaterThan(0);
 
     data.forEach(item => {
