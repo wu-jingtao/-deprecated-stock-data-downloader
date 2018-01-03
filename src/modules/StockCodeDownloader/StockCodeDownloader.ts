@@ -2,6 +2,9 @@ import { BaseServiceModule } from "service-starter";
 const crontab = require('node-crontab');
 
 import { MysqlConnection } from "../MysqlConnection/MysqlConnection";
+import { ModuleStatusRecorder } from "../ModuleStatusRecorder/ModuleStatusRecorder";
+import { SH_A_Code_sjs } from "./downloader/SH_A_Code_sjs";
+import { SZ_A_Code_sjs } from "./downloader/SZ_A_Code_sjs";
 
 const createTable = "\
     CREATE TABLE IF NOT EXISTS `stock`.`stock_code` (\
@@ -23,11 +26,19 @@ const createTable = "\
  */
 export class StockCodeDownloader extends BaseServiceModule {
 
-    timer: any[] = []; //保存计时器
+    private readonly _timer: any[] = [];    //保存计时器
+
+    private _connection: MysqlConnection;
+    private _statusRecorder: ModuleStatusRecorder;
+
+    private readonly _downloader = async () => {  //下载器
+        await SH_A_Code_sjs();
+        await SZ_A_Code_sjs();
+    };
 
     async onStart(): Promise<void> {
-        const con: MysqlConnection = this.services.MysqlConnection;
-        await con.asyncQuery(createTable);  //创建数据表
+        this._connection = this.services.MysqlConnection;
+        await this._connection.asyncQuery(createTable);  //创建数据表
 
 
     }
