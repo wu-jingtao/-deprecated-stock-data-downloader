@@ -1,2 +1,2 @@
 /// <reference types="node" />
-export declare function Get(uri: string): Promise<Buffer>;
+export declare const Get: (uri: string, header?: any) => Promise<Buffer>;

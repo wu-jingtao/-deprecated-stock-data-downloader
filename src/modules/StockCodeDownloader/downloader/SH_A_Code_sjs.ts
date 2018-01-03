@@ -1,9 +1,11 @@
 import * as dsv from 'd3-dsv';
 import * as iconv from 'iconv-lite';
+import expect = require('expect.js');
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
 import { StockMarket } from '../../StockMarketDownloader/StockMarket';
 import { DownloadedData } from '../DownloadedData';
+import { Retry3 } from '../../../tools/Retry';
 
 /**
  * 上交所，股票列表数据
@@ -20,10 +22,8 @@ import { DownloadedData } from '../DownloadedData';
 const address = 'http://query.sse.com.cn/security/stock/downloadStockListFile.do?csrcCode=&stockCode=&areaName=&stockType=1';
 const referer = "http://www.sse.com.cn/assortment/stock/list/share/";
 
-/**
- * 上海A股代码下载器
- */
-export async function SH_A_Code_sjs(): Promise<DownloadedData[]> {
+//下载数据
+async function download(): Promise<DownloadedData[]> {
     const file = await HttpDownloader.Get(address, { Referer: referer });
     const data = iconv.decode(file, 'gbk');     //转码
     const result = dsv.tsvParse(data);
@@ -35,3 +35,20 @@ export async function SH_A_Code_sjs(): Promise<DownloadedData[]> {
         isIndex: false
     }));
 }
+
+//检测下载的数据是否正确
+function test(data: DownloadedData[]) {
+    expect(data.length).to.greaterThan(0);
+    
+    data.forEach(item => {
+        expect(/^6\d{5}$/.test(item.code)).to.be.ok();  //股票代码
+        expect(item.name.length).to.greaterThan(0);     //确保公司名称不为空
+    });
+
+    return data;
+}
+
+/**
+ * 上海A股代码下载器
+ */
+export const SH_A_Code_sjs = Retry3(async () => test(await download()));

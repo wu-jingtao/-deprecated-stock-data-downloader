@@ -1,8 +1,10 @@
 import * as xlsx from 'xlsx';
+import expect = require('expect.js');
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
 import { StockMarket } from '../../StockMarketDownloader/StockMarket';
 import { DownloadedData } from '../DownloadedData';
+import { Retry3 } from '../../../tools/Retry';
 
 /**
  * 深交所，股票列表数据
@@ -16,10 +18,8 @@ import { DownloadedData } from '../DownloadedData';
 //下载地址
 const address = 'http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=xlsx&CATALOGID=1110&tab2PAGENO=1&ENCODE=1&TABKEY=tab2';
 
-/**
- * 深圳A股代码下载器
- */
-export async function SZ_A_Code_sjs(): Promise<DownloadedData[]> {
+//下载数据
+async function download(): Promise<DownloadedData[]> {
     const file = await HttpDownloader.Get(address);
     const data = xlsx.read(file);
     const result = xlsx.utils.sheet_to_json(data.Sheets["A股列表"]) as any[];
@@ -31,3 +31,20 @@ export async function SZ_A_Code_sjs(): Promise<DownloadedData[]> {
         isIndex: false
     }));
 }
+
+//检测下载的数据是否正确
+function test(data: DownloadedData[]) {
+    expect(data.length).to.greaterThan(0);
+
+    data.forEach(item => {
+        expect(/^[03]\d{5}$/.test(item.code)).to.be.ok();   //股票代码
+        expect(item.name.length).to.greaterThan(0);         //确保公司名称不为空
+    });
+
+    return data;
+}
+
+/**
+ * 深圳A股代码下载器
+ */
+export const SZ_A_Code_sjs = Retry3(async () => test(await download()));

@@ -24,6 +24,8 @@
     },
     "homepage": "https://github.com/mx601595686/stock-data-downloader#readme",
     "devDependencies": {
+        "@types/cheerio": "^0.22.7",
+        "@types/d3-dsv": "^1.0.31",
         "@types/expect.js": "^0.3.29",
         "@types/lodash": "^4.14.85",
         "@types/mocha": "^2.2.40",
@@ -39,7 +41,7 @@
         "typescript": "^2.5.2"
     },
     "dependencies": {
-        "@types/d3-dsv": "^1.0.31",
+        "cheerio": "^1.0.0-rc.2",
         "d3-dsv": "^1.0.8",
         "iconv-lite": "^0.4.19",
         "lodash": "^4.17.4",
