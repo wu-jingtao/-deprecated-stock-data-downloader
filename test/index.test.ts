@@ -1,24 +1,26 @@
+import * as _ from 'lodash';
 import expect = require('expect.js');
 
-describe('测试模块', function () {
+import { StockMarket } from './../src/modules/StockMarketDownloader/StockMarket';
+import { DownloadedData } from '../src/modules/StockCodeDownloader/DownloadedData';
 
-    before(function () {
-        // 所有测试开始之前执行
-    });
+import { SH_A_Code_sjs } from '../src/modules/StockCodeDownloader/downloader/SH_A_Code_sjs';
 
-    after(function () {
-        // 所有测试结束之后执行
-    });
+describe('测试下载数据', function () {
+    this.timeout(3 * 60 * 1000);
 
-    beforeEach(function () {
-        // 每个测试开始之前执行
-    });
+    describe('测试下载股票代码列表', function () {
 
-    afterEach(function () {
-        // 每个测试结束之后执行
-    });
+        it('上交所 A股列表 数据', async function () {
+            const result: DownloadedData[] = await SH_A_Code_sjs();
 
-    it('测试单元', function () {
-        expect('something').to.be.a('string');
+            result.forEach(item => {
+                expect(/^6\d{5}$/.test(item.code)).to.be.ok();  //股票代码
+                expect(item.name.length).to.greaterThan(0);     //确保公司名称不为空
+                expect(item.market).to.be(StockMarket.sh.id);
+                expect(item.isIndex).to.be(false);
+            });
+        });
     });
 });
+

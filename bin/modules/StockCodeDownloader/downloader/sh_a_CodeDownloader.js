@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const HttpDownloader = require("../../../tools/HttpDownloader");
+//下载地址
+const address = "";
+/**
+ * 上海A股代码下载器
+ */
+async function sh_a_CodeDownloader() {
+    const data = await HttpDownloader.Get('http://www.sse.com.cn/assortment/stock/list/share/');
+    debugger;
+}
+exports.sh_a_CodeDownloader = sh_a_CodeDownloader;
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1vZHVsZXMvU3RvY2tDb2RlRG93bmxvYWRlci9kb3dubG9hZGVyL3NoX2FfQ29kZURvd25sb2FkZXIudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFFQSxnRUFBZ0U7QUFFaEUsTUFBTTtBQUNOLE1BQU0sT0FBTyxHQUFHLEVBQUUsQ0FBQztBQUVuQjs7R0FFRztBQUNJLEtBQUs7SUFDUixNQUFNLElBQUksR0FBRyxNQUFNLGNBQWMsQ0FBQyxHQUFHLENBQUMsb0RBQW9ELENBQUMsQ0FBQztJQUM1RixRQUFRLENBQUE7QUFDWixDQUFDO0FBSEQsa0RBR0MiLCJmaWxlIjoibW9kdWxlcy9TdG9ja0NvZGVEb3dubG9hZGVyL2Rvd25sb2FkZXIvc2hfYV9Db2RlRG93bmxvYWRlci5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCAqIGFzIHhsc3ggZnJvbSAneGxzeCc7XHJcblxyXG5pbXBvcnQgKiBhcyBIdHRwRG93bmxvYWRlciBmcm9tICcuLi8uLi8uLi90b29scy9IdHRwRG93bmxvYWRlcic7XHJcblxyXG4vL+S4i+i9veWcsOWdgFxyXG5jb25zdCBhZGRyZXNzID0gXCJcIjtcclxuXHJcbi8qKlxyXG4gKiDkuIrmtbdB6IKh5Luj56CB5LiL6L295ZmoXHJcbiAqL1xyXG5leHBvcnQgYXN5bmMgZnVuY3Rpb24gc2hfYV9Db2RlRG93bmxvYWRlcigpIHtcclxuICAgIGNvbnN0IGRhdGEgPSBhd2FpdCBIdHRwRG93bmxvYWRlci5HZXQoJ2h0dHA6Ly93d3cuc3NlLmNvbS5jbi9hc3NvcnRtZW50L3N0b2NrL2xpc3Qvc2hhcmUvJyk7XHJcbiAgICBkZWJ1Z2dlclxyXG59XHJcblxyXG4iXX0=

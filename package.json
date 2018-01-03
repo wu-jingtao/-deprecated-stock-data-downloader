@@ -29,6 +29,7 @@
         "@types/mocha": "^2.2.40",
         "@types/mysql": "^2.15.2",
         "@types/node": "^7.0.13",
+        "@types/request": "^2.0.9",
         "expect.js": "^0.3.1",
         "gulp": "^3.9.1",
         "gulp-sourcemaps": "^2.4.1",
@@ -38,10 +39,15 @@
         "typescript": "^2.5.2"
     },
     "dependencies": {
+        "@types/d3-dsv": "^1.0.31",
+        "d3-dsv": "^1.0.8",
+        "iconv-lite": "^0.4.19",
         "lodash": "^4.17.4",
         "log-formatter": "^0.1.5",
         "mysql": "^2.15.0",
         "node-crontab": "0.0.8",
-        "service-starter": "^1.0.3"
+        "request": "^2.83.0",
+        "service-starter": "^1.0.3",
+        "xlsx": "^0.11.16"
     }
 }
