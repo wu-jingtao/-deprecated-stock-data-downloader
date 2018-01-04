@@ -5,4 +5,4 @@ export declare const create_table = "    CREATE TABLE IF NOT EXISTS `stock`.`sto
 /**
  * 插入或更新数据
  */
-export declare const insert_data = "    INSERT INTO `stock`.`stock_market`    (`id`, `name`, `start_time`, `end_time`, `day_of_week`)    VALUES    (?, ?, ?, ?, ?)    ON duplicate key update     `name` = ?,`start_time` = ?,`end_time` = ?,`day_of_week` = ?;";
+export declare const insert_data = "    INSERT INTO `stock`.`stock_market`    (`id`, `name`, `start_time`, `end_time`, `day_of_week`)    VALUES    (?, ?, ?, ?, ?)    ON DUPLICATE KEY UPDATE     `name` = ?,`start_time` = ?,`end_time` = ?,`day_of_week` = ?;";

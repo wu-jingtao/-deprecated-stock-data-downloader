@@ -4,6 +4,7 @@ import { BaseServiceModule } from "service-starter";
 import * as sql from './Sql';
 import { MysqlConnection } from "../MysqlConnection/MysqlConnection";
 import { ModuleStatusRecorder } from "../ModuleStatusRecorder/ModuleStatusRecorder";
+import { StockCodeType } from './StockCodeType';
 
 import { SH_A_Code_sjs } from "./downloader/SH_A_Code_sjs";
 import { SZ_A_Code_sjs } from "./downloader/SZ_A_Code_sjs";
@@ -18,14 +19,31 @@ export class StockCodeDownloader extends BaseServiceModule {
     private _statusRecorder: ModuleStatusRecorder;
     private _downloading: boolean = false;  //是否正在下载
 
-    private async _downloader() {  //下载器
+    /**
+     * 保存下载到的数据
+     */
+    private async _saveData(data: StockCodeType[]) {
+        for (const item of data) {
+            const id = await this._connection.asyncQuery(sql.get_id, [item.code, item.market, item.isIndex]);
+            if (id.length > 0) {  //说明有数据，更新
+                await this._connection.asyncQuery(sql.update_data, [item.name, id[0].id]);
+            } else {
+                await this._connection.asyncQuery(sql.insert_data, [item.code, item.name, item.market, item.isIndex]);
+            }
+        }
+    }
+
+    /**
+     * 下载器
+     */
+    private async _downloader() {
         if (!this._downloading) {   //如果上次还没有执行完这次就取消执行了
             this._downloading = true;
             const jobID = await this._statusRecorder.newStartTime(this);
-            
+
             try {
-                await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) });
-                await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) });
+                await this._saveData(await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) }));
+                await this._saveData(await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) }));
 
                 await this._statusRecorder.updateEndTime(this, jobID);
             } catch (error) {
@@ -41,7 +59,7 @@ export class StockCodeDownloader extends BaseServiceModule {
         this._connection = this.services.MysqlConnection;
         this._statusRecorder = this.services.ModuleStatusRecorder;
         await this._connection.asyncQuery(sql.create_table);  //创建数据表
-
+debugger
         const status = await this._statusRecorder.getStatus(this);
         if (status == null || status.error != null || status.startTime > status.endTime) {
             //如果没下载过或上次下载出现过异常，则立即重新下载

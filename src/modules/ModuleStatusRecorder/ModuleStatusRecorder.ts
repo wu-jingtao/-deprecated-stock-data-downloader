@@ -50,7 +50,7 @@ export class ModuleStatusRecorder extends BaseServiceModule {
      * 发回插入行的id
      */
     async newStartTime(module: BaseServiceModule): Promise<number> {
-        log.location.text.green(module.name, '开始下载');
+        log.location.text.blue.round(module.name, '开始下载');
         const result = await this._connection.asyncQuery(sql.insert_start_time, [module.name, Date.now()]);
         return result.insertId;
     }
@@ -61,7 +61,7 @@ export class ModuleStatusRecorder extends BaseServiceModule {
      * @param id newStartTime返回的id
      */
     async updateEndTime(module: BaseServiceModule, id: number) {
-        log.location.text.blue(module.name, '下载结束');
+        log.location.text.green.round(module.name, '下载结束');
         await this._connection.asyncQuery(sql.update_end_time, [Date.now(), id]);
     }
 
@@ -69,7 +69,7 @@ export class ModuleStatusRecorder extends BaseServiceModule {
      * 更新错误消息
      */
     async updateError(module: BaseServiceModule, id: number, err: Error) {
-        log.location.text.red.content.red(module.name, '下载出现异常', err);
+        log.location.text.red.round.content.red(module.name, '下载出现异常', err);
         await this._connection.asyncQuery(sql.update_error, [Date.now(), err.toString(), id]);
     }
 

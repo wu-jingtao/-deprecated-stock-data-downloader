@@ -21,6 +21,6 @@ export const insert_data = "\
     (`id`, `name`, `start_time`, `end_time`, `day_of_week`)\
     VALUES\
     (?, ?, ?, ?, ?)\
-    ON duplicate key update \
+    ON DUPLICATE KEY UPDATE \
     `name` = ?,`start_time` = ?,`end_time` = ?,`day_of_week` = ?;\
 ";
