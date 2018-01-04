@@ -1,7 +1,7 @@
 /**
  * 创建表
  */
-export const create = "\
+export const create_table = "\
     CREATE TABLE IF NOT EXISTS `stock`.`stock_market` (\
         `id` INT UNSIGNED NOT NULL COMMENT '主键',\
         `name` VARCHAR(255) NOT NULL COMMENT '市场名称',\
@@ -16,7 +16,7 @@ export const create = "\
 /**
  * 插入或更新数据
  */
-export const insert = "\
+export const insert_data = "\
     INSERT INTO `stock`.`stock_market`\
     (`id`, `name`, `start_time`, `end_time`, `day_of_week`)\
     VALUES\

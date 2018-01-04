@@ -2,9 +2,9 @@ import * as xlsx from 'xlsx';
 import expect = require('expect.js');
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
-import { StockMarket } from '../../StockMarketDownloader/StockMarket';
 import { StockCodeDownloadedData } from '../StockCodeDownloadedData';
 import { Retry3 } from '../../../tools/Retry';
+import { StockMarketType } from '../../StockMarketTypeList/StockMarketType';
 
 /**
  * 深交所，股票列表数据
@@ -27,7 +27,7 @@ async function download(): Promise<StockCodeDownloadedData[]> {
     return result.map(item => ({
         code: (item['A股代码'] as string).trim(),
         name: (item['A股简称'] as string).trim(),
-        market: StockMarket.sz.id,
+        market: StockMarketType.sz.id,
         isIndex: false
     }));
 }

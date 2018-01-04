@@ -3,9 +3,9 @@ import * as iconv from 'iconv-lite';
 import * as $ from 'cheerio';
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
-import { StockMarket } from '../../StockMarketDownloader/StockMarket';
 import { StockCodeDownloadedData } from '../StockCodeDownloadedData';
 import { Retry3 } from '../../../tools/Retry';
+import { StockMarketType } from '../../StockMarketTypeList/StockMarketType';
 
 /**
  * 东方财富，股票列表数据
@@ -34,7 +34,7 @@ async function download(): Promise<StockCodeDownloadedData[]> {
             result.push({
                 code,
                 name: text.match(/(.+)(?:\()/)[1].trim(),
-                market: (StockMarket as any)[href.match(/([a-z]{2})(?:\d{6})/)[1]].id,
+                market: (StockMarketType as any)[href.match(/([a-z]{2})(?:\d{6})/)[1]].id,
                 isIndex: false
             });
         }
@@ -50,7 +50,7 @@ function test(data: StockCodeDownloadedData[]) {
     data.forEach(item => {
         expect(/^[360]\d{5}$/.test(item.code)).to.be.ok();  //股票代码
         expect(item.name.length).to.greaterThan(0);         //确保公司名称不为空
-        expect(item.market === StockMarket.sh.id || item.market === StockMarket.sz.id).to.be.ok()
+        expect(item.market === StockMarketType.sh.id || item.market === StockMarketType.sz.id).to.be.ok()
     });
 
     return data;

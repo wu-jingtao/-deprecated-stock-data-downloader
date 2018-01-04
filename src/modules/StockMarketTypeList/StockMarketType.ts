@@ -1,7 +1,7 @@
 /**
  * 市场列表
  */
-export const StockMarket = {
+export const StockMarketType = {
     'sh': {
         id: 1,  //注意ID不能变动
         name: '上海A股',

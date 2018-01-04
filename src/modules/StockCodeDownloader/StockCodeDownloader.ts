@@ -26,20 +26,40 @@ const createTable = "\
  */
 export class StockCodeDownloader extends BaseServiceModule {
 
-    private readonly _timer: any[] = [];    //保存计时器
-
+    private _timer: any;    //保存计时器
     private _connection: MysqlConnection;
     private _statusRecorder: ModuleStatusRecorder;
 
-    private readonly _downloader = async () => {  //下载器
-        await SH_A_Code_sjs();
-        await SZ_A_Code_sjs();
+    private readonly _downloader = async (onStart?: boolean) => {  //下载器
+        try {
+            const status = await this._statusRecorder.getStatus(this);
+            if (status.startTime === 0 || status.error != null) {   //如果没有下载过，或之前下载出现过异常，则立刻重新下载
+    
+            }
+
+            await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) });
+            await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) });
+        } catch (error) {
+            if (onStart) {  //是不是模块启动阶段
+                throw error;
+            } else {
+                this.emit('error', error);
+            }
+        }
     };
 
     async onStart(): Promise<void> {
         this._connection = this.services.MysqlConnection;
+        this._statusRecorder = this.services.ModuleStatusRecorder;
+
         await this._connection.asyncQuery(createTable);  //创建数据表
+        await this._downloader(true);
 
+        //每周星期天的3点钟更新
+        this._timer = crontab.scheduleJob("0 3 * * 7", this._downloader);
+    }
 
+    async onStop() {
+        crontab.cancelJob(this._timer);
     }
 }
