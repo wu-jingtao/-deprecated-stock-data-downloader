@@ -22,7 +22,7 @@ export class StockCodeDownloader extends BaseServiceModule {
         if (!this._downloading) {   //如果上次还没有执行完这次就取消执行了
             this._downloading = true;
             const jobID = await this._statusRecorder.newStartTime(this);
-
+            
             try {
                 await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) });
                 await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) });
@@ -48,8 +48,8 @@ export class StockCodeDownloader extends BaseServiceModule {
             await this._downloader();
         }
 
-        //每周星期天的3点钟更新
-        this._timer = schedule.scheduleJob({ hour: 3, dayOfWeek: 7 }, () => this._downloader().catch(err => this.emit('error', err)));
+        //每周星期五的10点钟更新
+        this._timer = schedule.scheduleJob({ hour: 10, dayOfWeek: 5 }, () => this._downloader().catch(err => this.emit('error', err)));
     }
 
     async onStop() {
