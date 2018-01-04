@@ -3,9 +3,9 @@ import * as iconv from 'iconv-lite';
 import expect = require('expect.js');
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
-import { StockCodeDownloadedData } from '../StockCodeDownloadedData';
 import { Retry3 } from '../../../tools/Retry';
-import { StockMarketType } from '../../StockMarketTypeList/StockMarketType';
+import { StockCodeType } from '../StockCodeType';
+import { StockMarketType } from '../../StockMarketList/StockMarketType';
 
 /**
  * 上交所，股票列表数据
@@ -23,7 +23,7 @@ const address = 'http://query.sse.com.cn/security/stock/downloadStockListFile.do
 const referer = "http://www.sse.com.cn/assortment/stock/list/share/";
 
 //下载数据
-async function download(): Promise<StockCodeDownloadedData[]> {
+async function download(): Promise<StockCodeType[]> {
     const file = await HttpDownloader.Get(address, { Referer: referer });
     const data = iconv.decode(file, 'gbk');     //转码
     const result = dsv.tsvParse(data);
@@ -37,7 +37,7 @@ async function download(): Promise<StockCodeDownloadedData[]> {
 }
 
 //检测下载的数据是否正确
-function test(data: StockCodeDownloadedData[]) {
+function test(data: StockCodeType[]) {
     expect(data.length).to.greaterThan(0);
     
     data.forEach(item => {

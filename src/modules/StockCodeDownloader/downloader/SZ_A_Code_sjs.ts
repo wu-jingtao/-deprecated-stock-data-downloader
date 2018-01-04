@@ -2,9 +2,9 @@ import * as xlsx from 'xlsx';
 import expect = require('expect.js');
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
-import { StockCodeDownloadedData } from '../StockCodeDownloadedData';
 import { Retry3 } from '../../../tools/Retry';
-import { StockMarketType } from '../../StockMarketTypeList/StockMarketType';
+import { StockCodeType } from '../StockCodeType';
+import { StockMarketType } from '../../StockMarketList/StockMarketType';
 
 /**
  * 深交所，股票列表数据
@@ -19,7 +19,7 @@ import { StockMarketType } from '../../StockMarketTypeList/StockMarketType';
 const address = 'http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=xlsx&CATALOGID=1110&tab2PAGENO=1&ENCODE=1&TABKEY=tab2';
 
 //下载数据
-async function download(): Promise<StockCodeDownloadedData[]> {
+async function download(): Promise<StockCodeType[]> {
     const file = await HttpDownloader.Get(address);
     const data = xlsx.read(file);
     const result = xlsx.utils.sheet_to_json(data.Sheets["A股列表"]) as any[];
@@ -33,7 +33,7 @@ async function download(): Promise<StockCodeDownloadedData[]> {
 }
 
 //检测下载的数据是否正确
-function test(data: StockCodeDownloadedData[]) {
+function test(data: StockCodeType[]) {
     expect(data.length).to.greaterThan(0);
 
     data.forEach(item => {

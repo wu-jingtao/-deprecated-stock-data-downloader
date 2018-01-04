@@ -3,9 +3,9 @@ import * as iconv from 'iconv-lite';
 import * as $ from 'cheerio';
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
-import { StockCodeDownloadedData } from '../StockCodeDownloadedData';
 import { Retry3 } from '../../../tools/Retry';
-import { StockMarketType } from '../../StockMarketTypeList/StockMarketType';
+import { StockCodeType } from '../StockCodeType';
+import { StockMarketType } from '../../StockMarketList/StockMarketType';
 
 /**
  * 东方财富，股票列表数据
@@ -18,11 +18,11 @@ import { StockMarketType } from '../../StockMarketTypeList/StockMarketType';
 const address = 'http://quote.eastmoney.com/stocklist.html';
 
 //下载数据
-async function download(): Promise<StockCodeDownloadedData[]> {
+async function download(): Promise<StockCodeType[]> {
     const file = await HttpDownloader.Get(address);
     const data = iconv.decode(file, 'gbk');     //转码
 
-    const result: StockCodeDownloadedData[] = [];
+    const result: StockCodeType[] = [];
 
     $("#quotesearch ul li a[target]", data).each(function (this: CheerioElement) {
         const href = $(this).attr('href') as any;
@@ -44,7 +44,7 @@ async function download(): Promise<StockCodeDownloadedData[]> {
 }
 
 //检测下载的数据是否正确
-function test(data: StockCodeDownloadedData[]) {
+function test(data: StockCodeType[]) {
     expect(data.length).to.greaterThan(0);
 
     data.forEach(item => {

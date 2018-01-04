@@ -1,5 +1,5 @@
-import { BaseServiceModule } from "service-starter";
 import * as schedule from 'node-schedule';
+import { BaseServiceModule } from "service-starter";
 
 import * as sql from './Sql';
 import { MysqlConnection } from "../MysqlConnection/MysqlConnection";
@@ -16,18 +16,24 @@ export class StockCodeDownloader extends BaseServiceModule {
     private _timer: schedule.Job;    //保存计时器
     private _connection: MysqlConnection;
     private _statusRecorder: ModuleStatusRecorder;
+    private _downloading: boolean = false;  //是否正在下载
 
     private async _downloader() {  //下载器
-        const jobID = await this._statusRecorder.newStartTime(this);
+        if (!this._downloading) {   //如果上次还没有执行完这次就取消执行了
+            this._downloading = true;
+            const jobID = await this._statusRecorder.newStartTime(this);
 
-        try {
-            await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) });
-            await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) });
+            try {
+                await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) });
+                await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) });
 
-            this._statusRecorder.updateEndTime(jobID);
-        } catch (error) {
-            this._statusRecorder.updateError(jobID, error);
-            throw error;
+                await this._statusRecorder.updateEndTime(this, jobID);
+            } catch (error) {
+                await this._statusRecorder.updateError(this, jobID, error);
+                throw error;
+            } finally {
+                this._downloading = false;
+            }
         }
     };
 

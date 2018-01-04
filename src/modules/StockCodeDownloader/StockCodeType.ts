@@ -1,7 +1,7 @@
 /**
  * 下载到的数据
  */
-export interface StockCodeDownloadedData {
+export interface StockCodeType {
     code: string,       //股票代码
     name: string,       //股票名称
     market: number,     //所属市场ID

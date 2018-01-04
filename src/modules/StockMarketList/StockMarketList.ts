@@ -9,7 +9,7 @@ import * as sql from './Sql';
  * 股票市场列表。
  * 该模块目前的主要目的就是创建`stock_market`数据表，并且将StockMarket.ts中的数据保存到数据库中
  */
-export class StockMarketTypeList extends BaseServiceModule {
+export class StockMarketList extends BaseServiceModule {
 
     async onStart(): Promise<void> {
         const con: MysqlConnection = this.services.MysqlConnection;
