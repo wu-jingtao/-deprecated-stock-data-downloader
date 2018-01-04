@@ -20,10 +20,10 @@ export class ModuleStatusRecorder extends BaseServiceModule {
 
         if (data.length > 0) {
             return {
-                id: data[0].id,
-                startTime: data[0].start_time,
-                endTime: data[0].end_time,
-                error: data[0].error
+                id: data[0].id as number,
+                startTime: data[0].start_time as number,
+                endTime: data[0].end_time as number,
+                error: data[0].error as string | undefined
             };
         }
     }
@@ -37,10 +37,10 @@ export class ModuleStatusRecorder extends BaseServiceModule {
 
         if (data.length > 0) {
             return {
-                id: data[0].id,
-                startTime: data[0].start_time,
-                endTime: data[0].end_time,
-                error: data[0].error
+                id: data[0].id as number,
+                startTime: data[0].start_time as number,
+                endTime: data[0].end_time as number,
+                error: data[0].error as string | undefined
             };
         }
     }

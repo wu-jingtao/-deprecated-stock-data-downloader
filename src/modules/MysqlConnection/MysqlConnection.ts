@@ -1,8 +1,6 @@
 import * as mysql from 'mysql';
 import { BaseServiceModule, RunningStatus } from "service-starter";
 
-const createDB = "CREATE SCHEMA IF NOT EXISTS `stock`;";
-
 /**
  * 连接mysql并创建数据库
  */
@@ -34,7 +32,7 @@ export class MysqlConnection extends BaseServiceModule {
                 if (err) {
                     reject(err);
                 } else {    //创建系统所需的数据库
-                    this.connection.query(createDB, err => err ? reject(err) : resolve());
+                    this.connection.query("CREATE SCHEMA IF NOT EXISTS `stock`;", err => err ? reject(err) : resolve());
                 }
             });
 
