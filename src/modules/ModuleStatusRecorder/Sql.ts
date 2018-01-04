@@ -4,7 +4,7 @@
 export const create = "\
     CREATE TABLE IF NOT EXISTS `stock`.`_system_status` (\
         `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',\
-        `module_name` varchar(255) NOT NULL COMMENT '系统模块的名称',\
+        `module_name` VARCHAR(255) NOT NULL COMMENT '系统模块的名称',\
         `start_time` BIGINT unsigned NOT NULL DEFAULT '0' COMMENT '模块执行任务的开始时间戳',\
         `end_time` BIGINT unsigned NOT NULL DEFAULT '0' COMMENT '模块执行任务的结束时间戳',\
         `error` TEXT DEFAULT NULL COMMENT '记录模块执行任务的过程发生的错误',\

@@ -59,10 +59,10 @@ export class StockCodeDownloader extends BaseServiceModule {
         this._connection = this.services.MysqlConnection;
         this._statusRecorder = this.services.ModuleStatusRecorder;
         await this._connection.asyncQuery(sql.create_table);  //创建数据表
-debugger
+
         const status = await this._statusRecorder.getStatus(this);
+        //如果没下载过或上次下载出现过异常，则立即重新下载
         if (status == null || status.error != null || status.startTime > status.endTime) {
-            //如果没下载过或上次下载出现过异常，则立即重新下载
             await this._downloader();
         }
 
