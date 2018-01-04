@@ -31,6 +31,7 @@
         "@types/mocha": "^2.2.40",
         "@types/mysql": "^2.15.2",
         "@types/node": "^7.0.13",
+        "@types/node-schedule": "^1.2.1",
         "@types/request": "^2.0.9",
         "expect.js": "^0.3.1",
         "gulp": "^3.9.1",
@@ -47,7 +48,7 @@
         "lodash": "^4.17.4",
         "log-formatter": "^0.1.5",
         "mysql": "^2.15.0",
-        "node-crontab": "0.0.8",
+        "node-schedule": "^1.2.5",
         "request": "^2.83.0",
         "service-starter": "^1.0.3",
         "xlsx": "^0.11.16"

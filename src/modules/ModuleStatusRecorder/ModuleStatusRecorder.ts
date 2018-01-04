@@ -66,8 +66,8 @@ export class ModuleStatusRecorder extends BaseServiceModule {
     /**
      * 更新错误消息
      */
-    async updateError(id: number, err: string) {
-        await this._connection.asyncQuery(sql.update_error, [Date.now(), err, id]);
+    async updateError(id: number, err: Error) {
+        await this._connection.asyncQuery(sql.update_error, [Date.now(), err.toString(), id]);
     }
 
     async onStart(): Promise<void> {
