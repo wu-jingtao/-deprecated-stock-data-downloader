@@ -10,6 +10,9 @@ COPY tsconfig.json /app/tsconfig.json
 RUN npm install
 RUN npm start compile
 
+# 清除devDependencies包
+RUN npm prune --production  
+
 # 确保可执行
 RUN chmod 755 /app/node_modules/service-starter/src/Docker/health_check.sh
 
