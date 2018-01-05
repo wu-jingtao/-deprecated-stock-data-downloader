@@ -9,6 +9,7 @@ import { H_Code_sgt } from '../src/modules/StockCodeDownloader/DataSource/H_Stoc
 
 import { SH_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/SH_Future/SH_Future_Index';
 import { ZZ_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/ZZ_Future/ZZ_Future_Index';
+import { DL_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/DL_Future/DL_Future_Index';
 
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
@@ -27,7 +28,9 @@ describe('测试下载数据', function () {
 
         it('上海期货交易所 主连列表 数据', SH_Future_Index);
 
-        it.only('郑州商品交易所 主连列表 数据', ZZ_Future_Index);
+        it('郑州商品交易所 主连列表 数据', ZZ_Future_Index);
+
+        it.only('大连商品交易所 主连列表 数据', DL_Future_Index);
         
     });
 });
