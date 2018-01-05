@@ -3,6 +3,7 @@ FROM registry.cn-hangzhou.aliyuncs.com/wujingtao/node:8.9.0
 WORKDIR /app
 
 COPY src /app/src
+COPY gulpfile.js /app/gulpfile.js
 COPY LICENSE /app/LICENSE
 COPY package.json /app/package.json
 COPY tsconfig.json /app/tsconfig.json

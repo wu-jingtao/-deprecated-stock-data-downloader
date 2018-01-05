@@ -1,5 +1,6 @@
 *
 !src
+!gulpfile.js
 !LICENSE
 !package.json
 !tsconfig.json
