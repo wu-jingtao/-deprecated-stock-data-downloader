@@ -8,6 +8,7 @@ import { H_Code_hgt } from '../src/modules/StockCodeDownloader/DataSource/H_Stoc
 import { H_Code_sgt } from '../src/modules/StockCodeDownloader/DataSource/H_Stock/H_Code_sgt';
 
 import { SH_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/SH_Future/SH_Future_Index';
+import { ZZ_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/ZZ_Future/ZZ_Future_Index';
 
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
@@ -24,7 +25,10 @@ describe('测试下载数据', function () {
 
         it('深港通 H股列表 数据', H_Code_sgt);
 
-        it.only('上海期货交易所 主连列表 数据', SH_Future_Index);
+        it('上海期货交易所 主连列表 数据', SH_Future_Index);
+
+        it.only('郑州商品交易所 主连列表 数据', ZZ_Future_Index);
+        
     });
 });
 

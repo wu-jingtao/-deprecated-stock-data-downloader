@@ -10,7 +10,7 @@ import { StockMarketType } from "../../../StockMarketList/StockMarketType";
 
 //读取数据
 function read(): StockCodeType[] {
-    const file = fs.readFileSync(path.resolve(__dirname, './SQS_2018-1-6.xls'));
+    const file = fs.readFileSync(path.resolve(__dirname, './ZSS_2018-1-6.xls'));
     const data = iconv.decode(file, 'gbk');     //转码
     const parsed = dsv.tsvParse(data);
 
@@ -23,7 +23,7 @@ function read(): StockCodeType[] {
             result.push({
                 code: (code.match(/[a-z]+/i) as any)[0],
                 name,
-                market: StockMarketType.sqs.id,
+                market: StockMarketType.zss.id,
                 isIndex: true
             });
         }
@@ -45,16 +45,16 @@ function test(data: StockCodeType[]) {
 }
 
 /**
- * 上海期货交易所。上市各产品主力连续。
+ * 郑州商品交易所。上市各产品主力连续。
  * 
  * 由于各个数据源的代码各不相同，所以只保留代码固定部分
  * 
- * 该目录下有一个`SQS.xls`文件，这个是我从同花顺，上期所页面下导出的，只保留了名称与代码。`GBK`编码
+ * 该目录下有一个`ZSS.xls`文件，这个是我从同花顺，上期所页面下导出的，只保留了名称与代码。`GBK`编码
  */
 
 /**
- * 上海期货指数
+ * 郑州商品交易所 主连列表
  */
-export function SH_Future_Index(): StockCodeType[] {
+export function ZZ_Future_Index(): StockCodeType[] {
     return test(read());
 }
