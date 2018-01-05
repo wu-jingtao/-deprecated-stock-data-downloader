@@ -8,6 +8,7 @@ import { StockCodeType } from './StockCodeType';
 
 import { SH_A_Code_sjs } from "./downloader/SH_A_Code_sjs";
 import { SZ_A_Code_sjs } from "./downloader/SZ_A_Code_sjs";
+import { A_Index_Code_zx } from './downloader/A_Index_Code_zx';
 
 /**
  * 股票代码下载器
@@ -44,7 +45,8 @@ export class StockCodeDownloader extends BaseServiceModule {
             try {
                 await this._saveData(await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) }));
                 await this._saveData(await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) }));
-
+                await this._saveData(A_Index_Code_zx());    
+                
                 await this._statusRecorder.updateEndTime(this, jobID);
             } catch (error) {
                 await this._statusRecorder.updateError(this, jobID, error);
