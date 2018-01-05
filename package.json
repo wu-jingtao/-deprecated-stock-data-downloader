@@ -33,7 +33,6 @@
         "@types/node": "^7.0.13",
         "@types/node-schedule": "^1.2.1",
         "@types/request": "^2.0.9",
-        "expect.js": "^0.3.1",
         "gulp": "^3.9.1",
         "gulp-sourcemaps": "^2.4.1",
         "gulp-typescript": "^3.1.5",
@@ -42,6 +41,7 @@
         "typescript": "^2.5.2"
     },
     "dependencies": {
+        "expect.js": "^0.3.1",
         "cheerio": "^1.0.0-rc.2",
         "d3-dsv": "^1.0.8",
         "iconv-lite": "^0.4.19",
