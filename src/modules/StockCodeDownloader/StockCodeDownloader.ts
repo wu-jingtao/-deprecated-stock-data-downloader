@@ -10,6 +10,10 @@ import { SH_A_Code_sjs } from './DataSource/A_Stock/SH_A_Code_sjs';
 import { SZ_A_Code_sjs } from './DataSource/A_Stock/SZ_A_Code_sjs';
 import { A_Index_Code_zx } from './DataSource/A_Stock/A_Index_Code_zx';
 
+import { H_Code_hgt } from './DataSource/H_Stock/H_Code_hgt';
+import { H_Code_sgt } from './DataSource/H_Stock/H_Code_sgt';
+import { H_Index_Code_zx } from './DataSource/H_Stock/H_Index_Code_zx';
+
 
 /**
  * 股票代码下载器
@@ -44,9 +48,15 @@ export class StockCodeDownloader extends BaseServiceModule {
             const jobID = await this._statusRecorder.newStartTime(this);
 
             try {
+                //A股
                 await this._saveData(await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) }));
                 await this._saveData(await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) }));
                 await this._saveData(A_Index_Code_zx());
+
+                //港股
+                await this._saveData(await H_Code_hgt().catch(err => { throw new Error('下载沪港通代码异常：' + err) }));
+                await this._saveData(await H_Code_sgt().catch(err => { throw new Error('下载深港通代码异常：' + err) }));
+                await this._saveData(H_Index_Code_zx());
 
                 await this._statusRecorder.updateEndTime(this, jobID);
             } catch (error) {
