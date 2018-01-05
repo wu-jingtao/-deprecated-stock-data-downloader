@@ -8,7 +8,7 @@ COPY package.json /app/package.json
 COPY tsconfig.json /app/tsconfig.json
 
 RUN npm install
-RUN npm start compile
+RUN npm run compile
 
 # 清除devDependencies包
 RUN npm prune --production  
