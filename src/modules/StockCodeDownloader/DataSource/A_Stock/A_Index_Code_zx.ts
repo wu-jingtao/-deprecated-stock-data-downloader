@@ -1,5 +1,5 @@
-import { StockCodeType } from '../StockCodeType';
-import { StockMarketType } from '../../StockMarketList/StockMarketType';
+import { StockCodeType } from "../../StockCodeType";
+import { StockMarketType } from "../../../StockMarketList/StockMarketType";
 
 /**
  * 自选的一些A股指数

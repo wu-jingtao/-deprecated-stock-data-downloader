@@ -6,9 +6,10 @@ import { MysqlConnection } from "../MysqlConnection/MysqlConnection";
 import { ModuleStatusRecorder } from "../ModuleStatusRecorder/ModuleStatusRecorder";
 import { StockCodeType } from './StockCodeType';
 
-import { SH_A_Code_sjs } from "./downloader/SH_A_Code_sjs";
-import { SZ_A_Code_sjs } from "./downloader/SZ_A_Code_sjs";
-import { A_Index_Code_zx } from './downloader/A_Index_Code_zx';
+import { SH_A_Code_sjs } from './DataSource/A_Stock/SH_A_Code_sjs';
+import { SZ_A_Code_sjs } from './DataSource/A_Stock/SZ_A_Code_sjs';
+import { A_Index_Code_zx } from './DataSource/A_Stock/A_Index_Code_zx';
+
 
 /**
  * 股票代码下载器
@@ -45,8 +46,8 @@ export class StockCodeDownloader extends BaseServiceModule {
             try {
                 await this._saveData(await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) }));
                 await this._saveData(await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) }));
-                await this._saveData(A_Index_Code_zx());    
-                
+                await this._saveData(A_Index_Code_zx());
+
                 await this._statusRecorder.updateEndTime(this, jobID);
             } catch (error) {
                 await this._statusRecorder.updateError(this, jobID, error);
@@ -68,11 +69,11 @@ export class StockCodeDownloader extends BaseServiceModule {
             await this._downloader();
         }
 
-        //每周星期五的10点钟更新
-        this._timer = schedule.scheduleJob({ hour: 10, dayOfWeek: 5 }, () => this._downloader().catch(err => this.emit('error', err)));
+        //每周星期五的晚上10点钟更新
+        this._timer = schedule.scheduleJob({ hour: 22, dayOfWeek: 5 }, () => this._downloader().catch(err => this.emit('error', err)));
     }
 
     async onStop() {
-        this._timer.cancel();
+        this._timer && this._timer.cancel();
     }
 }

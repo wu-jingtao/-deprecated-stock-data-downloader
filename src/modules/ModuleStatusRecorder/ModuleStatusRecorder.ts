@@ -75,6 +75,6 @@ export class ModuleStatusRecorder extends BaseServiceModule {
 
     async onStart(): Promise<void> {
         this._connection = this.services.MysqlConnection;
-        await this._connection.asyncQuery(sql.create);
+        await this._connection.asyncQuery(sql.create_table);
     }
 }

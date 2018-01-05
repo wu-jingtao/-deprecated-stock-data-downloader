@@ -1,7 +1,7 @@
 /**
  * 创建表
  */
-export const create = "\
+export const create_table = "\
     CREATE TABLE IF NOT EXISTS `stock`.`_system_status` (\
         `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',\
         `module_name` VARCHAR(255) NOT NULL COMMENT '系统模块的名称',\
@@ -13,7 +13,7 @@ export const create = "\
     ) COMMENT='\
         保存系统模块的运行状态。\
         如果 `start_time` > `end_time` 表示正在运行。\
-        如果 `end_time` > `start_time` 表示执行结束。如果系统发生过崩溃，则可能为0\
+        如果 `end_time` > `start_time` 表示执行结束。如果系统发生了崩溃，则可能依然记录的是`start_time` > `end_time`\
         如果 `error` 不为空则表示执行任务的过程发生了错误。\
         提示：如果要让某个模块重新下载，最简单的方式就是删除该模块的所有状态记录。\
     ';\

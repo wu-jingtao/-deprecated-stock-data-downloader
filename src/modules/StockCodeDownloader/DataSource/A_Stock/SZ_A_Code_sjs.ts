@@ -1,10 +1,10 @@
 import * as xlsx from 'xlsx';
 import expect = require('expect.js');
 
-import * as HttpDownloader from '../../../tools/HttpDownloader';
-import { Retry3 } from '../../../tools/Retry';
-import { StockCodeType } from '../StockCodeType';
-import { StockMarketType } from '../../StockMarketList/StockMarketType';
+import * as HttpDownloader from '../../../../tools/HttpDownloader';
+import { Retry3 } from '../../../../tools/Retry';
+import { StockCodeType } from '../../StockCodeType';
+import { StockMarketType } from '../../../StockMarketList/StockMarketType';
 
 /**
  * 深交所，股票列表数据

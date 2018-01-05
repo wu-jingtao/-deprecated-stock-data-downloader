@@ -2,13 +2,13 @@ import expect = require('expect.js');
 import * as iconv from 'iconv-lite';
 import * as $ from 'cheerio';
 
-import * as HttpDownloader from '../../../tools/HttpDownloader';
-import { Retry3 } from '../../../tools/Retry';
-import { StockCodeType } from '../StockCodeType';
-import { StockMarketType } from '../../StockMarketList/StockMarketType';
+import * as HttpDownloader from '../../../../tools/HttpDownloader';
+import { Retry3 } from '../../../../tools/Retry';
+import { StockCodeType } from '../../StockCodeType';
+import { StockMarketType } from '../../../StockMarketList/StockMarketType';
 
 /**
- * 东方财富，股票列表数据
+ * 东方财富，A股列表数据(同时包含上海与深圳)
  * 
  * 数据格式`HTML`
  * 下载地址：http://quote.eastmoney.com/stocklist.html
@@ -57,6 +57,6 @@ function test(data: StockCodeType[]) {
 }
 
 /**
- * 上海A股代码下载器
+ * A股代码下载器
  */
-export const SH_SZ_A_Code_dfcf = Retry3(async () => test(await download()));
+export const A_Code_dfcf = Retry3(async () => test(await download()));
