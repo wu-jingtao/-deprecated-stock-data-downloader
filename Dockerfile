@@ -2,10 +2,13 @@ FROM registry.cn-hangzhou.aliyuncs.com/wujingtao/node:8.9.0
 
 WORKDIR /app
 
-COPY bin /app/bin
+COPY src /app/src
+COPY LICENSE /app/LICENSE
 COPY package.json /app/package.json
+COPY tsconfig.json /app/tsconfig.json
 
-RUN npm install --production 
+RUN npm install
+RUN npm start compile
 
 # 确保可执行
 RUN chmod 755 /app/node_modules/service-starter/src/Docker/health_check.sh
