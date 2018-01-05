@@ -60,7 +60,7 @@ export const StockMarketType = {
     },
     'zjs': {
         id: 9,
-        name: '中国金融期货交易所',
+        name: '中国金融期货交易所',  //暂时用不上就不下载了
         start_time: '09:30:00',
         end_time: '15:00:00',
         day_of_week: '1,2,3,4,5'

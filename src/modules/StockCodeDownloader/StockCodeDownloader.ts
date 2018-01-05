@@ -17,6 +17,7 @@ import { H_Index_Code_zx } from './DataSource/H_Stock/H_Index_Code_zx';
 import { SH_Future_Index } from './DataSource/SH_Future/SH_Future_Index';
 import { ZZ_Future_Index } from './DataSource/ZZ_Future/ZZ_Future_Index';
 import { DL_Future_Index } from './DataSource/DL_Future/DL_Future_Index';
+import { WH_Code_zx } from './DataSource/WH/WH_Code_zx';
 
 
 /**
@@ -70,6 +71,9 @@ export class StockCodeDownloader extends BaseServiceModule {
 
                 //大连商品交易所 主连列表
                 await this._saveData(DL_Future_Index());
+
+                //外汇
+                await this._saveData(WH_Code_zx());
 
                 await this._statusRecorder.updateEndTime(this, jobID);
             } catch (error) {
