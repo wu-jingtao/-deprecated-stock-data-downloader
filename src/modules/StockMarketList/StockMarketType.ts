@@ -23,7 +23,7 @@ export const StockMarketType = {
         end_time: '16:10:00',
         day_of_week: '1,2,3,4,5'
     },
-    'NYSE': {
+    'NYSE': {   //暂时还用不上，所以就没有下载美股
         id: 4,
         name: '纽交所',
         start_time: '22:30:00', //按照北京时间计算，并且未考录夏令时冬令时，与同花顺保持一致

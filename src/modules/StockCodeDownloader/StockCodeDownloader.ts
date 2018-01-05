@@ -14,6 +14,8 @@ import { H_Code_hgt } from './DataSource/H_Stock/H_Code_hgt';
 import { H_Code_sgt } from './DataSource/H_Stock/H_Code_sgt';
 import { H_Index_Code_zx } from './DataSource/H_Stock/H_Index_Code_zx';
 
+import { SH_Future_Index } from './DataSource/SH_Future/SH_Future_Index';
+
 
 /**
  * 股票代码下载器
@@ -57,6 +59,9 @@ export class StockCodeDownloader extends BaseServiceModule {
                 await this._saveData(await H_Code_hgt().catch(err => { throw new Error('下载沪港通代码异常：' + err) }));
                 await this._saveData(await H_Code_sgt().catch(err => { throw new Error('下载深港通代码异常：' + err) }));
                 await this._saveData(H_Index_Code_zx());
+
+                //上海期货交易所 主连列表
+                await this._saveData(SH_Future_Index());
 
                 await this._statusRecorder.updateEndTime(this, jobID);
             } catch (error) {
