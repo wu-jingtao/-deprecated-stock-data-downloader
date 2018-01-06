@@ -32,10 +32,10 @@ export class MysqlConnection extends BaseServiceModule {
                 if (err) {
                     reject(err);
                 } else {    //创建系统所需的数据库
-                    this.connection.query("CREATE SCHEMA IF NOT EXISTS `stock`;", err => err ? reject(err) : resolve());
+                    this.connection.query("CREATE SCHEMA IF NOT EXISTS `stock` DEFAULT CHARACTER SET utf8;", err => err ? reject(err) : resolve());
                 }
             });
-
+            
             this.connection.on("end", (err) => {
                 if (err) this.emit('error', err);
 

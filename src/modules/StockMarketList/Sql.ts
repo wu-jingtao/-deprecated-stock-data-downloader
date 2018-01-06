@@ -9,8 +9,8 @@ export const create_table = "\
         `end_time` TIME NOT NULL COMMENT '收市时间',\
         `day_of_week` VARCHAR(45) NOT NULL COMMENT '每周哪几日交易。格式为：1,2,3,4,5,6,7',\
         PRIMARY KEY (`id`),\
-        UNIQUE INDEX `name_UNIQUE` (`name` ASC))\
-    COMMENT = '交易市场列表';\
+        UNIQUE INDEX `name_UNIQUE` (`name` ASC)\
+    ) COMMENT = '交易市场列表';\
 ";
 
 /**
