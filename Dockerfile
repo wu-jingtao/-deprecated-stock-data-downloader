@@ -1,5 +1,9 @@
 FROM registry.cn-hangzhou.aliyuncs.com/wujingtao/node:8.9.0
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    dos2unix \
+	&& rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 COPY src /app/src
@@ -15,6 +19,7 @@ RUN npm run compile
 RUN npm prune --production  
 
 # 确保可执行
+RUN dos2unix /app/node_modules/service-starter/src/Docker/health_check.sh
 RUN chmod 755 /app/node_modules/service-starter/src/Docker/health_check.sh
 
 HEALTHCHECK \
