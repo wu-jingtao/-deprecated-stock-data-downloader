@@ -5,7 +5,7 @@ import * as cheerio from 'cheerio';
 import * as HttpDownloader from '../../../tools/HttpDownloader';
 import { Retry3 } from '../../../tools/Retry';
 import { StockMarketType } from '../../StockMarketList/StockMarketType';
-import { CompanyInformationType } from './CompanyInformationType';
+import { CompanyInformationType } from '../CompanyInformationType';
 
 /**
  * A股上市公司 公司资料下载。数据来源于同花顺f10
