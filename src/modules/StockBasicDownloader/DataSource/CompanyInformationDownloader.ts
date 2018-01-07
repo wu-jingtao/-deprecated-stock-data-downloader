@@ -1,10 +1,8 @@
-import expect = require('expect.js');
 import * as iconv from 'iconv-lite';
 import * as cheerio from 'cheerio';
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
 import { Retry3 } from '../../../tools/Retry';
-import { StockMarketType } from '../../StockMarketList/StockMarketType';
 import { CompanyInformationType } from '../CompanyInformationType';
 
 /**
@@ -127,4 +125,4 @@ export async function download(code: string): Promise<CompanyInformationType[]> 
  * 上海A股代码下载器
  * @param code 要下载的股票代码
  */
-export const CompanyInformation = Retry3(download);
+export const CompanyInformationDownloader = Retry3(download);
