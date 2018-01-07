@@ -18,7 +18,7 @@ node --inspect-brk=0.0.0.0:9229 .
 docker rm -f test-stock-data-downloader
 
 # 创建或更新正式上线的容器
-docker rm -f stock-data-downloader || \
+docker rm -f stock-data-downloader; \
 docker run -d --restart=always --name stock-data-downloader \
 -e MYSQL_HOST_ADDR='localhost' \
 -e MYSQL_HOST_PORT='3306' \
