@@ -2,9 +2,9 @@
  * 获取所有A股
  */
 export const get_code_list="\
-    SELECT `id`, `code`, `name`\
+    SELECT `id`, `code`, `market`\
     FROM `stock`.`stock_code`\
-    WHERE `market` IN (1,2) AND `is_index` = 0;\
+    WHERE `market` IN (1, 2) AND `is_index` = 0;\
 ";
 
 /**
@@ -24,7 +24,7 @@ export const create_company_information_table = "\
         `legal_representative` VARCHAR(255) NULL COMMENT '法人代表',\
         `manager` VARCHAR(255) NULL COMMENT '总经理',\
         `registered_capital` DOUBLE NULL COMMENT '注册资金(万元)',\
-        `employees_number` INT NULL COMMENT '员工人数',\
+        `employees_number` INT UNSIGNED NULL COMMENT '员工人数',\
         `establishing_date` DATE NULL COMMENT '成立日期',\
         `listing_date` DATE NULL COMMENT '上市日期',\
         `issuance_number` DOUBLE NULL COMMENT '发行数量(万股)',\

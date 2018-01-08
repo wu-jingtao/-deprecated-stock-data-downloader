@@ -39,7 +39,7 @@ async function download(code: string): Promise<CompanyInformationType> {
         old_name: (temp = normalizeNull(detail.find(".hltip:contains('曾 用 名')").next('span').text()))
             ? temp.split('->').map((item: string) => item.trim()) : [],
         main_business: normalizeNull(detail.find(".hltip:contains('主营业务')").next('span').text().trim()),
-        product_name: detail.find(".hltip:contains('产品名称')").next('span').find('a').map((index, element) => $(element).text().trim()),
+        product_name: Array.from(detail.find(".hltip:contains('产品名称')").next('span').find('a:not(.m_more)').map((index, element) => $(element).text().trim())),
         controling_shareholder: (temp = detail.find(".hltip:contains('控股股东')").next('span'), temp.children('span').remove(), normalizeNull(temp.text().trim())),
         actual_controller: (temp = detail.find(".hltip:contains('实际控制人')").next('span'), temp.children('span').remove(), normalizeNull(temp.text().trim())),
         chairman: normalizeNull(detail.find(".hltip:contains('董事长')").next('span').text().trim()),
@@ -59,7 +59,8 @@ async function download(code: string): Promise<CompanyInformationType> {
         main_underwriter: normalizeNull(publish.find(".hltip:contains('主承销商')").next('span').text().trim()),
         sponsors: normalizeNull(publish.find(".hltip:contains('上市保荐人')").next('span').text().trim()),
 
-        subsidiary: share.find('#ckg_table > tbody > tr').map((index, element) => {
+        //使用Array.from包装一下是因为，无法JSON.stringify
+        subsidiary: Array.from(share.find('#ckg_table > tbody > tr').map((index, element) => {
             const cells = $(element).find('td');
 
             return {
@@ -68,7 +69,7 @@ async function download(code: string): Promise<CompanyInformationType> {
                 share_ratio: (temp = normalizeAmountToYi(cells.eq(3).text())) ? temp / 100 : undefined,
                 investment_amount: normalizeAmountToWan(cells.eq(4).text()),
             };
-        })
+        }))
     } as any;
 }
 

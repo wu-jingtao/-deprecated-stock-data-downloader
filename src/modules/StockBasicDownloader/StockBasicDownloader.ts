@@ -28,19 +28,19 @@ export class StockBasicDownloader extends BaseServiceModule {
      */
     private async _saveInformationData(code_id: number, code: string, data: CompanyInformationType) {
         await this._connection.asyncQuery(sql.insert_company_information, [
-            code_id, data.location, data.industry, data.old_name, data.main_business,
-            data.product_name, data.controling_shareholder, data.actual_controller,
+            code_id, data.location, data.industry, JSON.stringify(data.old_name), data.main_business,
+            JSON.stringify(data.product_name), data.controling_shareholder, data.actual_controller,
             data.chairman, data.legal_representative, data.manager, data.registered_capital,
             data.employees_number, data.establishing_date, data.listing_date, data.issuance_number,
             data.issuance_price, data.ipo_pe_ratio, data.expect_raise, data.actual_raise,
-            data.first_day_open_price, data.main_underwriter, data.sponsors, data.subsidiary,
+            data.first_day_open_price, data.main_underwriter, data.sponsors, JSON.stringify(data.subsidiary),
 
-            data.location, data.industry, data.old_name, data.main_business,
-            data.product_name, data.controling_shareholder, data.actual_controller,
+            data.location, data.industry, JSON.stringify(data.old_name), data.main_business,
+            JSON.stringify(data.product_name), data.controling_shareholder, data.actual_controller,
             data.chairman, data.legal_representative, data.manager, data.registered_capital,
             data.employees_number, data.establishing_date, data.listing_date, data.issuance_number,
             data.issuance_price, data.ipo_pe_ratio, data.expect_raise, data.actual_raise,
-            data.first_day_open_price, data.main_underwriter, data.sponsors, data.subsidiary
+            data.first_day_open_price, data.main_underwriter, data.sponsors, JSON.stringify(data.subsidiary)
         ]).catch(err => { throw new Error(`保存"${code}"公司资料失败：` + err) });
     }
 
@@ -94,6 +94,7 @@ export class StockBasicDownloader extends BaseServiceModule {
                 for (const { id, code, market } of code_list) {   //循环下载
                     await this._saveInformationData(id, code, await CompanyInformationDownloader(code));
                     await this._saveFinanceData(id, code, await CompanyFinanceDownloader(code));
+                    console.log('下载完成：' + code);    //调试使用
                 }
 
                 await this._statusRecorder.updateEndTime(this, jobID);
