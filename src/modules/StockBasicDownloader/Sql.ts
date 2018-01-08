@@ -14,15 +14,15 @@ export const create_company_information_table = "\
         `chairman` VARCHAR(255) NULL COMMENT '董事长',\
         `legal_representative` VARCHAR(255) NULL COMMENT '法人代表',\
         `manager` VARCHAR(255) NULL COMMENT '总经理',\
-        `registered_capital` BIGINT NULL COMMENT '注册资金(万元)',\
+        `registered_capital` DOUBLE NULL COMMENT '注册资金(万元)',\
         `employees_number` INT NULL COMMENT '员工人数',\
         `establishing_date` DATE NULL COMMENT '成立日期',\
         `listing_date` DATE NULL COMMENT '上市日期',\
-        `issuance_number` BIGINT NULL COMMENT '发行数量(万股)',\
+        `issuance_number` DOUBLE NULL COMMENT '发行数量(万股)',\
         `issuance_price` FLOAT NULL COMMENT '发行价格',\
         `ipo_pe_ratio` FLOAT NULL COMMENT '发行市盈率(倍)',\
-        `expect_raise` BIGINT NULL COMMENT '预计募资(万元)',\
-        `actual_raise` BIGINT NULL COMMENT '实际募资(万元)',\
+        `expect_raise` DOUBLE NULL COMMENT '预计募资(万元)',\
+        `actual_raise` DOUBLE NULL COMMENT '实际募资(万元)',\
         `first_day_open_price` FLOAT NULL COMMENT '首日开盘价',\
         `main_underwriter` VARCHAR(255) NULL COMMENT '主承销商',\
         `sponsors` VARCHAR(255) NULL COMMENT '上市保荐人',\
@@ -33,7 +33,7 @@ export const create_company_information_table = "\
         REFERENCES `stock`.`stock_code` (`id`)\
         ON DELETE NO ACTION\
         ON UPDATE NO ACTION\
-    ) COMMENT = '股票的公司资料。注意：其中有些数据可能随着时间会发生变化。';\
+    ) COMMENT = 'A股上市公司的公司资料。注意：其中有些数据可能随着时间会发生变化。';\
 ";
 
 /**
@@ -74,3 +74,56 @@ export const insert_company_information = "\
     `subsidiary` = ?\
 ";
 
+/**
+ * 创建公司财务表
+ */
+export const create_company_finance_table = "\
+    CREATE TABLE IF NOT EXISTS `stock`.`stock_company_finance` (\
+        `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',\
+        `code` INT UNSIGNED NOT NULL COMMENT '股票代码(`stock_code`中对应的`id`)',\
+        `date` DATE NOT NULL COMMENT '报告时间',\
+        `basic_earnings_per_share` FLOAT NULL COMMENT '基本每股收益(元)',\
+        `net_profit` DOUBLE NULL COMMENT '净利润(万元)',\
+        `gross_revenue` DOUBLE NULL COMMENT '营业总收入(万元)',\
+        `net_assets_per_share` FLOAT NULL COMMENT '每股净资产(元)',\
+        `asset_liability_ratio` FLOAT NULL COMMENT '资产负债比率(0-1)',\
+        `capital_accumulation_fund_per_share` FLOAT NULL COMMENT '每股资本公积金(元)',\
+        `undistributed_profit_per_share` FLOAT NULL COMMENT '每股未分配利润(元)',\
+        `operating_cash_flow_per_share` FLOAT NULL COMMENT '每股经营现金流(元)',\
+        PRIMARY KEY (`id`),\
+        KEY `code_idx` (`code`),\
+        CONSTRAINT `code_fk` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
+    ) COMMENT='A股上市公司财务数据';\
+";
+
+/**
+ * 插入新的财务数据
+ */
+export const insert_company_finance_data = "\
+    INSERT INTO `stock`.`stock_company_finance`\
+    (`code`,`date`,`basic_earnings_per_share`,\
+    `net_profit`,`gross_revenue`,`net_assets_per_share`,\
+    `asset_liability_ratio`,\
+    `capital_accumulation_fund_per_share`,\
+    `undistributed_profit_per_share`,\
+    `operating_cash_flow_per_share`)\
+    VALUES\
+    (?,?,?,?,?,?,?,?,?,?);\
+";
+
+/**
+ * 更新财务数据
+ */
+export const update_company_finance_data = "\
+    UPDATE `stock`.`stock_company_finance`\
+    SET\
+    `basic_earnings_per_share` = ?,\
+    `net_profit` = ?,\
+    `gross_revenue` = ?,\
+    `net_assets_per_share` = ?,\
+    `asset_liability_ratio` = ?,\
+    `capital_accumulation_fund_per_share` = ?,\
+    `undistributed_profit_per_share` = ?,\
+    `operating_cash_flow_per_share` = ?\
+    WHERE `code` = ? AND `date` = ?\
+";

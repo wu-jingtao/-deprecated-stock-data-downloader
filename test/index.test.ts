@@ -12,6 +12,7 @@ import { ZZ_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/Z
 import { DL_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/DL_Future/DL_Future_Index';
 
 import { CompanyInformationDownloader } from '../src/modules/StockBasicDownloader/DataSource/CompanyInformationDownloader';
+import { CompanyFinanceDownloader } from '../src/modules/StockBasicDownloader/DataSource/CompanyFinanceDownloader';
 
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
@@ -37,7 +38,9 @@ describe('测试下载数据', function () {
 
     describe('测试下载基本面数据', function () {
 
-        it.only('同花顺 公司资料', () => CompanyInformationDownloader('300359'));
+        it('同花顺 公司资料', () => CompanyInformationDownloader('300359'));
+        
+        it.only('同花顺 公司财务', () => CompanyFinanceDownloader('300359'));
     });
 });
 
