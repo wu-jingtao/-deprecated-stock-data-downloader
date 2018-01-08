@@ -1,4 +1,13 @@
 /**
+ * 获取所有A股
+ */
+export const get_code_list="\
+    SELECT `id`, `code`, `name`\
+    FROM `stock`.`stock_code`\
+    WHERE `market` IN (1,2) AND `is_index` = 0;\
+";
+
+/**
  * 创建公司资料表
  */
 export const create_company_information_table = "\
@@ -96,6 +105,12 @@ export const create_company_finance_table = "\
     ) COMMENT='A股上市公司财务数据';\
 ";
 
+//根据code与日期查询某条财务记录的id
+export const get_company_finance_id = "\
+    SELECT `id` FROM `stock`.`stock_company_finance`\
+    WHERE `code` = ? AND `date` = ?\
+";
+
 /**
  * 插入新的财务数据
  */
@@ -125,5 +140,5 @@ export const update_company_finance_data = "\
     `capital_accumulation_fund_per_share` = ?,\
     `undistributed_profit_per_share` = ?,\
     `operating_cash_flow_per_share` = ?\
-    WHERE `code` = ? AND `date` = ?\
+    WHERE `id` = ?\
 ";

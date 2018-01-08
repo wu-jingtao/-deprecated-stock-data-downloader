@@ -6,8 +6,6 @@ import { Retry3 } from '../../../tools/Retry';
 import { CompanyFinanceType } from '../CompanyFinanceType';
 import { normalizeAmountToYi, normalizeAmountToWan, normalizePercent } from '../Tools';
 
-import * as fs from 'fs';
-
 /**
  * A股上市公司 财务数据下载。数据来源于同花顺f10
  * 
@@ -54,8 +52,7 @@ function parseData(sheet: xlsx.WorkSheet): any[] {
 
 //下载数据
 async function download(code: string): Promise<CompanyFinanceType[]> {
-    //const file = await HttpDownloader.Get(address(code));
-    const file = fs.readFileSync('C:\\Users\\HASEE\\Desktop\\300359_main_report.xls');
+    const file = await HttpDownloader.Get(address(code));
     const result = parseData(xlsx.read(file).Sheets['Worksheet']);
 
     return result.map(item => ({

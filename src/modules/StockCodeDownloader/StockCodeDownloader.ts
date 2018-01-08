@@ -96,8 +96,8 @@ export class StockCodeDownloader extends BaseServiceModule {
             await this._downloader();
         }
 
-        //每周星期五的晚上10点钟更新
-        this._timer = schedule.scheduleJob({ hour: 22, dayOfWeek: 5 }, () => this._downloader().catch(err => this.emit('error', err)));
+        //每天的下午5点钟更新
+        this._timer = schedule.scheduleJob({ hour: 17 }, () => this._downloader().catch(err => this.emit('error', err)));
     }
 
     async onStop() {

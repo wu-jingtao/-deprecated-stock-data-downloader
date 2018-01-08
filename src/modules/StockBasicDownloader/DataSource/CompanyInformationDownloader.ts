@@ -18,7 +18,7 @@ import { normalizeNull, normalizeAmountToWan, normalizeAmountToYi } from '../Too
 const address = (code: string) => `http://basic.10jqka.com.cn/${code}/company.html`;
 
 //下载数据
-async function download(code: string): Promise<CompanyInformationType[]> {
+async function download(code: string): Promise<CompanyInformationType> {
     const file = await HttpDownloader.Get(address(code));
     const data = iconv.decode(file, 'gbk');     //转码
     const $ = cheerio.load(data);
