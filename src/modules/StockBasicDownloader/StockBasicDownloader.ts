@@ -94,7 +94,7 @@ export class StockBasicDownloader extends BaseServiceModule {
                 for (const { id, code, market } of code_list) {   //循环下载
                     await this._saveInformationData(id, code, await CompanyInformationDownloader(code));
                     await this._saveFinanceData(id, code, await CompanyFinanceDownloader(code));
-                    console.log('下载完成：' + code);    //调试使用
+                    //console.log('下载完成：' + code);    //调试使用
                 }
 
                 await this._statusRecorder.updateEndTime(this, jobID);
