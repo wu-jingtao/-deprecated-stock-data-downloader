@@ -53,19 +53,27 @@ function parseData(sheet: xlsx.WorkSheet): any[] {
 //下载数据
 async function download(code: string): Promise<CompanyFinanceType[]> {
     const file = await HttpDownloader.Get(address(code));
-    const result = parseData(xlsx.read(file).Sheets['Worksheet']);
+    const data = parseData(xlsx.read(file).Sheets['Worksheet']);
+    const result: CompanyFinanceType[] = [];
 
-    return result.map(item => ({
-        date: item['科目\\时间'],
-        basic_earnings_per_share: normalizeAmountToYi(item['基本每股收益']),
-        net_profit: normalizeAmountToWan(item['净利润']),
-        gross_revenue: normalizeAmountToWan(item['营业总收入']),
-        net_assets_per_share: normalizeAmountToYi(item['每股净资产']),
-        asset_liability_ratio: normalizePercent(item['资产负债比率']),
-        capital_accumulation_fund_per_share: normalizeAmountToYi(item['每股资本公积金']),
-        undistributed_profit_per_share: normalizeAmountToYi(item['每股未分配利润']),
-        operating_cash_flow_per_share: normalizeAmountToYi(item['每股经营现金流'])
-    }));
+    for (const item of data) {
+        const temp = {
+            date: item['科目\\时间'],
+            basic_earnings_per_share: normalizeAmountToYi(item['基本每股收益']),
+            net_profit: normalizeAmountToWan(item['净利润']),
+            gross_revenue: normalizeAmountToWan(item['营业总收入']),
+            net_assets_per_share: normalizeAmountToYi(item['每股净资产']),
+            asset_liability_ratio: normalizePercent(item['资产负债比率']),
+            capital_accumulation_fund_per_share: normalizeAmountToYi(item['每股资本公积金']),
+            undistributed_profit_per_share: normalizeAmountToYi(item['每股未分配利润']),
+            operating_cash_flow_per_share: normalizeAmountToYi(item['每股经营现金流'])
+        };
+
+        if (temp.date != null)  //有些数据可能缺少date (例如：600903)。没有日期的数据直接丢弃
+            result.push(temp);
+    }
+
+    return result;
 }
 
 /**
