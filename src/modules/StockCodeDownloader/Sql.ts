@@ -11,7 +11,7 @@ export const create_table = "\
         PRIMARY KEY (`id`),\
         KEY `code` (`code`),\
         KEY `market` (`market`),\
-        CONSTRAINT `market` FOREIGN KEY (`market`) REFERENCES `stock_market` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
+        CONSTRAINT `stock_code_market` FOREIGN KEY (`market`) REFERENCES `stock_market` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT='股票代码列表';\
 ";
 

@@ -37,11 +37,8 @@ export const create_company_information_table = "\
         `sponsors` VARCHAR(255) NULL COMMENT '上市保荐人',\
         `subsidiary` JSON NULL COMMENT '参股控股公司 {公司名称:string, 参控关系:string, 参控比例:float(0-1), 投资金额:number(万元)}',\
         PRIMARY KEY (`code`),\
-        CONSTRAINT `code`\
-        FOREIGN KEY (`code`)\
-        REFERENCES `stock`.`stock_code` (`id`)\
-        ON DELETE NO ACTION\
-        ON UPDATE NO ACTION\
+        CONSTRAINT `stock_company_information_code` FOREIGN KEY (`code`) REFERENCES `stock`.`stock_code` (`id`)\
+        ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT = 'A股上市公司的公司资料。注意：其中有些数据可能随着时间会发生变化。';\
 ";
 
@@ -101,7 +98,7 @@ export const create_company_finance_table = "\
         `operating_cash_flow_per_share` FLOAT NULL COMMENT '每股经营现金流(元)',\
         PRIMARY KEY (`id`),\
         KEY `code_idx` (`code`),\
-        CONSTRAINT `code_fk` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
+        CONSTRAINT `stock_company_finance_code` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT='A股上市公司财务数据';\
 ";
 

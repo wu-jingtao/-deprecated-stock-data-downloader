@@ -120,7 +120,7 @@ export class StockBasicDownloader extends BaseServiceModule {
         }
 
         //每周星期五的晚上7点钟更新
-        this._timer = schedule.scheduleJob({ hour: 19, dayOfWeek: 5 }, () => this._downloader().catch(err => this.emit('error', err)));
+        this._timer = schedule.scheduleJob("0 0 19 * * 5", () => this._downloader().catch(err => this.emit('error', err)));
     }
 
     async onStop() {

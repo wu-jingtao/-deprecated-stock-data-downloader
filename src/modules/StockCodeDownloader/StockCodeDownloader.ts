@@ -97,7 +97,7 @@ export class StockCodeDownloader extends BaseServiceModule {
         }
 
         //每天的下午5点钟更新
-        this._timer = schedule.scheduleJob({ hour: 17 }, () => this._downloader().catch(err => this.emit('error', err)));
+        this._timer = schedule.scheduleJob("0 0 17 * * *", () => this._downloader().catch(err => this.emit('error', err)));
     }
 
     async onStop() {
