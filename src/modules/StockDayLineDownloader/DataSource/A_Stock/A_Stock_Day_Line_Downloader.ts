@@ -3,9 +3,8 @@ import * as iconv from 'iconv-lite';
 import * as moment from 'moment';
 
 import * as HttpDownloader from '../../../../tools/HttpDownloader';
-import { Retry3 } from '../../../../tools/Retry';
-import { StockMarketType } from '../../../StockMarketList/StockMarketType';
 import { DayLineType } from '../../DayLineType';
+import { Retry3 } from '../../../../tools/Retry';
 import { exchangeToWan, testData, exchangeToYi } from '../../Tools';
 
 /**
@@ -22,11 +21,11 @@ function address(code: string, market: number, startDate: string) {
     return `http://quotes.money.163.com/service/chddata.html?code=${market - 1}${code}&start=${moment(startDate).format('YYYYMMDD')}&end=${moment().format('YYYYMMDD')}&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP`;
 }
 
-async function download(code_id: number, code: string, market: number, startDate: string): Promise<DayLineType> {
+async function download(code: string, market: number, startDate: string): Promise<DayLineType[]> {
     const file = await HttpDownloader.Get(address(code, market, startDate));
     const data = iconv.decode(file, 'gbk');     //转码
     const result = dsv.csvParse(data);
-    const day_line: any[] = [];
+    const day_line: DayLineType[] = [];
 
     result.forEach(item => {
         if (0 != (item['收盘价'] as any)) {    //不保存停牌期间的数据
@@ -42,23 +41,22 @@ async function download(code_id: number, code: string, market: number, startDate
                 money: exchangeToWan(item['成交金额']),
                 gross_market_value: exchangeToWan(item['总市值']),
                 current_market_value: exchangeToWan(item['流通市值'])
-            });
+            } as any);
         }
     });
 
-    return { code_id, code, day_line };
+    return day_line;
 }
 
 /**
  * A股与A股指数日线数据下载器
  * 
- * @param code_id `stock_code`中对应的`id`
  * @param code 股票代码
  * @param market 所属市场 上海1 深圳2
  * @param name 股票名称
  * @param startDate 开始日期
  */
-export function A_Stock_Day_Line_Downloader(code_id: number, code: string, market: number, name: string, startDate: string) {
-    return Retry3(async () => testData(await download(code_id, code, market, startDate)))()
+export function A_Stock_Day_Line_Downloader(code: string, market: number, name: string, startDate: string) {
+    return Retry3(async () => testData(await download(code, market, startDate)))()
         .catch(err => { throw new Error(`下载A股"${name}-${code}"失败：` + err) });
 }

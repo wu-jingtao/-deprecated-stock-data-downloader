@@ -5,6 +5,7 @@ import { BaseServiceModule } from "service-starter";
 import * as sql from './Sql';
 import { MysqlConnection } from "../MysqlConnection/MysqlConnection";
 import { ModuleStatusRecorder } from "../ModuleStatusRecorder/ModuleStatusRecorder";
+import { StockMarketType } from '../StockMarketList/StockMarketType';
 import { DayLineType } from './DayLineType';
 
 import { A_Stock_Day_Line_Downloader } from './DataSource/A_Stock/A_Stock_Day_Line_Downloader';
@@ -23,9 +24,9 @@ export class StockDayLineDownloader extends BaseServiceModule {
     /**
      * 保存下载到的数据
      */
-    private async _saveData(data: DayLineType) {
-        for (const item of data.day_line) {
-            const id = await this._connection.asyncQuery(sql.get_id, [data.code_id, item.date]);
+    private async _saveData(code_id: number, data: DayLineType[]) {
+        for (const item of data) {
+            const id = await this._connection.asyncQuery(sql.get_id, [code_id, item.date]);
             if (id.length > 0) {  //说明有数据，更新
                 await this._connection.asyncQuery(sql.update_data, [
                     item.close, item.high, item.low, item.open, item.pre_close,
@@ -35,7 +36,7 @@ export class StockDayLineDownloader extends BaseServiceModule {
                 ]);
             } else {
                 await this._connection.asyncQuery(sql.insert_data, [
-                    data.code_id, item.date,
+                    code_id, item.date,
                     item.close, item.high, item.low, item.open, item.pre_close,
                     item.exchange_ratio, item.volume, item.money,
                     item.gross_market_value, item.current_market_value
@@ -58,9 +59,13 @@ export class StockDayLineDownloader extends BaseServiceModule {
 
             try {
                 //A股与A股指数
-                let code_list = await this._connection.asyncQuery(sql.get_stock_code, ['1, 2', '0, 1']);
+                let code_list = await this._connection.asyncQuery(sql.get_stock_code, [
+                    [StockMarketType.sh.id, StockMarketType.sz.id].join(','),
+                    'true, false'
+                ]);
+
                 for (const code of code_list) {
-                    await this._saveData(await A_Stock_Day_Line_Downloader(code.id, code.code, code.market, code.name, start_date));
+                    await this._saveData(code.id, await A_Stock_Day_Line_Downloader(code.code, code.market, code.name, start_date));
                     //console.log(code.id, code.code, code.market, code.name, start_date);
                 }
 

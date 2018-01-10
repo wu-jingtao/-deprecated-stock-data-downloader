@@ -17,8 +17,8 @@ export function exchangeToYi(data?: string) {
 }
 
 //检测下载的数据是否正确
-export function testData(data: DayLineType) {
-    data.day_line.forEach(item => {
+export function testData(data: DayLineType[]) {
+    data.forEach(item => {
         expect(/\d{4}.\d{2}.\d{2}/.test(item.date)).to.be.ok();
         expect(item.close).to.greaterThan(0);
         expect(item.high).to.greaterThan(0);
