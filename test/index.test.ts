@@ -47,7 +47,7 @@ describe('测试下载数据', function () {
 
     describe('测试下载日线数据', function () {
 
-        it.only('网易财经 A股与A股指数日线数据', () => A_Stock_Day_Line_Downloader(1, '300359', 2, '2014-1-13'));
+        it.only('网易财经 A股与A股指数日线数据', () => A_Stock_Day_Line_Downloader(1, '600007', 1, '中国国贸', '1990-01-01'));
 
     });
 });

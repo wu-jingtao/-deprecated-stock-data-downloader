@@ -1,5 +1,5 @@
-import * as schedule from 'node-schedule';
 import * as moment from 'moment';
+import * as schedule from 'node-schedule';
 import { BaseServiceModule } from "service-starter";
 
 import * as sql from './Sql';
@@ -61,6 +61,7 @@ export class StockDayLineDownloader extends BaseServiceModule {
                 let code_list = await this._connection.asyncQuery(sql.get_stock_code, ['1, 2', '0, 1']);
                 for (const code of code_list) {
                     await this._saveData(await A_Stock_Day_Line_Downloader(code.id, code.code, code.market, code.name, start_date));
+                    //console.log(code.id, code.code, code.market, code.name, start_date);
                 }
 
 
@@ -86,11 +87,11 @@ export class StockDayLineDownloader extends BaseServiceModule {
             await this._downloader(true);
         }
 
-        //每周1-5的下午6点半更新
-        this._timer = schedule.scheduleJob("0 30 18 * * 1-5", () => this._downloader(false).catch(err => this.emit('error', err)));
+        //每周1-5的下午6点15分更新
+        this._timer = schedule.scheduleJob("0 15 18 * * 1-5", () => this._downloader(false).catch(err => this.emit('error', err)));
 
-        //每周1凌晨2点更新全部数据
-        this._timer_reDownload = schedule.scheduleJob("0 0 2 * * 1", () => this._downloader(true).catch(err => this.emit('error', err)));
+        //每周末凌晨2点更新全部数据
+        this._timer_reDownload = schedule.scheduleJob("0 0 2 * * 7", () => this._downloader(true).catch(err => this.emit('error', err)));
     }
 
     async onStop() {

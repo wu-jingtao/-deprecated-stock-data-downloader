@@ -6,7 +6,7 @@ import * as HttpDownloader from '../../../../tools/HttpDownloader';
 import { Retry3 } from '../../../../tools/Retry';
 import { StockMarketType } from '../../../StockMarketList/StockMarketType';
 import { DayLineType } from '../../DayLineType';
-import { exchangeToWan, testData } from '../Tools';
+import { exchangeToWan, testData, exchangeToYi } from '../Tools';
 
 /**
  * A股与A股指数日线数据下载器
@@ -32,12 +32,12 @@ async function download(code_id: number, code: string, market: number, startDate
         if (0 != (item['收盘价'] as any)) {    //不保存停牌期间的数据
             day_line.push({
                 date: item['日期'],
-                close: item['收盘价'],
-                high: item['最高价'],
-                low: item['最低价'],
-                open: item['开盘价'],
-                pre_close: item['前收盘'],
-                exchange_ratio: item['换手率'],
+                close: exchangeToYi(item['收盘价']),
+                high: exchangeToYi(item['最高价']),
+                low: exchangeToYi(item['最低价']),
+                open: exchangeToYi(item['开盘价']),
+                pre_close: exchangeToYi(item['前收盘']),
+                exchange_ratio: exchangeToYi(item['换手率']),
                 volume: exchangeToWan(item['成交量']),
                 money: exchangeToWan(item['成交金额']),
                 gross_market_value: exchangeToWan(item['总市值']),
