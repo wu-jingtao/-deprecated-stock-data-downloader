@@ -38,11 +38,11 @@ async function download(code: string, year?: string, season?: string): Promise<D
 
     const data = iconv.decode(file, 'gbk');     //转码
     const $ = cheerio.load(data);
+    const result: any = [];
 
-    return $('table tr:not(:first)').map((index, element) => {
+    $('table tr').slice(1).each((index, element) => {
         const items = $(element).children();
-
-        return {
+        const temp = {
             date: items.eq(0).text(),
             close: exchangeToYi(items.eq(1).text()),
             high: exchangeToYi(items.eq(7).text()),
@@ -51,7 +51,11 @@ async function download(code: string, year?: string, season?: string): Promise<D
             volume: exchangeToWan(items.eq(4).text()),
             money: exchangeToWan(items.eq(5).text())
         };
-    }) as any;
+
+        if (temp.volume != 0) result.push(temp);    //去除停牌日
+    })
+
+    return result;
 }
 
 /**
@@ -65,7 +69,7 @@ async function download(code: string, year?: string, season?: string): Promise<D
  */
 export function H_Stock_Day_Line_Downloader(code: string, name: string, year?: string, season?: string) {
     return Retry3(async () => testData(await download(code, year, season)))()
-        .catch(err => { throw new Error(`下载港股"${name}-${code}"失败：` + err) });
+    //.catch(err => { throw new Error(`下载港股"${name}-${code}"失败：` + err) });
 }
 
 /**
