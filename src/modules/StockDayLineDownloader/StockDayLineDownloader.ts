@@ -9,6 +9,7 @@ import { StockMarketType } from '../StockMarketList/StockMarketType';
 import { DayLineType } from './DayLineType';
 
 import { A_Stock_Day_Line_Downloader } from './DataSource/A_Stock/A_Stock_Day_Line_Downloader';
+import { H_Stock_Day_Line_Downloader, get_H_Stock_listing_year } from './DataSource/H_Stock/H_Stock_Day_Line_Downloader';
 
 /**
  * 股票日线下载器
@@ -54,21 +55,41 @@ export class StockDayLineDownloader extends BaseServiceModule {
             this._downloading = true;
             const jobID = await this._statusRecorder.newStartTime(this);
 
-            //下载开始日期
-            const start_date = reDownload ? '1990-01-01' : moment().subtract({ days: 7 }).format('YYYY-MM-DD');
-
             try {
-                //A股与A股指数
-                let code_list = await this._connection.asyncQuery(sql.get_stock_code, [
-                    [StockMarketType.sh.id, StockMarketType.sz.id].join(','),
-                    'true, false'
-                ]);
 
-                for (const code of code_list) {
-                    await this._saveData(code.id, await A_Stock_Day_Line_Downloader(code.code, code.market, code.name, start_date));
-                    //console.log(code.id, code.code, code.market, code.name, start_date);
+                {//A股与A股指数
+                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [
+                        [StockMarketType.sh.id, StockMarketType.sz.id].join(','),
+                        'true, false'
+                    ]);
+
+                    //下载开始日期
+                    const start_date = reDownload ? '1990-01-01' : moment().subtract({ days: 7 }).format('YYYY-MM-DD');
+
+                    for (const code of code_list) {
+                        await this._saveData(code.id, await A_Stock_Day_Line_Downloader(code.code, code.market, code.name, start_date));
+                        //console.log('A股', code.id, code.code, code.name, start_date);
+                    }
                 }
 
+                {//港股
+                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [StockMarketType.xg.id, 'false']);
+
+                    for (const code of code_list) {
+                        if (reDownload) {
+                            const min_year = Number.parseInt(await get_H_Stock_listing_year(code.code));
+                            for (let year = moment().year(); year >= min_year; year--) {
+                                for (let season = 1; season <= 4; season++) {
+                                    await this._saveData(code.id, await H_Stock_Day_Line_Downloader(code.code, code.name, year, season));
+                                    //console.log('港股', code.code, code.name, year, season);
+                                }
+                            }
+                        } else {
+                            await this._saveData(code.id, await H_Stock_Day_Line_Downloader(code.code, code.name));
+                            //console.log('港股', code.code, code.name);
+                        }
+                    }
+                }
 
 
                 await this._statusRecorder.updateEndTime(this, jobID);

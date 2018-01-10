@@ -30,7 +30,7 @@ function address_data(code: string) {
     return `http://stock.finance.sina.com.cn/hkstock/history/${code}.html`;
 }
 
-async function download(code: string, year?: string, season?: string): Promise<DayLineType[]> {
+async function download(code: string, year?: number, season?: number): Promise<DayLineType[]> {
     if (year != null && season != null)
         var file = await HttpDownloader.Post(address_data(code), { year, season });
     else
@@ -67,7 +67,7 @@ async function download(code: string, year?: string, season?: string): Promise<D
  * @param year 数据对应的年份
  * @param season 数据对应的季度
  */
-export function H_Stock_Day_Line_Downloader(code: string, name: string, year?: string, season?: string) {
+export function H_Stock_Day_Line_Downloader(code: string, name: string, year?: number, season?: number) {
     return Retry3(async () => testData(await download(code, year, season)))()
         .catch(err => { throw new Error(`下载港股"${name}-${code}"失败：` + err) });
 }
