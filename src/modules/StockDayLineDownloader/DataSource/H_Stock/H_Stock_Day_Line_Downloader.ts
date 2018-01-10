@@ -69,7 +69,7 @@ async function download(code: string, year?: string, season?: string): Promise<D
  */
 export function H_Stock_Day_Line_Downloader(code: string, name: string, year?: string, season?: string) {
     return Retry3(async () => testData(await download(code, year, season)))()
-    //.catch(err => { throw new Error(`下载港股"${name}-${code}"失败：` + err) });
+        .catch(err => { throw new Error(`下载港股"${name}-${code}"失败：` + err) });
 }
 
 /**
