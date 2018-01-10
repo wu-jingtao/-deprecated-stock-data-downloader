@@ -52,8 +52,13 @@ async function download(code: string, year?: number, season?: number): Promise<D
             money: exchangeToWan(items.eq(5).text())
         };
 
-        if (temp.volume != 0) result.push(temp);    //去除停牌日
-    })
+        if (
+            temp.close != null &&   //针对暂无数据的情况
+            temp.volume != 0        //去除停牌日
+        ) result.push(temp);
+    });
+
+    if (result.length === 0) throw 'no data';   //如果没有下载到数据就再试几次，排除新浪服务器异常的情况
 
     return result;
 }
@@ -69,7 +74,12 @@ async function download(code: string, year?: number, season?: number): Promise<D
  */
 export function H_Stock_Day_Line_Downloader(code: string, name: string, year?: number, season?: number) {
     return Retry3(async () => testData(await download(code, year, season)))()
-        .catch(err => { throw new Error(`下载港股"${name}-${code}"失败：` + `${err.message}\n${err.stack}`) });
+        .catch(err => {
+            if (err !== 'no data')
+                throw new Error(`下载港股"${name}-${code}"失败：` + `${err.message}\n${err.stack}`);
+            else
+                return [];
+        });
 }
 
 /**

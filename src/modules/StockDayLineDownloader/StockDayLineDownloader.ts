@@ -79,7 +79,7 @@ export class StockDayLineDownloader extends BaseServiceModule {
                         if (reDownload) {
                             const min_year = Number.parseInt(await get_H_Stock_listing_year(code.code));
                             for (let year = moment().year(); year >= min_year; year--) {
-                                for (let season = 1; season <= 4; season++) {
+                                for (let season = 4; season >= 1; season--) {
                                     await this._saveData(code.id, await H_Stock_Day_Line_Downloader(code.code, code.name, year, season));
                                     console.log('港股', code.code, code.name, year, season);
                                 }
@@ -91,7 +91,7 @@ export class StockDayLineDownloader extends BaseServiceModule {
                     }
                 }
 
-
+                
                 await this._statusRecorder.updateEndTime(this, jobID);
             } catch (error) {
                 await this._statusRecorder.updateError(this, jobID, error);
