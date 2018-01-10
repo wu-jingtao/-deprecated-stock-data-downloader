@@ -51,4 +51,7 @@ function test(data: StockCodeType[]) {
 /**
  * 深港通代码下载器
  */
-export const H_Code_sgt = Retry3(async () => test(await download()));
+export function H_Code_sgt() {
+    return Retry3(async () => test(await download()))()
+        .catch(err => { throw new Error('下载深港通代码异常：' + err) });
+}

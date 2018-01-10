@@ -55,4 +55,7 @@ function test(data: StockCodeType[]) {
 /**
  * 沪港通代码下载器
  */
-export const H_Code_hgt = Retry3(async () => test(await download()));
+export function H_Code_hgt() {
+    return Retry3(async () => test(await download()))()
+        .catch(err => { throw new Error('下载沪港通代码异常：' + err) });
+}

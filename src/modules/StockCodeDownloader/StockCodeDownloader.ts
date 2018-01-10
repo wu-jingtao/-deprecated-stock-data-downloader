@@ -54,13 +54,13 @@ export class StockCodeDownloader extends BaseServiceModule {
 
             try {
                 //A股
-                await this._saveData(await SH_A_Code_sjs().catch(err => { throw new Error('下载上交所股票代码异常：' + err) }));
-                await this._saveData(await SZ_A_Code_sjs().catch(err => { throw new Error('下载深交所股票代码异常：' + err) }));
+                await this._saveData(await SH_A_Code_sjs());
+                await this._saveData(await SZ_A_Code_sjs());
                 await this._saveData(A_Index_Code_zx());
 
                 //港股
-                await this._saveData(await H_Code_hgt().catch(err => { throw new Error('下载沪港通代码异常：' + err) }));
-                await this._saveData(await H_Code_sgt().catch(err => { throw new Error('下载深港通代码异常：' + err) }));
+                await this._saveData(await H_Code_hgt());
+                await this._saveData(await H_Code_sgt());
                 await this._saveData(H_Index_Code_zx());
 
                 //上海期货交易所 主连列表

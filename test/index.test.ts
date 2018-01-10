@@ -14,6 +14,8 @@ import { DL_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/D
 import { CompanyInformationDownloader } from '../src/modules/StockBasicDownloader/DataSource/CompanyInformationDownloader';
 import { CompanyFinanceDownloader } from '../src/modules/StockBasicDownloader/DataSource/CompanyFinanceDownloader';
 
+import { A_Stock_Day_Line_Downloader } from '../src/modules/StockDayLineDownloader/DataSource/A_Stock/A_Stock_Day_Line_Downloader';
+
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
 
@@ -39,8 +41,14 @@ describe('测试下载数据', function () {
     describe('测试下载基本面数据', function () {
 
         it('同花顺 公司资料', () => CompanyInformationDownloader('300359'));
-        
-        it.only('同花顺 公司财务', () => CompanyFinanceDownloader('300359'));
+
+        it('同花顺 公司财务', () => CompanyFinanceDownloader('300359'));
+    });
+
+    describe('测试下载日线数据', function () {
+
+        it.only('网易财经 A股与A股指数日线数据', () => A_Stock_Day_Line_Downloader(1, '300359', 2, '2014-1-13'));
+
     });
 });
 

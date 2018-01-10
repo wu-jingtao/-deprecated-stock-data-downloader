@@ -39,7 +39,7 @@ async function download(): Promise<StockCodeType[]> {
 //检测下载的数据是否正确
 function test(data: StockCodeType[]) {
     expect(data.length).to.greaterThan(0);
-    
+
     data.forEach(item => {
         expect(/^6\d{5}$/.test(item.code)).to.be.ok();  //股票代码
         expect(item.name.length).to.greaterThan(0);     //确保公司名称不为空
@@ -51,4 +51,7 @@ function test(data: StockCodeType[]) {
 /**
  * 上海A股代码下载器
  */
-export const SH_A_Code_sjs = Retry3(async () => test(await download()));
+export function SH_A_Code_sjs() {
+    return Retry3(async () => test(await download()))()
+        .catch(err => { throw new Error('下载上交所股票代码异常：' + err) });
+}
