@@ -59,4 +59,7 @@ function test(data: StockCodeType[]) {
 /**
  * A股代码下载器
  */
-export const A_Code_dfcf = Retry3(async () => test(await download()));
+export function A_Code_dfcf() {
+    return Retry3(async () => test(await download()))()
+        .catch(err => { throw new Error('下载东方财富股票代码异常：' + err) });
+}
