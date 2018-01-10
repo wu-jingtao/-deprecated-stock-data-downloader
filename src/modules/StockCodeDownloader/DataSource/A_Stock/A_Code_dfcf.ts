@@ -38,7 +38,7 @@ async function download(): Promise<StockCodeType[]> {
                 isIndex: false
             });
         }
-    }); 
+    });
 
     return result;
 }
@@ -61,5 +61,5 @@ function test(data: StockCodeType[]) {
  */
 export function A_Code_dfcf() {
     return Retry3(async () => test(await download()))()
-        .catch(err => { throw new Error('下载东方财富股票代码异常：' + err) });
+        .catch(err => { throw new Error('下载东方财富股票代码异常：' + `${err.message}\n${err.stack}`) });
 }

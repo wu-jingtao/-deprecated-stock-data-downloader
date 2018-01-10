@@ -57,7 +57,7 @@ export class StockDayLineDownloader extends BaseServiceModule {
 
             try {
 
-                {//A股与A股指数
+                /* {//A股与A股指数
                     const code_list = await this._connection.asyncQuery(sql.get_stock_code, [
                         [StockMarketType.sh.id, StockMarketType.sz.id].join(','),
                         'true, false'
@@ -70,7 +70,7 @@ export class StockDayLineDownloader extends BaseServiceModule {
                         await this._saveData(code.id, await A_Stock_Day_Line_Downloader(code.code, code.market, code.name, start_date));
                         //console.log('A股', code.id, code.code, code.name, start_date);
                     }
-                }
+                } */
 
                 {//港股
                     const code_list = await this._connection.asyncQuery(sql.get_stock_code, [StockMarketType.xg.id, 'false']);
@@ -81,12 +81,12 @@ export class StockDayLineDownloader extends BaseServiceModule {
                             for (let year = moment().year(); year >= min_year; year--) {
                                 for (let season = 1; season <= 4; season++) {
                                     await this._saveData(code.id, await H_Stock_Day_Line_Downloader(code.code, code.name, year, season));
-                                    //console.log('港股', code.code, code.name, year, season);
+                                    console.log('港股', code.code, code.name, year, season);
                                 }
                             }
                         } else {
                             await this._saveData(code.id, await H_Stock_Day_Line_Downloader(code.code, code.name));
-                            //console.log('港股', code.code, code.name);
+                            console.log('港股', code.code, code.name);
                         }
                     }
                 }

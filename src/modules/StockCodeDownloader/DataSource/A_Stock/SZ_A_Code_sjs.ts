@@ -49,5 +49,5 @@ function test(data: StockCodeType[]) {
  */
 export function SZ_A_Code_sjs() {
     return Retry3(async () => test(await download()))()
-        .catch(err => { throw new Error('下载深交所股票代码异常：' + err) });
+        .catch(err => { throw new Error('下载深交所股票代码异常：' + `${err.message}\n${err.stack}`) });
 }

@@ -53,5 +53,5 @@ function test(data: StockCodeType[]) {
  */
 export function H_Code_sgt() {
     return Retry3(async () => test(await download()))()
-        .catch(err => { throw new Error('下载深港通代码异常：' + err) });
+        .catch(err => { throw new Error('下载深港通代码异常：' + `${err.message}\n${err.stack}`) });
 }

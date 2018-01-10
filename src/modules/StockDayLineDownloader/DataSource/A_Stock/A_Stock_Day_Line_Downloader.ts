@@ -58,5 +58,5 @@ async function download(code: string, market: number, startDate: string): Promis
  */
 export function A_Stock_Day_Line_Downloader(code: string, market: number, name: string, startDate: string) {
     return Retry3(async () => testData(await download(code, market, startDate)))()
-        .catch(err => { throw new Error(`下载A股"${name}-${code}"失败：` + err) });
+        .catch(err => { throw new Error(`下载A股"${name}-${code}"失败：` + `${err.message}\n${err.stack}`) });
 }

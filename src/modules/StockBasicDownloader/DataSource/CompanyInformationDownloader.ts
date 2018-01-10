@@ -79,5 +79,5 @@ async function download(code: string): Promise<CompanyInformationType> {
  */
 export function CompanyInformationDownloader(code: string) {
     return Retry3(download)(code)
-        .catch(error => { throw new Error(`下载"${code}"公司资料失败："` + error) });
+        .catch(err => { throw new Error(`下载"${code}"公司资料失败："` + `${err.message}\n${err.stack}`) });
 }
