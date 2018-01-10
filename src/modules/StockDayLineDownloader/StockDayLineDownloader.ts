@@ -90,8 +90,8 @@ export class StockDayLineDownloader extends BaseServiceModule {
         //每周1-5的下午6点15分更新
         this._timer = schedule.scheduleJob("0 15 18 * * 1-5", () => this._downloader(false).catch(err => this.emit('error', err)));
 
-        //每周末凌晨2点更新全部数据
-        this._timer_reDownload = schedule.scheduleJob("0 0 2 * * 7", () => this._downloader(true).catch(err => this.emit('error', err)));
+        //每周末凌晨1点更新全部数据
+        this._timer_reDownload = schedule.scheduleJob("0 0 1 * * 7", () => this._downloader(true).catch(err => this.emit('error', err)));
     }
 
     async onStop() {

@@ -1,6 +1,6 @@
 import expect = require('expect.js');
 
-import { DayLineType } from '../DayLineType';
+import { DayLineType } from './DayLineType';
 
 //将数字转换成以万的形式表示
 export function exchangeToWan(data?: string) {

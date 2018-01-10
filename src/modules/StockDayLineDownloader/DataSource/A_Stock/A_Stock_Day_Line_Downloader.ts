@@ -6,7 +6,7 @@ import * as HttpDownloader from '../../../../tools/HttpDownloader';
 import { Retry3 } from '../../../../tools/Retry';
 import { StockMarketType } from '../../../StockMarketList/StockMarketType';
 import { DayLineType } from '../../DayLineType';
-import { exchangeToWan, testData, exchangeToYi } from '../Tools';
+import { exchangeToWan, testData, exchangeToYi } from '../../Tools';
 
 /**
  * A股与A股指数日线数据下载器
