@@ -48,32 +48,26 @@ export class StockBasicDownloader extends BaseServiceModule {
     private async _saveFinanceData(code_id: number, code: string, data: CompanyFinanceType[]) {
         try {
             for (const item of data) {
-                const id = await this._connection.asyncQuery(sql.get_company_finance_id, [code_id, item.date]);
-                if (id.length > 0) {  //说明有数据，更新
-                    await this._connection.asyncQuery(sql.update_company_finance_data, [
-                        item.basic_earnings_per_share,
-                        item.net_profit,
-                        item.gross_revenue,
-                        item.net_assets_per_share,
-                        item.asset_liability_ratio,
-                        item.capital_accumulation_fund_per_share,
-                        item.undistributed_profit_per_share,
-                        item.operating_cash_flow_per_share,
-                        id[0].id
-                    ]);
-                } else {
-                    await this._connection.asyncQuery(sql.insert_company_finance_data, [
-                        code_id, item.date,
-                        item.basic_earnings_per_share,
-                        item.net_profit,
-                        item.gross_revenue,
-                        item.net_assets_per_share,
-                        item.asset_liability_ratio,
-                        item.capital_accumulation_fund_per_share,
-                        item.undistributed_profit_per_share,
-                        item.operating_cash_flow_per_share
-                    ]);
-                }
+                await this._connection.asyncQuery(sql.insert_company_finance_data, [
+                    code_id, item.date,
+                    item.basic_earnings_per_share,
+                    item.net_profit,
+                    item.gross_revenue,
+                    item.net_assets_per_share,
+                    item.asset_liability_ratio,
+                    item.capital_accumulation_fund_per_share,
+                    item.undistributed_profit_per_share,
+                    item.operating_cash_flow_per_share,
+
+                    item.basic_earnings_per_share,
+                    item.net_profit,
+                    item.gross_revenue,
+                    item.net_assets_per_share,
+                    item.asset_liability_ratio,
+                    item.capital_accumulation_fund_per_share,
+                    item.undistributed_profit_per_share,
+                    item.operating_cash_flow_per_share
+                ]);
             }
         } catch (error) {
             throw new Error(`保存"${code}"财务数据失败：` + error);

@@ -61,8 +61,8 @@ export class ModuleStatusRecorder extends BaseServiceModule {
      * @param id newStartTime返回的id
      */
     async updateEndTime(module: BaseServiceModule, id: number) {
-        log.location.text.green.round(module.name, '下载结束');
         await this._connection.asyncQuery(sql.update_end_time, [Date.now(), id]);
+        log.location.text.green.round(module.name, '下载结束');
     }
 
     /**

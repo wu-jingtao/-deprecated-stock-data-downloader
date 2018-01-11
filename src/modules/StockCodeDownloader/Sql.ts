@@ -11,31 +11,17 @@ export const create_table = "\
         PRIMARY KEY (`id`),\
         KEY `code` (`code`),\
         KEY `market` (`market`),\
+        UNIQUE KEY `unique` (`code`,`market`,`is_index`),\
         CONSTRAINT `stock_code_market` FOREIGN KEY (`market`) REFERENCES `stock_market` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT='股票代码列表';\
 ";
 
 /**
- * 查询ID
- */
-export const get_id = "\
-    SELECT `id` FROM `stock`.`stock_code`\
-    WHERE `code` = ? AND `market` = ? AND `is_index` = ?;\
-";
-
-/**
- * 保存数据
+ * 保存或更新数据
  */
 export const insert_data = "\
     INSERT INTO `stock`.`stock_code` (`code`, `name`, `market`, `is_index`)\
-    VALUES (?, ?, ?, ?);\
-";
-
-/**
- * 更新股票名称
- */
-export const update_data = "\
-    UPDATE `stock`.`stock_code`\
+    VALUES (?, ?, ?, ?)\
+    ON DUPLICATE KEY UPDATE \
     SET `name` = ?\
-    WHERE `id` = ?;\
 ";

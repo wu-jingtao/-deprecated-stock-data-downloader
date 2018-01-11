@@ -1,7 +1,7 @@
 /**
  * 获取所有A股
  */
-export const get_code_list="\
+export const get_code_list = "\
     SELECT `id`, `code`, `market`\
     FROM `stock`.`stock_code`\
     WHERE `market` IN (1, 2) AND `is_index` = 0;\
@@ -85,7 +85,6 @@ export const insert_company_information = "\
  */
 export const create_company_finance_table = "\
     CREATE TABLE IF NOT EXISTS `stock`.`stock_company_finance` (\
-        `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',\
         `code` INT UNSIGNED NOT NULL COMMENT '股票代码(`stock_code`中对应的`id`)',\
         `date` DATE NOT NULL COMMENT '报告时间',\
         `basic_earnings_per_share` FLOAT NULL COMMENT '基本每股收益(元)',\
@@ -96,20 +95,14 @@ export const create_company_finance_table = "\
         `capital_accumulation_fund_per_share` FLOAT NULL COMMENT '每股资本公积金(元)',\
         `undistributed_profit_per_share` FLOAT NULL COMMENT '每股未分配利润(元)',\
         `operating_cash_flow_per_share` FLOAT NULL COMMENT '每股经营现金流(元)',\
-        PRIMARY KEY (`id`),\
         KEY `code_idx` (`code`),\
+        UNIQUE KEY `unique` (`code`,`date`),\
         CONSTRAINT `stock_company_finance_code` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT='A股上市公司财务数据';\
 ";
 
-//根据code与日期查询某条财务记录的id
-export const get_company_finance_id = "\
-    SELECT `id` FROM `stock`.`stock_company_finance`\
-    WHERE `code` = ? AND `date` = ?\
-";
-
 /**
- * 插入新的财务数据
+ * 插入或更新财务数据
  */
 export const insert_company_finance_data = "\
     INSERT INTO `stock`.`stock_company_finance`\
@@ -120,15 +113,8 @@ export const insert_company_finance_data = "\
     `undistributed_profit_per_share`,\
     `operating_cash_flow_per_share`)\
     VALUES\
-    (?,?,?,?,?,?,?,?,?,?);\
-";
-
-/**
- * 更新财务数据
- */
-export const update_company_finance_data = "\
-    UPDATE `stock`.`stock_company_finance`\
-    SET\
+    (?,?,?,?,?,?,?,?,?,?)\
+    ON DUPLICATE KEY UPDATE \
     `basic_earnings_per_share` = ?,\
     `net_profit` = ?,\
     `gross_revenue` = ?,\
@@ -137,5 +123,4 @@ export const update_company_finance_data = "\
     `capital_accumulation_fund_per_share` = ?,\
     `undistributed_profit_per_share` = ?,\
     `operating_cash_flow_per_share` = ?\
-    WHERE `id` = ?\
 ";

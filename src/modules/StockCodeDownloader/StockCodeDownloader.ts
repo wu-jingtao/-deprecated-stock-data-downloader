@@ -35,12 +35,10 @@ export class StockCodeDownloader extends BaseServiceModule {
      */
     private async _saveData(data: StockCodeType[]) {
         for (const item of data) {
-            const id = await this._connection.asyncQuery(sql.get_id, [item.code, item.market, item.isIndex]);
-            if (id.length > 0) {  //说明有数据，更新
-                await this._connection.asyncQuery(sql.update_data, [item.name, id[0].id]);
-            } else {
-                await this._connection.asyncQuery(sql.insert_data, [item.code, item.name, item.market, item.isIndex]);
-            }
+            await this._connection.asyncQuery(sql.insert_data, [
+                item.code, item.name, item.market, item.isIndex,
+                item.name
+            ]);
         }
     }
 
