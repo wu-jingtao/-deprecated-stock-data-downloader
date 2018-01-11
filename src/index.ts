@@ -15,7 +15,7 @@ manager.registerService(new MysqlConnection);
 manager.registerService(new ModuleStatusRecorder);
 manager.registerService(new StockMarketList);
 manager.registerService(new StockCodeDownloader);
-//manager.registerService(new StockBasicDownloader);
+manager.registerService(new StockBasicDownloader);
 manager.registerService(new StockDayLineDownloader);
 
 manager.start();
