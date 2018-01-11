@@ -23,5 +23,5 @@ export const insert_data = "\
     INSERT INTO `stock`.`stock_code` (`code`, `name`, `market`, `is_index`)\
     VALUES (?, ?, ?, ?)\
     ON DUPLICATE KEY UPDATE \
-    SET `name` = ?\
+    `name` = ? \
 ";
