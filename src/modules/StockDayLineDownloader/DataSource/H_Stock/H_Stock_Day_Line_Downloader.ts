@@ -37,11 +37,10 @@ async function download(code: string, year?: number, season?: number): Promise<D
         var file = await HttpDownloader.Get(address_data(code));
 
     const data = iconv.decode(file, 'gbk');     //转码
-    const $ = cheerio.load(data);
-    const result: any = [];
+    const result: DayLineType[] = [];
 
-    $('table tr').slice(1).each((index, element) => {
-        const items = $(element).children();
+    cheerio('table tr', data).slice(1).each((index, element) => {
+        const items = cheerio(element).children();
         const temp: any = {
             date: items.eq(0).text(),
             close: exchangeToYi(items.eq(1).text()),
@@ -52,11 +51,10 @@ async function download(code: string, year?: number, season?: number): Promise<D
             money: exchangeToWan(items.eq(5).text())
         };
 
-        if (temp.close > 0 && temp.volume > 0) //针对"暂无数据"以及"停牌"的情况
-            result.push(temp);
+        if (testData(temp)) result.push(temp);
     });
 
-    if (result.length === 0) throw 'no data';   //如果没有下载到数据就再试几次，排除新浪服务器异常的情况
+    if (result.length === 0) throw 'no data';   //如果没有下载到数据就再试几次，排除服务器异常的情况
 
     return result;
 }
@@ -71,7 +69,7 @@ async function download(code: string, year?: number, season?: number): Promise<D
  * @param season 数据对应的季度
  */
 export function H_Stock_Day_Line_Downloader(code: string, name: string, year?: number, season?: number) {
-    return Retry3(async () => testData(await download(code, year, season)))()
+    return Retry3(async () => await download(code, year, season))()
         .catch(err => {
             if (err !== 'no data')
                 throw new Error(`下载港股"${name}-${code}"失败：` + `${err.message}\n${err.stack}`);

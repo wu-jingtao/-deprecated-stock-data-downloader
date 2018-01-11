@@ -27,22 +27,16 @@ export class StockDayLineDownloader extends BaseServiceModule {
      */
     private async _saveData(code_id: number, data: DayLineType[]) {
         for (const item of data) {
-            const id = await this._connection.asyncQuery(sql.get_id, [code_id, item.date]);
-            if (id.length > 0) {  //说明有数据，更新
-                await this._connection.asyncQuery(sql.update_data, [
-                    item.close, item.high, item.low, item.open, item.pre_close,
-                    item.exchange_ratio, item.volume, item.money,
-                    item.gross_market_value, item.current_market_value,
-                    id[0].id
-                ]);
-            } else {
-                await this._connection.asyncQuery(sql.insert_data, [
-                    code_id, item.date,
-                    item.close, item.high, item.low, item.open, item.pre_close,
-                    item.exchange_ratio, item.volume, item.money,
-                    item.gross_market_value, item.current_market_value
-                ]);
-            }
+            await this._connection.asyncQuery(sql.insert_data, [
+                code_id, item.date,
+                item.close, item.high, item.low, item.open, item.pre_close,
+                item.exchange_ratio, item.volume, item.money,
+                item.gross_market_value, item.current_market_value,
+                
+                item.close, item.high, item.low, item.open, item.pre_close,
+                item.exchange_ratio, item.volume, item.money,
+                item.gross_market_value, item.current_market_value,
+            ]);
         }
     }
 

@@ -24,28 +24,29 @@ function address(code: string, market: number, startDate: string) {
 async function download(code: string, market: number, startDate: string): Promise<DayLineType[]> {
     const file = await HttpDownloader.Get(address(code, market, startDate));
     const data = iconv.decode(file, 'gbk');     //转码
-    const result = dsv.csvParse(data);
-    const day_line: DayLineType[] = [];
+    const result: DayLineType[] = [];
 
-    result.forEach(item => {
-        if (0 != (item['收盘价'] as any)) {    //不保存停牌期间的数据
-            day_line.push({
-                date: item['日期'],
-                close: exchangeToYi(item['收盘价']),
-                high: exchangeToYi(item['最高价']),
-                low: exchangeToYi(item['最低价']),
-                open: exchangeToYi(item['开盘价']),
-                pre_close: exchangeToYi(item['前收盘']),
-                exchange_ratio: exchangeToYi(item['换手率']),
-                volume: exchangeToWan(item['成交量']),
-                money: exchangeToWan(item['成交金额']),
-                gross_market_value: exchangeToWan(item['总市值']),
-                current_market_value: exchangeToWan(item['流通市值'])
-            } as any);
-        }
+    dsv.csvParse(data).forEach(item => {
+        const temp: any = {
+            date: item['日期'],
+            close: exchangeToYi(item['收盘价']),
+            high: exchangeToYi(item['最高价']),
+            low: exchangeToYi(item['最低价']),
+            open: exchangeToYi(item['开盘价']),
+            pre_close: exchangeToYi(item['前收盘']),
+            exchange_ratio: exchangeToYi(item['换手率']),
+            volume: exchangeToWan(item['成交量']),
+            money: exchangeToWan(item['成交金额']),
+            gross_market_value: exchangeToWan(item['总市值']),
+            current_market_value: exchangeToWan(item['流通市值'])
+        };
+
+        if (testData(temp)) result.push(temp);
     });
 
-    return day_line;
+    if (result.length === 0) throw 'no data';   //如果没有下载到数据就再试几次，排除服务器异常的情况
+
+    return result;
 }
 
 /**
@@ -57,6 +58,11 @@ async function download(code: string, market: number, startDate: string): Promis
  * @param startDate 开始日期
  */
 export function A_Stock_Day_Line_Downloader(code: string, market: number, name: string, startDate: string) {
-    return Retry3(async () => testData(await download(code, market, startDate)))()
-        .catch(err => { throw new Error(`下载A股"${name}-${code}"失败：` + `${err.message}\n${err.stack}`) });
+    return Retry3(async () => await download(code, market, startDate))()
+        .catch(err => {
+            if (err !== 'no data')
+                throw new Error(`下载A股"${name}-${code}"失败：` + `${err.message}\n${err.stack}`);
+            else
+                return [];
+        });
 }

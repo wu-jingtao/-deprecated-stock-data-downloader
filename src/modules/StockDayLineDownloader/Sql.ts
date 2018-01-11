@@ -3,7 +3,6 @@
  */
 export const create_table = "\
     CREATE TABLE IF NOT EXISTS `stock`.`stock_day_line` (\
-        `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',\
         `code` int(10) unsigned NOT NULL COMMENT '股票代码`stock_code`中对应的`id`',\
         `date` date NOT NULL COMMENT '日期',\
         `close` float unsigned NOT NULL COMMENT '收盘价',\
@@ -16,23 +15,15 @@ export const create_table = "\
         `money` double unsigned DEFAULT NULL COMMENT '成交金额(万元)',\
         `gross_market_value` double unsigned DEFAULT NULL COMMENT '总市值(万元)',\
         `current_market_value` double unsigned DEFAULT NULL COMMENT '流通市值(万元)',\
-        PRIMARY KEY (`id`),\
         KEY `code_idx` (`code`),\
         KEY `date_idx` (`date`),\
+        UNIQUE KEY `unique_code_date` (`code`,`date`),\
         CONSTRAINT `code_day_line_code` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT='股票日线数据';\
 ";
 
 /**
- * 查找某条数据的id
- */
-export const get_id = "\
-    SELECT `id` FROM `stock`.`stock_day_line`\
-    WHERE `code` = ? AND `date` = ?;\
-";
-
-/**
- * 插入新的数据
+ * 插入或更新数据
  */
 export const insert_data = "\
     INSERT INTO `stock`.`stock_day_line`\
@@ -40,14 +31,7 @@ export const insert_data = "\
     `exchange_ratio`,`volume`,`money`,\
     `gross_market_value`,`current_market_value`)\
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)\
-";
-
-/**
- * 更新数据
- */
-export const update_data = "\
-    UPDATE `stock`.`stock_day_line`\
-    SET\
+    ON DUPLICATE KEY UPDATE \
     `close` = ?,\
     `high` = ?,\
     `low` = ?,\
@@ -58,7 +42,6 @@ export const update_data = "\
     `money` = ?,\
     `gross_market_value` = ?,\
     `current_market_value` = ?\
-    WHERE `id` = ?;\
 ";
 
 /**
