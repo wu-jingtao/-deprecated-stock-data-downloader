@@ -68,7 +68,7 @@ async function download(code: string, year?: number, season?: number): Promise<D
  * @param year 数据对应的年份
  * @param season 数据对应的季度
  */
-export function H_Stock_Day_Line_Downloader(code: string, name: string, year?: number, season?: number) {
+export function H_Stock_Day_Line_Downloader_sina(code: string, name: string, year?: number, season?: number) {
     return Retry3(async () => await download(code, year, season))()
         .catch(err => {
             if (err !== 'no data')
@@ -81,7 +81,7 @@ export function H_Stock_Day_Line_Downloader(code: string, name: string, year?: n
 /**
  * 获取港股上市年份
  */
-export function get_H_Stock_listing_year(code: string): Promise<string> {
+export function get_H_Stock_listing_year_sina(code: string): Promise<string> {
     return Retry3(async () => {
         const file = await HttpDownloader.Get(address_min_year(code));
         const year = (file.toString().match(/min:"(\d{4})/) || [])[1];

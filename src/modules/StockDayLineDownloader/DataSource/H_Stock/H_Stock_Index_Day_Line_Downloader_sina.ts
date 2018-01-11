@@ -42,7 +42,7 @@ async function download(code: string): Promise<DayLineType[]> {
         if (testData(temp)) result.push(temp);
     });
 
-    if (result.length === 0) throw 'no data';   //如果没有下载到数据就再试几次，排除服务器异常的情况
+    if (result.length === 0) throw new Error('没下载到数据');
 
     return result;
 }
@@ -53,12 +53,7 @@ async function download(code: string): Promise<DayLineType[]> {
  * @param code 股票代码
  * @param name 股票名称
  */
-export function H_Stock_Index_Day_Line_Downloader(code: string, name: string) {
+export function H_Stock_Index_Day_Line_Downloader_sina(code: string, name: string) {
     return Retry3(async () => await download(code))()
-        .catch(err => {
-            if (err !== 'no data')
-                throw new Error(`下载港股指数"${name}-${code}"失败：` + `${err.message}\n${err.stack}`);
-            else
-                return [];
-        });
+        .catch(err => { throw new Error(`下载港股指数"${name}-${code}"失败：` + `${err.message}\n${err.stack}`); });
 }

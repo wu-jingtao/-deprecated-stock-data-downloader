@@ -44,7 +44,7 @@ async function download(code: string, market: number, startDate: string): Promis
         if (testData(temp)) result.push(temp);
     });
 
-    if (result.length === 0) throw 'no data';   //如果没有下载到数据就再试几次，排除服务器异常的情况
+    if (result.length === 0) throw new Error('没下载到数据');
 
     return result;
 }
@@ -57,12 +57,7 @@ async function download(code: string, market: number, startDate: string): Promis
  * @param name 股票名称
  * @param startDate 开始日期
  */
-export function A_Stock_Day_Line_Downloader(code: string, market: number, name: string, startDate: string) {
+export function A_Stock_Day_Line_Downloader_neteasy(code: string, market: number, name: string, startDate: string) {
     return Retry3(async () => await download(code, market, startDate))()
-        .catch(err => {
-            if (err !== 'no data')
-                throw new Error(`下载A股"${name}-${code}"失败：` + `${err.message}\n${err.stack}`);
-            else
-                return [];
-        });
+        .catch(err => {throw new Error(`下载A股"${name}-${code}"失败：` + `${err.message}\n${err.stack}`)});
 }

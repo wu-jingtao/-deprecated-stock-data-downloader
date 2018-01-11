@@ -8,9 +8,6 @@ import { ModuleStatusRecorder } from "../ModuleStatusRecorder/ModuleStatusRecord
 import { StockMarketType } from '../StockMarketList/StockMarketType';
 import { DayLineType } from './DayLineType';
 
-import { A_Stock_Day_Line_Downloader } from './DataSource/A_Stock/A_Stock_Day_Line_Downloader';
-import { H_Stock_Day_Line_Downloader, get_H_Stock_listing_year } from './DataSource/H_Stock/H_Stock_Day_Line_Downloader';
-
 /**
  * 股票日线下载器
  */
