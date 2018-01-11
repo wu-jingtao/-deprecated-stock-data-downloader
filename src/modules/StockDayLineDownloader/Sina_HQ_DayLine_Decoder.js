@@ -16,7 +16,7 @@
  * 新浪财经日线行情数据解密器
  * @param {string} t 加密字符串
  */
-export function Sina_HQ_DayLine_Decoder (t) {
+module.exports = function Sina_HQ_DayLine_Decoder(t) {
     var e, i, n, r, a, o, s, l = 864e5,
         u = 7657,
         c = [],

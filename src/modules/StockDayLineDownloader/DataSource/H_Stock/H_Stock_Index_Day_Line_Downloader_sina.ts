@@ -5,7 +5,7 @@ import * as HttpDownloader from '../../../../tools/HttpDownloader';
 import { Retry3 } from '../../../../tools/Retry';
 import { DayLineType } from '../../DayLineType';
 import { exchangeToWan, testData, exchangeToYi } from '../../Tools';
-import { Sina_HQ_DayLine_Decoder } from '../../Sina_HQ_DayLine_Decoder.js';
+import * as Sina_HQ_DayLine_Decoder from '../../Sina_HQ_DayLine_Decoder.js';
 
 /**
  * 港股指数日线数据下载器（目前就只有恒生指数）
