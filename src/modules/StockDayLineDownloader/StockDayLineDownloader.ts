@@ -11,6 +11,8 @@ import { DayLineType } from './DayLineType';
 import { H_Stock_Day_Line_Downloader_sina } from './DataSource/H_Stock/H_Stock_Day_Line_Downloader_sina';
 import { H_Stock_Index_Day_Line_Downloader_sina } from './DataSource/H_Stock/H_Stock_Index_Day_Line_Downloader_sina';
 
+import { Future_Day_Line_Downloader_sina } from './DataSource/Future/Future_Day_Line_Downloader_sina';
+
 /**
  * 股票日线下载器
  */
@@ -81,6 +83,16 @@ export class StockDayLineDownloader extends BaseServiceModule {
                     for (const code of code_list) {
                         await this._saveData(code.id, await H_Stock_Index_Day_Line_Downloader_sina(code.code, code.name));
                         console.log('港股指数', code.code, code.name);
+                    }
+                }
+
+                {//国内商品期货
+                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [
+                        [StockMarketType.sqs.id, StockMarketType.zss.id, StockMarketType.dss.id].join(','), 'true']);
+
+                    for (const code of code_list) {
+                        await this._saveData(code.id, await Future_Day_Line_Downloader_sina(code.code, code.name));
+                        console.log('国内商品期货', code.code, code.name);
                     }
                 }
 

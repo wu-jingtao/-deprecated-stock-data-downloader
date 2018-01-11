@@ -15,9 +15,9 @@ import { Sina_HQ_DayLine_Decoder } from '../../Sina_HQ_DayLine_Decoder.js';
  * 相关页面：http://stock.sina.com.cn/hkstock/quotes/HSI.html
  * 下载地址：http://finance.sina.com.cn/stock/hkstock/HSI/klc_kl.js?d=2018_1_11 
  *      这个数据源返回的数据缺少当天的K线
+ *      后来发现：其实在今天的日期上加一就可以得到了
  * 
  * 当天数据：http://hq.sinajs.cn/?list=hkHSI  (弃用了：新浪返回的数据有问题)
- * 
  */
 
 //当天的数据
@@ -27,7 +27,7 @@ function address_today(code: string) {
 
 //下载地址
 function address_history(code: string) {
-    return `http://finance.sina.com.cn/stock/hkstock/${code}/klc_kl.js?d=${moment().format('YYYY_M_D')}`;
+    return `http://finance.sina.com.cn/stock/hkstock/${code}/klc_kl.js?d=${moment().add({ days: 1 }).format('YYYY_M_D')}`;
 }
 
 function download_history(code: string): Promise<DayLineType[]> {
