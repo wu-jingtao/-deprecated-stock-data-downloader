@@ -8,10 +8,14 @@ import { ModuleStatusRecorder } from "../ModuleStatusRecorder/ModuleStatusRecord
 import { StockMarketType } from '../StockMarketList/StockMarketType';
 import { DayLineType } from './DayLineType';
 
+import { A_Stock_Day_Line_Downloader_neteasy } from './DataSource/A_Stock/A_Stock_Day_Line_Downloader_neteasy';
+
 import { H_Stock_Day_Line_Downloader_sina } from './DataSource/H_Stock/H_Stock_Day_Line_Downloader_sina';
 import { H_Stock_Index_Day_Line_Downloader_sina } from './DataSource/H_Stock/H_Stock_Index_Day_Line_Downloader_sina';
 
 import { Future_Day_Line_Downloader_sina } from './DataSource/Future/Future_Day_Line_Downloader_sina';
+
+import { WH_Day_Line_Downloader_sina } from './DataSource/WH/WH_Day_Line_Downloader_sina';
 
 /**
  * 股票日线下载器
@@ -53,7 +57,7 @@ export class StockDayLineDownloader extends BaseServiceModule {
 
             try {
 
-                /* {//A股与A股指数
+                {//A股与A股指数
                     const code_list = await this._connection.asyncQuery(sql.get_stock_code, [
                         [StockMarketType.sh.id, StockMarketType.sz.id].join(','),
                         'true, false'
@@ -63,10 +67,10 @@ export class StockDayLineDownloader extends BaseServiceModule {
                     const start_date = reDownload ? '1990-01-01' : moment().subtract({ days: 7 }).format('YYYY-MM-DD');
 
                     for (const code of code_list) {
-                        await this._saveData(code.id, await A_Stock_Day_Line_Downloader(code.code, code.market, code.name, start_date));
-                        //console.log('A股', code.id, code.code, code.name, start_date);
+                        await this._saveData(code.id, await A_Stock_Day_Line_Downloader_neteasy(code.code, code.market, code.name, start_date));
+                        console.log('A股', code.id, code.code, code.name, start_date);
                     }
-                } */
+                }
 
                 {//港股
                     const code_list = await this._connection.asyncQuery(sql.get_stock_code, [StockMarketType.xg.id, 'false']);
@@ -93,6 +97,15 @@ export class StockDayLineDownloader extends BaseServiceModule {
                     for (const code of code_list) {
                         await this._saveData(code.id, await Future_Day_Line_Downloader_sina(code.code, code.name));
                         console.log('国内商品期货', code.code, code.name);
+                    }
+                }
+
+                {//外汇
+                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [StockMarketType.wh.id, 'true, false']);
+
+                    for (const code of code_list) {
+                        await this._saveData(code.id, await WH_Day_Line_Downloader_sina(code.code, code.name));
+                        console.log('外汇', code.code, code.name);
                     }
                 }
 

@@ -13,7 +13,7 @@ export function WH_Code_zx(): StockCodeType[] {
             isIndex: true
         },
         {
-            code: 'USDCNY',  
+            code: 'fx_susdcny',  
             name: '美元人民币',
             market: StockMarketType.wh.id,
             isIndex: false

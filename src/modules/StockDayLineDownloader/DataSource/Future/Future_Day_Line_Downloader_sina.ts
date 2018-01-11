@@ -21,9 +21,6 @@ function address(code: string) {
 
 function download(code: string): Promise<DayLineType[]> {
     return Retry3(async () => {
-        //下载到的数据格式
-        type historyData = { date: Date, close: number, high: number, low: number, open: number, volume: number };
-
         const reg = /\{d:"(\d{4}-\d{2}-\d{2})",o:"(-?[0-9\.]+)",h:"(-?[0-9\.]+)",l:"(-?[0-9\.]+)",c:"(-?[0-9\.]+)",v:"(-?[0-9\.]+)"\}/;
         const reg_g = /\{d:"(\d{4}-\d{2}-\d{2})",o:"(-?[0-9\.]+)",h:"(-?[0-9\.]+)",l:"(-?[0-9\.]+)",c:"(-?[0-9\.]+)",v:"(-?[0-9\.]+)"\}/g;
 

@@ -21,6 +21,8 @@ import { H_Stock_Day_Line_Downloader_baidu } from '../src/modules/StockDayLineDo
 
 import { Future_Day_Line_Downloader_sina } from '../src/modules/StockDayLineDownloader/DataSource/Future/Future_Day_Line_Downloader_sina';
 
+import { WH_Day_Line_Downloader_sina } from '../src/modules/StockDayLineDownloader/DataSource/WH/WH_Day_Line_Downloader_sina';
+
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
 
@@ -60,7 +62,9 @@ describe('测试下载数据', function () {
 
         it('百度股市通 港股和港股指数日线数据', () => H_Stock_Day_Line_Downloader_baidu('00700', '腾讯控股'));
 
-        it.only('新浪财经 国内商品期货日线数据', () => Future_Day_Line_Downloader_sina('AU', '黄金连续'));
+        it('新浪财经 国内商品期货日线数据', () => Future_Day_Line_Downloader_sina('AU', '黄金连续'));
+
+        it.only('新浪财经 外汇日线数据', () => WH_Day_Line_Downloader_sina('fx_susdcny', '美元兑人民币'));
     });
 });
 
