@@ -8,6 +8,9 @@ import { ModuleStatusRecorder } from "../ModuleStatusRecorder/ModuleStatusRecord
 import { StockMarketType } from '../StockMarketList/StockMarketType';
 import { DayLineType } from './DayLineType';
 
+import { H_Stock_Day_Line_Downloader_sina } from './DataSource/H_Stock/H_Stock_Day_Line_Downloader_sina';
+import { H_Stock_Index_Day_Line_Downloader_sina } from './DataSource/H_Stock/H_Stock_Index_Day_Line_Downloader_sina';
+
 /**
  * 股票日线下载器
  */
@@ -29,7 +32,7 @@ export class StockDayLineDownloader extends BaseServiceModule {
                 item.close, item.high, item.low, item.open, item.pre_close,
                 item.exchange_ratio, item.volume, item.money,
                 item.gross_market_value, item.current_market_value,
-                
+
                 item.close, item.high, item.low, item.open, item.pre_close,
                 item.exchange_ratio, item.volume, item.money,
                 item.gross_market_value, item.current_market_value,
@@ -67,22 +70,20 @@ export class StockDayLineDownloader extends BaseServiceModule {
                     const code_list = await this._connection.asyncQuery(sql.get_stock_code, [StockMarketType.xg.id, 'false']);
 
                     for (const code of code_list) {
-                        if (reDownload) {
-                            const min_year = Number.parseInt(await get_H_Stock_listing_year(code.code));
-                            for (let year = moment().year(); year >= min_year; year--) {
-                                for (let season = 4; season >= 1; season--) {
-                                    await this._saveData(code.id, await H_Stock_Day_Line_Downloader(code.code, code.name, year, season));
-                                    console.log('港股', code.code, code.name, year, season);
-                                }
-                            }
-                        } else {
-                            await this._saveData(code.id, await H_Stock_Day_Line_Downloader(code.code, code.name));
-                            console.log('港股', code.code, code.name);
-                        }
+                        await this._saveData(code.id, await H_Stock_Day_Line_Downloader_sina(code.code, code.name, reDownload));
+                        console.log('港股', code.code, code.name);
                     }
                 }
 
-                
+                {//港股指数
+                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [StockMarketType.xg.id, 'true']);
+
+                    for (const code of code_list) {
+                        await this._saveData(code.id, await H_Stock_Index_Day_Line_Downloader_sina(code.code, code.name));
+                        console.log('港股指数', code.code, code.name);
+                    }
+                }
+
                 await this._statusRecorder.updateEndTime(this, jobID);
             } catch (error) {
                 await this._statusRecorder.updateError(this, jobID, error);

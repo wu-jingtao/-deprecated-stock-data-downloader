@@ -7,6 +7,7 @@ import { exchangeToWan, testData, exchangeToYi } from '../../Tools';
  * 港股与港股指数日线数据下载器
  * 
  * 百度股市通数据。返回`json`格式的数据
+ * 注意：百度的恒生指数数据缺少成交量，而且很多港股数据不全
  * 
  * 相关页面：https://gupiao.baidu.com/stock/hk00700.html?from=aladingpc
  * 下载地址：https://gupiao.baidu.com/api/stocks/stockdaybar?from=pc&os_ver=1&cuid=xxx&vv=100&format=json&stock_code=hk00700&step=3&start=&count=16000&fq_type=no&timestamp=1515682611182
