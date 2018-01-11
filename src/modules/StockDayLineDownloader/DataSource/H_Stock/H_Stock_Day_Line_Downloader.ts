@@ -42,7 +42,7 @@ async function download(code: string, year?: number, season?: number): Promise<D
 
     $('table tr').slice(1).each((index, element) => {
         const items = $(element).children();
-        const temp = {
+        const temp: any = {
             date: items.eq(0).text(),
             close: exchangeToYi(items.eq(1).text()),
             high: exchangeToYi(items.eq(7).text()),
@@ -52,10 +52,8 @@ async function download(code: string, year?: number, season?: number): Promise<D
             money: exchangeToWan(items.eq(5).text())
         };
 
-        if (
-            temp.close != null &&   //针对暂无数据的情况
-            temp.volume != 0        //去除停牌日
-        ) result.push(temp);
+        if (temp.close > 0 && temp.volume > 0) //针对"暂无数据"以及"停牌"的情况
+            result.push(temp);
     });
 
     if (result.length === 0) throw 'no data';   //如果没有下载到数据就再试几次，排除新浪服务器异常的情况
