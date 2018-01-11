@@ -17,6 +17,7 @@ import { CompanyFinanceDownloader } from '../src/modules/StockBasicDownloader/Da
 import { A_Stock_Day_Line_Downloader_neteasy } from '../src/modules/StockDayLineDownloader/DataSource/A_Stock/A_Stock_Day_Line_Downloader_neteasy';
 import { H_Stock_Day_Line_Downloader_sina, get_H_Stock_listing_year_sina } from '../src/modules/StockDayLineDownloader/DataSource/H_Stock/H_Stock_Day_Line_Downloader_sina';
 import { H_Stock_Index_Day_Line_Downloader_sina } from '../src/modules/StockDayLineDownloader/DataSource/H_Stock/H_Stock_Index_Day_Line_Downloader_sina';
+import { H_Stock_Day_Line_Downloader_baidu } from '../src/modules/StockDayLineDownloader/DataSource/H_Stock/H_Stock_Day_Line_Downloader_baidu';
 
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
@@ -55,8 +56,9 @@ describe('测试下载数据', function () {
 
         it('新浪财经 获取港股上市年份', () => get_H_Stock_listing_year_sina('00700').then(year => expect(year).to.be('2004')));
 
-        it.only('新浪财经 港股指数日线数据', () => H_Stock_Index_Day_Line_Downloader_sina('HSI', '恒生指数'));
+        it('新浪财经 港股指数日线数据', () => H_Stock_Index_Day_Line_Downloader_sina('HSI', '恒生指数'));
 
+        it.only('百度股市通 港股和港股指数日线数据', () => H_Stock_Day_Line_Downloader_baidu('00700', '腾讯控股'));
     });
 });
 
