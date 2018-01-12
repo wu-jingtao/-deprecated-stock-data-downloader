@@ -3,45 +3,15 @@ import * as path from 'path';
 import * as dsv from 'd3-dsv';
 import * as iconv from 'iconv-lite';
 import * as _ from 'lodash';
-import expect = require('expect.js');
 
 import { StockCodeType } from "../../StockCodeType";
 import { StockMarketType } from "../../../StockMarketList/StockMarketType";
 
-//读取数据
-function read(): StockCodeType[] {
-    const file = fs.readFileSync(path.resolve(__dirname, './DSS_2018-1-6.xls'));
-    const data = iconv.decode(file, 'gbk');     //转码
-    const parsed = dsv.tsvParse(data);
-
-    const result: StockCodeType[] = [];
-
-    parsed.forEach(item => {
-        const [name, code] = _.map(item, value => value && value.trim());   //去除空格
-
-        if (code && name && name.endsWith('主连')) {
-            result.push({
-                code: (code.match(/[a-z]+/i) as any)[0],
-                name,
-                market: StockMarketType.dss.id,
-                isIndex: true
-            });
-        }
-    });
-
-    return result;
-}
-
 //检测下载的数据是否正确
-function test(data: StockCodeType[]) {
-    expect(data.length).to.greaterThan(0);
-
-    data.forEach(item => {
-        expect(/^[a-z]+$/i.test(item.code)).to.be.ok();  //股票代码
-        expect(item.name.length).to.greaterThan(0);     //确保公司名称不为空
-    });
-
-    return data;
+function testData(data: StockCodeType) {
+    return /^[a-z]+$/i.test(data.code) &&       //股票代码
+        data.name.length > 0 &&                 //确保名称不为空
+        data.name.endsWith('主连')
 }
 
 /**
@@ -56,5 +26,26 @@ function test(data: StockCodeType[]) {
  * 大连商品交易所 各产品主力连续
  */
 export function DL_Future_Index(): StockCodeType[] {
-    return test(read());
+    const file = fs.readFileSync(path.resolve(__dirname, './DSS_2018-1-6.xls'));
+    const data = iconv.decode(file, 'gbk');     //转码
+    const parsed = dsv.tsvParse(data);
+
+    const result: StockCodeType[] = [];
+
+    parsed.forEach(item => {
+        const [name, code] = _.map(item, value => value && value.trim());   //去除空格
+
+        const temp: any = {
+            code: ((code && code.match(/[a-z]+/i)) || [])[0],
+            name,
+            market: StockMarketType.dss.id,
+            isIndex: true
+        };
+
+        if (testData(temp)) result.push(temp);
+    });
+
+    if (result.length === 0) throw new Error('没有收集到数据');
+
+    return result;
 }

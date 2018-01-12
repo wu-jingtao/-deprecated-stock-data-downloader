@@ -7,7 +7,7 @@ import { ModuleStatusRecorder } from "../modules/ModuleStatusRecorder/ModuleStat
 /**
  * 行情数据下载器模块父类
  */
-export abstract class DownloaderModule extends BaseServiceModule {
+export abstract class BaseDataModule extends BaseServiceModule {
 
     private _timers: schedule.Job[] = [];       //下载计时器
     private _downloading: boolean = false;      //是否正在下载

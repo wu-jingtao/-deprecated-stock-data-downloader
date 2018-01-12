@@ -1,5 +1,3 @@
-import expect = require('expect.js');
-
 import * as HttpDownloader from '../../../../tools/HttpDownloader';
 import { Retry3 } from '../../../../tools/Retry';
 import { StockCodeType } from '../../StockCodeType';

@@ -1,9 +1,6 @@
-import * as schedule from 'node-schedule';
-import { BaseServiceModule } from "service-starter";
+import { DownloaderModule } from '../../tools/DownloaderModule';
 
 import * as sql from './Sql';
-import { MysqlConnection } from "../MysqlConnection/MysqlConnection";
-import { ModuleStatusRecorder } from "../ModuleStatusRecorder/ModuleStatusRecorder";
 import { StockCodeType } from './StockCodeType';
 
 import { SH_A_Code_sjs } from './DataSource/A_Stock/SH_A_Code_sjs';
@@ -17,18 +14,18 @@ import { H_Index_Code_zx } from './DataSource/H_Stock/H_Index_Code_zx';
 import { SH_Future_Index } from './DataSource/SH_Future/SH_Future_Index';
 import { ZZ_Future_Index } from './DataSource/ZZ_Future/ZZ_Future_Index';
 import { DL_Future_Index } from './DataSource/DL_Future/DL_Future_Index';
-import { WH_Code_zx } from './DataSource/WH/WH_Code_zx';
 
+import { WH_Code_zx } from './DataSource/WH/WH_Code_zx';
 
 /**
  * 股票代码下载器
  */
-export class StockCodeDownloader extends BaseServiceModule {
+export class StockCodeDownloader extends DownloaderModule {
 
-    private _timer: schedule.Job;    //保存计时器
-    private _connection: MysqlConnection;
-    private _statusRecorder: ModuleStatusRecorder;
-    private _downloading: boolean = false;  //是否正在下载
+    constructor() {
+        //每天的下午5点钟更新
+        super([{ time: "0 0 17 * * *" }], sql.create_table);
+    }
 
     /**
      * 保存下载到的数据
@@ -42,63 +39,27 @@ export class StockCodeDownloader extends BaseServiceModule {
         }
     }
 
-    /**
-     * 下载器
-     */
-    private async _downloader() {
-        if (!this._downloading) {   //如果上次还没有执行完这次就取消执行了
-            this._downloading = true;
-            const jobID = await this._statusRecorder.newStartTime(this);
+    protected async _downloader() {
+        //A股
+        await this._saveData(await SH_A_Code_sjs());
+        await this._saveData(await SZ_A_Code_sjs());
+        await this._saveData(A_Index_Code_zx());
 
-            try {
-                //A股
-                await this._saveData(await SH_A_Code_sjs());
-                await this._saveData(await SZ_A_Code_sjs());
-                await this._saveData(A_Index_Code_zx());
+        //港股
+        await this._saveData(await H_Code_hgt());
+        await this._saveData(await H_Code_sgt());
+        await this._saveData(H_Index_Code_zx());
 
-                //港股
-                await this._saveData(await H_Code_hgt());
-                await this._saveData(await H_Code_sgt());
-                await this._saveData(H_Index_Code_zx());
+        //上海期货交易所 主连列表
+        await this._saveData(SH_Future_Index());
 
-                //上海期货交易所 主连列表
-                await this._saveData(SH_Future_Index());
+        //郑州商品交易所 主连列表
+        await this._saveData(ZZ_Future_Index());
 
-                //郑州商品交易所 主连列表
-                await this._saveData(ZZ_Future_Index());
+        //大连商品交易所 主连列表
+        await this._saveData(DL_Future_Index());
 
-                //大连商品交易所 主连列表
-                await this._saveData(DL_Future_Index());
-
-                //外汇
-                await this._saveData(WH_Code_zx());
-
-                await this._statusRecorder.updateEndTime(this, jobID);
-            } catch (error) {
-                await this._statusRecorder.updateError(this, jobID, error);
-                throw error;
-            } finally {
-                this._downloading = false;
-            }
-        }
+        //外汇
+        await this._saveData(WH_Code_zx());
     };
-
-    async onStart(): Promise<void> {
-        this._connection = this.services.MysqlConnection;
-        this._statusRecorder = this.services.ModuleStatusRecorder;
-        await this._connection.asyncQuery(sql.create_table);  //创建数据表
-
-        const status = await this._statusRecorder.getStatus(this);
-        //如果没下载过或上次下载出现过异常，则立即重新下载
-        if (status == null || status.error != null || status.startTime > status.endTime) {
-            await this._downloader();
-        }
-
-        //每天的下午5点钟更新
-        this._timer = schedule.scheduleJob("0 0 17 * * *", () => this._downloader().catch(err => this.emit('error', err)));
-    }
-
-    async onStop() {
-        this._timer && this._timer.cancel();
-    }
 }
