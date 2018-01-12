@@ -32,7 +32,7 @@ export class H_Code_hgt extends BaseDownloader {
 
         const lines = file.match(reg_g) || [];    //由于JS不支持直接获取全部，所以只有先差分成行，再获取项
 
-        const result: StockCodeType[] = lines.map(item => {
+        return lines.map(item => {
             const match = reg.exec(item) as any;
 
             return {
@@ -42,8 +42,6 @@ export class H_Code_hgt extends BaseDownloader {
                 isIndex: false
             };
         });
-
-        return result;
     }
 
     protected _process(err: Error | undefined, data: any[]): Promise<any[]> {

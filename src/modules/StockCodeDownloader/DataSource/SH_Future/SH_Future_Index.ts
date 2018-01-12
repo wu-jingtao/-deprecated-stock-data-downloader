@@ -23,7 +23,6 @@ export class SH_Future_Index extends BaseDownloader {
 
     protected _testData(data: StockCodeType) {
         return /^[a-z]+$/i.test(data.code) &&       //股票代码
-            data.name.length > 0 &&                 //确保名称不为空
             data.name.endsWith('主连')
     }
 
