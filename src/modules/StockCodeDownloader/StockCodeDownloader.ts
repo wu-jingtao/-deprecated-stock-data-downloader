@@ -1,4 +1,4 @@
-import { DownloaderModule } from '../../tools/DownloaderModule';
+import { BaseDataModule } from '../../tools/BaseDataModule';
 
 import * as sql from './Sql';
 import { StockCodeType } from './StockCodeType';
@@ -20,7 +20,7 @@ import { WH_Code_zx } from './DataSource/WH/WH_Code_zx';
 /**
  * 股票代码下载器
  */
-export class StockCodeDownloader extends DownloaderModule {
+export class StockCodeDownloader extends BaseDataModule {
 
     constructor() {
         //每天的下午5点钟更新
@@ -41,23 +41,23 @@ export class StockCodeDownloader extends DownloaderModule {
 
     protected async _downloader() {
         //A股
-        await this._saveData(await SH_A_Code_sjs());
-        await this._saveData(await SZ_A_Code_sjs());
+        await this._saveData(await SH_A_Code_sjs.download());
+        await this._saveData(await SZ_A_Code_sjs.download());
         await this._saveData(A_Index_Code_zx());
 
         //港股
-        await this._saveData(await H_Code_hgt());
-        await this._saveData(await H_Code_sgt());
+        await this._saveData(await H_Code_hgt.download());
+        await this._saveData(await H_Code_sgt.download());
         await this._saveData(H_Index_Code_zx());
 
         //上海期货交易所 主连列表
-        await this._saveData(SH_Future_Index());
+        await this._saveData(await SH_Future_Index.download());
 
         //郑州商品交易所 主连列表
-        await this._saveData(ZZ_Future_Index());
+        await this._saveData(await ZZ_Future_Index.download());
 
         //大连商品交易所 主连列表
-        await this._saveData(DL_Future_Index());
+        await this._saveData(await DL_Future_Index.download());
 
         //外汇
         await this._saveData(WH_Code_zx());

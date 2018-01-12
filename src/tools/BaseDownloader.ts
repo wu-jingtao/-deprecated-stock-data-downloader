@@ -5,8 +5,6 @@ import { Retry3 } from "./Retry";
  */
 export abstract class BaseDownloader {
 
-    private constructor() { }
-
     /**
      * 当前下载器名称
      */
@@ -31,7 +29,7 @@ export abstract class BaseDownloader {
      * @param data 下载到的数据
      */
     protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
-        return err ? Promise.reject(err) : Promise.resolve(data);
+        return err ? Promise.reject(new Error(`"${this.name}"：${err.message}\n${err.stack}`)) : Promise.resolve(data);
     }
 
     /**

@@ -28,21 +28,21 @@ describe('测试下载数据', function () {
 
     describe.only('测试下载股票代码', function () {
 
-        it('上交所 A股列表 数据', SH_A_Code_sjs);
+        it('上交所 A股列表 数据', SH_A_Code_sjs.download.bind(SH_A_Code_sjs));
 
-        it('深交所 A股列表 数据', SZ_A_Code_sjs);
+        it('深交所 A股列表 数据', SZ_A_Code_sjs.download.bind(SZ_A_Code_sjs));
 
-        it('东方财富 A股列表 数据', A_Code_dfcf);  //同时包含上交所与深交所
+        it('东方财富 A股列表 数据', A_Code_dfcf.download.bind(A_Code_dfcf));  //同时包含上交所与深交所
 
-        it('沪港通 H股列表 数据', H_Code_hgt);
+        it('沪港通 H股列表 数据', H_Code_hgt.download.bind(H_Code_hgt));
 
-        it('深港通 H股列表 数据', H_Code_sgt);
+        it('深港通 H股列表 数据', H_Code_sgt.download.bind(H_Code_sgt));
 
-        it('上海期货交易所 主连列表 数据', SH_Future_Index);
+        it('上海期货交易所 主连列表 数据', SH_Future_Index.download.bind(SH_Future_Index));
 
-        it('郑州商品交易所 主连列表 数据', ZZ_Future_Index);
+        it('郑州商品交易所 主连列表 数据', ZZ_Future_Index.download.bind(ZZ_Future_Index));
 
-        it('大连商品交易所 主连列表 数据', DL_Future_Index);
+        it('大连商品交易所 主连列表 数据', DL_Future_Index.download.bind(DL_Future_Index));
     });
 
     describe('测试下载基本面数据', function () {

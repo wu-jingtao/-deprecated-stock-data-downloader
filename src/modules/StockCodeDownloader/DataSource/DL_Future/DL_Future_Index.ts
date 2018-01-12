@@ -4,15 +4,9 @@ import * as dsv from 'd3-dsv';
 import * as iconv from 'iconv-lite';
 import * as _ from 'lodash';
 
-import { StockCodeType } from "../../StockCodeType";
-import { StockMarketType } from "../../../StockMarketList/StockMarketType";
-
-//检测下载的数据是否正确
-function testData(data: StockCodeType) {
-    return /^[a-z]+$/i.test(data.code) &&       //股票代码
-        data.name.length > 0 &&                 //确保名称不为空
-        data.name.endsWith('主连')
-}
+import { BaseDownloader } from '../../../../tools/BaseDownloader';
+import { StockCodeType } from '../../StockCodeType';
+import { StockMarketType } from '../../../StockMarketList/StockMarketType';
 
 /**
  * 大连商品交易所。上市各产品主力连续。
@@ -21,31 +15,39 @@ function testData(data: StockCodeType) {
  * 
  * 该目录下有一个`DSS.xls`文件，这个是我从同花顺，上期所页面下导出的，只保留了名称与代码。`GBK`编码
  */
+export class DL_Future_Index extends BaseDownloader {
 
-/**
- * 大连商品交易所 各产品主力连续
- */
-export function DL_Future_Index(): StockCodeType[] {
-    const file = fs.readFileSync(path.resolve(__dirname, './DSS_2018-1-6.xls'));
-    const data = iconv.decode(file, 'gbk');     //转码
-    const parsed = dsv.tsvParse(data);
+    get name() {
+        return '大连商品交易所 代码下载器';
+    }
 
-    const result: StockCodeType[] = [];
+    protected _testData(data: StockCodeType) {
+        return /^[a-z]+$/i.test(data.code) &&       //股票代码
+            data.name.length > 0 &&                 //确保名称不为空
+            data.name.endsWith('主连')
+    }
 
-    parsed.forEach(item => {
-        const [name, code] = _.map(item, value => value && value.trim());   //去除空格
+    protected async _download() {
+        const file = fs.readFileSync(path.resolve(__dirname, './DSS_2018-1-6.xls'));
+        const data = iconv.decode(file, 'gbk');     //转码
+        const parsed = dsv.tsvParse(data);
 
-        const temp: any = {
-            code: ((code && code.match(/[a-z]+/i)) || [])[0],
-            name,
-            market: StockMarketType.dss.id,
-            isIndex: true
-        };
+        return parsed.map(item => {
+            const [name, code] = _.map(item, value => value && value.trim());   //去除空格
 
-        if (testData(temp)) result.push(temp);
-    });
+            return {
+                code: ((code && code.match(/[a-z]+/i)) || [''])[0],
+                name,
+                market: StockMarketType.dss.id,
+                isIndex: true
+            };
+        });
+    }
 
-    if (result.length === 0) throw new Error('没有收集到数据');
-
-    return result;
+    protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
+        if (err === undefined && data.length === 0)
+            return super._process(new Error('没有读取到满足条件的数据'), data);
+        else
+            return super._process(err, data);
+    }
 }
