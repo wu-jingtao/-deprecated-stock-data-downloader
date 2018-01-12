@@ -20,7 +20,7 @@ export class H_Code_hgt extends BaseDownloader {
 
     protected _testData(data: StockCodeType) {
         return /^\d{5}$/.test(data.code) &&     //股票代码
-            data.name.length > 0                //确保公司名称不为空
+            data.name.length > 1                //确保公司名称不为空
     }
 
     protected async _download() {

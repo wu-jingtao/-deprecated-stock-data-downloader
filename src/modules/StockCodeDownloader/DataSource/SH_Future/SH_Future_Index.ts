@@ -37,7 +37,7 @@ export class SH_Future_Index extends BaseDownloader {
             return {
                 code: ((code && code.match(/[a-z]+/i)) || [''])[0],
                 name,
-                market: StockMarketType.dss.id,
+                market: StockMarketType.sqs.id,
                 isIndex: true
             };
         });

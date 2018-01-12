@@ -8,7 +8,6 @@ WORKDIR /app
 
 COPY src /app/src
 COPY gulpfile.js /app/gulpfile.js
-COPY LICENSE /app/LICENSE
 COPY package.json /app/package.json
 COPY tsconfig.json /app/tsconfig.json
 
