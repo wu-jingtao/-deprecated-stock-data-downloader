@@ -70,7 +70,7 @@ export class ModuleStatusRecorder extends BaseServiceModule {
      */
     async updateError(module: BaseServiceModule, id: number, err: Error) {
         log.location.text.red.round.content.red(module.name, '下载出现异常', err);
-        await this._connection.asyncQuery(sql.update_error, [Date.now(), err.toString(), id]);
+        await this._connection.asyncQuery(sql.update_error, [Date.now(), `${err.message}\n${err.stack}`, id]);
     }
 
     async onStart(): Promise<void> {
