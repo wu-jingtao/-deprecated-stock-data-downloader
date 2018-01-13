@@ -1,32 +1,38 @@
 import * as moment from 'moment';
-import * as schedule from 'node-schedule';
-import { BaseServiceModule } from "service-starter";
+import { BaseDataModule } from '../../tools/BaseDataModule';
 
 import * as sql from './Sql';
-import { MysqlConnection } from "../MysqlConnection/MysqlConnection";
-import { ModuleStatusRecorder } from "../ModuleStatusRecorder/ModuleStatusRecorder";
+import { StockCodeDownloader } from '../StockCodeDownloader/StockCodeDownloader';
 import { StockMarketType } from '../StockMarketList/StockMarketType';
 import { DayLineType } from './DayLineType';
 
-import { A_Stock_Day_Line_Downloader_neteasy } from './DataSource/A_Stock/A_Stock_Day_Line_Downloader_neteasy';
+import { A_Stock_Day_Line_neteasy } from './DataSource/A_Stock/A_Stock_Day_Line_neteasy';
 
-import { H_Stock_Day_Line_Downloader_sina } from './DataSource/H_Stock/H_Stock_Day_Line_Downloader_sina';
-import { H_Stock_Index_Day_Line_Downloader_sina } from './DataSource/H_Stock/H_Stock_Index_Day_Line_Downloader_sina';
+import { H_Stock_Day_Line_sina } from './DataSource/H_Stock/H_Stock_Day_Line_sina';
+import { H_Stock_Index_Day_Line_sina } from './DataSource/H_Stock/H_Stock_Index_Day_Line_sina';
 
-import { Future_Day_Line_Downloader_sina } from './DataSource/Future/Future_Day_Line_Downloader_sina';
+import { Future_Day_Line_sina } from './DataSource/Future/Future_Day_Line_sina';
 
-import { WH_Day_Line_Downloader_sina } from './DataSource/WH/WH_Day_Line_Downloader_sina';
+import { WH_Day_Line_sina } from './DataSource/WH/WH_Day_Line_sina';
 
 /**
  * 股票日线下载器
  */
-export class StockDayLineDownloader extends BaseServiceModule {
+export class StockDayLineDownloader extends BaseDataModule {
 
-    private _timer: schedule.Job;               //下载计时器
-    private _timer_reDownload: schedule.Job;    //重新下载计时器
-    private _connection: MysqlConnection;
-    private _statusRecorder: ModuleStatusRecorder;
-    private _downloading: boolean = false;      //是否正在下载
+    private _stockCodeDownloader: StockCodeDownloader;
+
+    constructor() {
+        super([
+            { time: "0 15 18 * * 1-5" },                //每周1-5的下午6点15分更新当天数据
+            { time: "0 0 1 * * 7", reDownload: true }   //每周末凌晨1点更新全部数据
+        ], [sql.create_table]);
+    }
+
+    async onStart(): Promise<void> {
+        this._stockCodeDownloader = this.services.StockCodeDownloader;
+        await super.onStart();
+    }
 
     /**
      * 保存下载到的数据
@@ -46,99 +52,74 @@ export class StockDayLineDownloader extends BaseServiceModule {
         }
     }
 
-    /**
-     * 下载器
-     * @param reDownload 是否从头开始下载
-     */
-    private async _downloader(reDownload: boolean) {
-        if (!this._downloading) {   //如果上次还没有执行完这次就取消执行了
-            this._downloading = true;
-            const jobID = await this._statusRecorder.newStartTime(this);
+    protected async _downloader(reDownload: boolean) {
+        {//A股与A股指数
+            const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [true, false]);
 
-            try {
+            //下载开始日期
+            const start_date = reDownload ? '1990-01-01' : moment().subtract({ days: 7 }).format('YYYY-MM-DD');
 
-                {//A股与A股指数
-                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [
-                        [StockMarketType.sh.id, StockMarketType.sz.id].join(','),
-                        'true, false'
-                    ]);
-
-                    //下载开始日期
-                    const start_date = reDownload ? '1990-01-01' : moment().subtract({ days: 7 }).format('YYYY-MM-DD');
-
-                    for (const code of code_list) {
-                        await this._saveData(code.id, await A_Stock_Day_Line_Downloader_neteasy(code.code, code.market, code.name, start_date));
-                        console.log('A股', code.id, code.code, code.name, start_date);
-                    }
+            for (const { id, code, name, market } of code_list) {
+                try {
+                    await this._saveData(id, await A_Stock_Day_Line_neteasy.download(code, market, start_date));
+                    //console.log('A股', id, code, name, start_date);
+                } catch (err) {
+                    throw new Error(`下载A股"${name}-${code}"失败：` + err);
                 }
+            }
 
-                {//港股
-                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [StockMarketType.xg.id, 'false']);
+        }
 
-                    for (const code of code_list) {
-                        await this._saveData(code.id, await H_Stock_Day_Line_Downloader_sina(code.code, code.name, reDownload));
-                        console.log('港股', code.code, code.name);
-                    }
+        {//港股
+            const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [false]);
+
+            for (const { id, code, name, market } of code_list) {
+                try {
+                    await this._saveData(id, await H_Stock_Day_Line_sina.download(code, reDownload));
+                    //console.log('港股', code, name);
+                } catch (err) {
+                    throw new Error(`下载港股"${name}-${code}"失败：` + err);
                 }
+            }
+        }
 
-                {//港股指数
-                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [StockMarketType.xg.id, 'true']);
+        {//港股指数
+            const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [true]);
 
-                    for (const code of code_list) {
-                        await this._saveData(code.id, await H_Stock_Index_Day_Line_Downloader_sina(code.code, code.name));
-                        console.log('港股指数', code.code, code.name);
-                    }
+            for (const { id, code, name, market } of code_list) {
+                try {
+                    await this._saveData(id, await H_Stock_Index_Day_Line_sina.download(code));
+                    //console.log('港股指数', code, name);
+                } catch (err) {
+                    throw new Error(`下载港股指数"${name}-${code}"失败：` + err);
                 }
+            }
+        }
 
-                {//国内商品期货
-                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [
-                        [StockMarketType.sqs.id, StockMarketType.zss.id, StockMarketType.dss.id].join(','), 'true']);
+        {//国内商品期货
+            const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sqs.id, StockMarketType.zss.id, StockMarketType.dss.id], [true]);
 
-                    for (const code of code_list) {
-                        await this._saveData(code.id, await Future_Day_Line_Downloader_sina(code.code, code.name));
-                        console.log('国内商品期货', code.code, code.name);
-                    }
+            for (const { id, code, name, market } of code_list) {
+                try {
+                    await this._saveData(id, await Future_Day_Line_sina.download(code));
+                    //console.log('国内商品期货', code, name);
+                } catch (err) {
+                    throw new Error(`下载国内商品期货"${name}-${code}"失败：` + err);
                 }
+            }
+        }
 
-                {//外汇
-                    const code_list = await this._connection.asyncQuery(sql.get_stock_code, [StockMarketType.wh.id, 'true, false']);
+        {//外汇
+            const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.wh.id], [true, false]);
 
-                    for (const code of code_list) {
-                        await this._saveData(code.id, await WH_Day_Line_Downloader_sina(code.code, code.name));
-                        console.log('外汇', code.code, code.name);
-                    }
+            for (const { id, code, name, market } of code_list) {
+                try {
+                    await this._saveData(id, await WH_Day_Line_sina.download(code));
+                    //console.log('外汇', code, name);
+                } catch (err) {
+                    throw new Error(`下载外汇"${name}-${code}"失败：` + err);
                 }
-
-                await this._statusRecorder.updateEndTime(this, jobID);
-            } catch (error) {
-                await this._statusRecorder.updateError(this, jobID, error);
-                throw error;
-            } finally {
-                this._downloading = false;
             }
         }
     };
-
-    async onStart(): Promise<void> {
-        this._connection = this.services.MysqlConnection;
-        this._statusRecorder = this.services.ModuleStatusRecorder;
-        await this._connection.asyncQuery(sql.create_table);  //创建数据表
-
-        const status = await this._statusRecorder.getStatus(this);
-        //如果没下载过或上次下载出现过异常，则立即重新下载
-        if (status == null || status.error != null || status.startTime > status.endTime) {
-            await this._downloader(true);
-        }
-
-        //每周1-5的下午6点15分更新
-        this._timer = schedule.scheduleJob("0 15 18 * * 1-5", () => this._downloader(false).catch(err => this.emit('error', err)));
-
-        //每周末凌晨1点更新全部数据
-        this._timer_reDownload = schedule.scheduleJob("0 0 1 * * 7", () => this._downloader(true).catch(err => this.emit('error', err)));
-    }
-
-    async onStop() {
-        this._timer && this._timer.cancel();
-        this._timer_reDownload && this._timer_reDownload.cancel();
-    }
 }
