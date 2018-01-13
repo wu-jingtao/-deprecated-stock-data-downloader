@@ -19,7 +19,7 @@ export abstract class BaseDataModule extends BaseServiceModule {
      */
     constructor(
         private _crontab: { time: string, reDownload?: boolean }[],
-        private _sql_create_table: string
+        private _sql_create_table: string[]
     ) { super(); }
 
     /**
@@ -56,7 +56,10 @@ export abstract class BaseDataModule extends BaseServiceModule {
     async onStart(): Promise<void> {
         this._connection = this.services.MysqlConnection;
         this._statusRecorder = this.services.ModuleStatusRecorder;
-        await this._connection.asyncQuery(this._sql_create_table);  //创建数据表
+        
+        for (const item of this._sql_create_table) {
+            await this._connection.asyncQuery(item);  //创建数据表
+        }
 
         //查询上次执行的状态
         const status = await this._statusRecorder.getStatus(this);

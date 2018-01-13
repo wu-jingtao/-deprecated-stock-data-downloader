@@ -21,7 +21,7 @@ export function normalizeNull(data?: string): string | undefined {
  */
 export function normalizeAmountToWan(data?: string): number | undefined {
     if (data = normalizeNull(data)) {
-        let temp: any = data.match(/[-0-9\.]+/);
+        let temp: any = data.match(/-?[0-9\.]+/);
         if (temp) {
             if (data.includes('亿')) {
                 return temp[0] * 10000;

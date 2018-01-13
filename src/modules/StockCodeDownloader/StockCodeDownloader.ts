@@ -24,7 +24,7 @@ export class StockCodeDownloader extends BaseDataModule {
 
     constructor() {
         //每天的下午5点钟更新
-        super([{ time: "0 0 17 * * *" }], sql.create_table);
+        super([{ time: "0 0 17 * * *" }], [sql.create_table]);
     }
 
     /**
@@ -37,7 +37,7 @@ export class StockCodeDownloader extends BaseDataModule {
             .replace('{1}', market.join(','))
             .replace('{2}', isIndex.join(','));
 
-        return await this._connection.asyncQuery(query_sql) as StockCodeType & { id: number };
+        return await this._connection.asyncQuery(query_sql) as (StockCodeType & { id: number })[];
     }
 
     /**

@@ -11,8 +11,8 @@ import { SH_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/S
 import { ZZ_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/ZZ_Future/ZZ_Future_Index';
 import { DL_Future_Index } from '../src/modules/StockCodeDownloader/DataSource/DL_Future/DL_Future_Index';
 
-import { CompanyInformationDownloader } from '../src/modules/StockBasicDownloader/DataSource/CompanyInformationDownloader';
-import { CompanyFinanceDownloader } from '../src/modules/StockBasicDownloader/DataSource/CompanyFinanceDownloader';
+import { Company_Information } from '../src/modules/StockBasicDownloader/DataSource/Company_Information';
+import { Company_Finance } from '../src/modules/StockBasicDownloader/DataSource/Company_Finance';
 
 import { A_Stock_Day_Line_Downloader_neteasy } from '../src/modules/StockDayLineDownloader/DataSource/A_Stock/A_Stock_Day_Line_Downloader_neteasy';
 import { H_Stock_Day_Line_Downloader_sina } from '../src/modules/StockDayLineDownloader/DataSource/H_Stock/H_Stock_Day_Line_Downloader_sina';
@@ -26,7 +26,7 @@ import { WH_Day_Line_Downloader_sina } from '../src/modules/StockDayLineDownload
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
 
-    describe.only('测试下载股票代码', function () {
+    describe('测试下载股票代码', function () {
 
         it('上交所 A股列表 数据', SH_A_Code_sjs.download.bind(SH_A_Code_sjs));
 
@@ -45,11 +45,11 @@ describe('测试下载数据', function () {
         it('大连商品交易所 主连列表 数据', DL_Future_Index.download.bind(DL_Future_Index));
     });
 
-    describe('测试下载基本面数据', function () {
+    describe.only('测试下载基本面数据', function () {
 
-        it('同花顺 公司资料', () => CompanyInformationDownloader('300359'));
+        it('同花顺 公司资料', () => Company_Information.download.bind(Company_Information, '300359'));
 
-        it('同花顺 公司财务', () => CompanyFinanceDownloader('300359'));
+        it('同花顺 公司财务', () => Company_Finance.download.bind(Company_Finance, '300359'));
     });
 
     describe('测试下载日线数据', function () {
