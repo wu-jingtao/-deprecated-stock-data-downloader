@@ -28,6 +28,19 @@ export class StockCodeDownloader extends BaseDataModule {
     }
 
     /**
+     * 获取某个市场的股票代码
+     * @param market 市场id
+     * @param isIndex 是否是指数
+     */
+    async getStockCodes(market: number[], isIndex: boolean[]) {
+        const query_sql = sql.get_stock_code
+            .replace('{1}', market.join(','))
+            .replace('{2}', isIndex.join(','));
+
+        return await this._connection.asyncQuery(query_sql) as StockCodeType & { id: number };
+    }
+
+    /**
      * 保存下载到的数据
      */
     private async _saveData(data: StockCodeType[]) {

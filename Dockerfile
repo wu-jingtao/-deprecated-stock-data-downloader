@@ -15,7 +15,7 @@ RUN npm install
 RUN npm run compile
 
 # 清除devDependencies包
-RUN npm prune --production  
+RUN npm prune --production
 
 # 确保可执行
 RUN dos2unix /app/node_modules/service-starter/src/Docker/health_check.sh

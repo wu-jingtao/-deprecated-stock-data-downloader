@@ -18,7 +18,7 @@ export class H_Code_sgt extends BaseDownloader {
     private address = 'http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=xlsx&CATALOGID=SGT_GGTBDQD&tab1PAGENO=1&ENCODE=1&TABKEY=tab1';  //下载地址
 
     get name() {
-        return '深交所，深港通代码列表下载器';
+        return '深交所 深港通代码列表下载器';
     }
 
     protected _testData(data: StockCodeType) {
@@ -46,7 +46,7 @@ export class H_Code_sgt extends BaseDownloader {
 
     protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
         if (err === undefined && data.length === 0)
-            return super._process(new Error('无法下载到数据'), data);
+            return super._process(new Error('没有下载到数据'), data);
         else
             return super._process(err, data);
     }

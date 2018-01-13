@@ -15,7 +15,7 @@ export class H_Code_hgt extends BaseDownloader {
     private address = 'http://www.sse.com.cn/services/hkexsc/disclo/eligiblead/';  //下载地址
 
     get name() {
-        return '上交所，沪港通代码列表下载器';
+        return '上交所 沪港通代码列表下载器';
     }
 
     protected _testData(data: StockCodeType) {
@@ -33,7 +33,7 @@ export class H_Code_hgt extends BaseDownloader {
         const lines = file.match(reg_g) || [];    //由于JS不支持直接获取全部，所以只有先差分成行，再获取项
 
         return lines.map(item => {
-            const match = reg.exec(item) as any;
+            const match = reg.exec(item) || [];
 
             return {
                 code: match[1].trim(),
@@ -46,7 +46,7 @@ export class H_Code_hgt extends BaseDownloader {
 
     protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
         if (err === undefined && data.length === 0)
-            return super._process(new Error('无法下载到数据'), data);
+            return super._process(new Error('没有下载到数据'), data);
         else
             return super._process(err, data);
     }

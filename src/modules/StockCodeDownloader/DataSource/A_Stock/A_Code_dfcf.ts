@@ -45,7 +45,7 @@ export class A_Code_dfcf extends BaseDownloader {
 
     protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
         if (err === undefined && data.length === 0)
-            return super._process(new Error('无法下载到数据'), data);
+            return super._process(new Error('没有下载到数据'), data);
         else
             return super._process(err, data);
     }

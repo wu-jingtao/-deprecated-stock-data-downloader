@@ -25,3 +25,12 @@ export const insert_data = "\
     ON DUPLICATE KEY UPDATE \
     `name` = ? \
 ";
+
+/**
+ * 获取股票代码
+ */
+export const get_stock_code = "\
+    SELECT `id`, `code`, `name`, `market`, `is_index` as `isIndex`\
+    FROM `stock`.`stock_code`\
+    WHERE `market` IN ({1}) AND `is_index` IN ({2});\
+";

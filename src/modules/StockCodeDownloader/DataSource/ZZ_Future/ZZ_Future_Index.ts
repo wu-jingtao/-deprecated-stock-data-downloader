@@ -29,9 +29,8 @@ export class ZZ_Future_Index extends BaseDownloader {
     protected async _download() {
         const file = fs.readFileSync(path.resolve(__dirname, './ZSS_2018-1-6.xls'));
         const data = iconv.decode(file, 'gbk');     //转码
-        const parsed = dsv.tsvParse(data);
-    
-        return parsed.map(item => {
+
+        return dsv.tsvParse(data).map(item => {
             const [name, code] = _.map(item, value => value && value.trim());   //去除空格
 
             return {

@@ -44,11 +44,3 @@ export const insert_data = "\
     `current_market_value` = ?\
 ";
 
-/**
- * 获取股票代码
- */
-export const get_stock_code = "\
-    SELECT `id`, `code`, `name`, `market`, `is_index`\
-    FROM `stock`.`stock_code`\
-    WHERE `market` IN (?) AND `is_index` IN (?);\
-";
