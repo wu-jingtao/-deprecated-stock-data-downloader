@@ -79,7 +79,6 @@ export class H_Stock_Day_Line_sina extends BaseDownloader {
         }));
     }
 
-
     protected _testData(data: DayLineType | any) {
         return /\d{4}.?\d{2}.?\d{2}/.test(data.date) &&
             data.close > 0 &&

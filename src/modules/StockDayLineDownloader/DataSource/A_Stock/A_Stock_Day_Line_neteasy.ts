@@ -16,13 +16,13 @@ import { exchangeToWan, exchangeToYi } from '../../Tools';
  * 下载地址：http://quotes.money.163.com/service/chddata.html?code=1300359&start=20140113&end=20180109&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP
  */
 export class A_Stock_Day_Line_neteasy extends BaseDownloader {
-
-    private _address(code: string, market: number, startDate: string) {
-        return `http://quotes.money.163.com/service/chddata.html?code=${market - 1}${code}&start=${moment(startDate).format('YYYYMMDD')}&end=${moment().format('YYYYMMDD')}&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP`;
-    }
-
+    
     get name() {
         return '网易财经 A股与A股指数日线数据下载器';
+    }
+    
+    private _address(code: string, market: number, startDate: string) {
+        return `http://quotes.money.163.com/service/chddata.html?code=${market - 1}${code}&start=${moment(startDate).format('YYYYMMDD')}&end=${moment().format('YYYYMMDD')}&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP`;
     }
 
     protected _testData(data: DayLineType | any) {

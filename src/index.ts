@@ -6,6 +6,7 @@ import { ModuleStatusRecorder } from './modules/ModuleStatusRecorder/ModuleStatu
 import { StockCodeDownloader } from './modules/StockCodeDownloader/StockCodeDownloader';
 import { StockBasicDownloader } from './modules/StockBasicDownloader/StockBasicDownloader';
 import { StockDayLineDownloader } from './modules/StockDayLineDownloader/StockDayLineDownloader';
+import { Stock_FQ_DayLineDownloader } from './modules/Stock_FQ_DayLineDownloader/Stock_FQ_DayLineDownloader';
 
 class StockDataDownloader extends DockerServicesManager { }
 
@@ -17,5 +18,6 @@ manager.registerService(new StockMarketList);
 manager.registerService(new StockCodeDownloader);
 manager.registerService(new StockBasicDownloader);
 manager.registerService(new StockDayLineDownloader);
+manager.registerService(new Stock_FQ_DayLineDownloader);
 
 manager.start();

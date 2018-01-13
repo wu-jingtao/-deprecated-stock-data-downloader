@@ -67,7 +67,6 @@ export class StockDayLineDownloader extends BaseDataModule {
                     throw new Error(`下载A股"${name}-${code}"失败：` + err);
                 }
             }
-
         }
 
         {//港股

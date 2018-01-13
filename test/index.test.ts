@@ -23,6 +23,8 @@ import { Future_Day_Line_sina } from '../src/modules/StockDayLineDownloader/Data
 
 import { WH_Day_Line_sina } from '../src/modules/StockDayLineDownloader/DataSource/WH/WH_Day_Line_sina';
 
+import { A_Stock_FQ_DayLine } from '../src/modules/Stock_FQ_DayLineDownloader/DataSource/A_Stock_FQ_DayLine';
+
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
 
@@ -47,12 +49,12 @@ describe('测试下载数据', function () {
 
     describe('测试下载基本面数据', function () {
 
-        it('同花顺 公司资料', () => Company_Information.download.bind(Company_Information, '300359'));
+        it('同花顺 公司资料', Company_Information.download.bind(Company_Information, '300359'));
 
-        it('同花顺 公司财务', () => Company_Finance.download.bind(Company_Finance, '300359'));
+        it('同花顺 公司财务', Company_Finance.download.bind(Company_Finance, '300359'));
     });
 
-    describe.only('测试下载日线数据', function () {
+    describe('测试下载日线数据', function () {
 
         it('网易财经 A股与A股指数日线数据', A_Stock_Day_Line_neteasy.download.bind(A_Stock_Day_Line_neteasy, '600007', 1, '1990-01-01'));
 
@@ -64,7 +66,12 @@ describe('测试下载数据', function () {
 
         it('新浪财经 国内商品期货日线数据', Future_Day_Line_sina.download.bind(Future_Day_Line_sina, 'AU'));
 
-        it.only('新浪财经 外汇日线数据', WH_Day_Line_sina.download.bind(WH_Day_Line_sina, 'fx_susdcny'));
+        it('新浪财经 外汇日线数据', WH_Day_Line_sina.download.bind(WH_Day_Line_sina, 'fx_susdcny'));
+    });
+
+    describe.only('测试下载 后复权收盘价数据', function () {
+
+        it('新浪财经 A股后复权收盘价数据', A_Stock_FQ_DayLine.download.bind(A_Stock_FQ_DayLine, '300359', 2));
     });
 });
 
