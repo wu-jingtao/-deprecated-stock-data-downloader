@@ -2,6 +2,7 @@ import * as moment from 'moment';
 
 import * as HttpDownloader from '../../../../tools/HttpDownloader';
 import { BaseDownloader } from '../../../../tools/BaseDownloader';
+import { GetLatestWeekData } from '../../../../tools/GetLatestWeekData';
 import { DayLineType } from '../../DayLineType';
 import { exchangeToWan, exchangeToYi } from '../../Tools';
 
@@ -15,12 +16,12 @@ import { exchangeToWan, exchangeToYi } from '../../Tools';
  */
 export class WH_Day_Line_sina extends BaseDownloader {
 
-    private _address(code: string) {
-        return `http://vip.stock.finance.sina.com.cn/forex/api/jsonp.php/var%20_fx_susdcny2018_1_12=/NewForexService.getDayKLine?symbol=${code}&_=${moment().add({ days: 1 }).format('YYYY_M_D')}`;
-    }
-
     get name() {
         return '新浪财经 外汇日线数据下载器';
+    }
+
+    private _address(code: string) {
+        return `http://vip.stock.finance.sina.com.cn/forex/api/jsonp.php/var%20_fx_susdcny2018_1_12=/NewForexService.getDayKLine?symbol=${code}&_=${moment().add({ days: 1 }).format('YYYY_M_D')}`;
     }
 
     protected _testData(data: DayLineType | any) {
@@ -50,5 +51,11 @@ export class WH_Day_Line_sina extends BaseDownloader {
                 volume: 0   //外汇没有成交量数据
             };
         });
+    }
+
+    protected _process(err: Error | undefined, data: any[], [code, name, reDownload]: any[]): Promise<any[]> {
+        return err ?
+            Promise.reject(new Error(`"${this.name}" 下载 "${name}-${code}" 失败：${err.message}\n${err.stack}`)) :
+            Promise.resolve(reDownload ? GetLatestWeekData(data, 'date') : data);
     }
 }

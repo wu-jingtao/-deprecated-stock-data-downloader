@@ -60,12 +60,8 @@ export class StockDayLineDownloader extends BaseDataModule {
             const start_date = reDownload ? '1990-01-01' : moment().subtract({ days: 7 }).format('YYYY-MM-DD');
 
             for (const { id, code, name, market } of code_list) {
-                try {
-                    await this._saveData(id, await A_Stock_Day_Line_neteasy.download(code, market, start_date));
-                    //console.log('A股', id, code, name, start_date);
-                } catch (err) {
-                    throw new Error(`下载A股"${name}-${code}"失败：` + err);
-                }
+                await this._saveData(id, await A_Stock_Day_Line_neteasy.download(code, name, market, start_date));
+                //console.log('A股', id, code, name, start_date);
             }
         }
 
@@ -73,12 +69,8 @@ export class StockDayLineDownloader extends BaseDataModule {
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [false]);
 
             for (const { id, code, name, market } of code_list) {
-                try {
-                    await this._saveData(id, await H_Stock_Day_Line_sina.download(code, reDownload));
-                    //console.log('港股', code, name);
-                } catch (err) {
-                    throw new Error(`下载港股"${name}-${code}"失败：` + err);
-                }
+                await this._saveData(id, await H_Stock_Day_Line_sina.download(code, name, reDownload));
+                //console.log('港股', code, name);
             }
         }
 
@@ -86,12 +78,8 @@ export class StockDayLineDownloader extends BaseDataModule {
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [true]);
 
             for (const { id, code, name, market } of code_list) {
-                try {
-                    await this._saveData(id, await H_Stock_Index_Day_Line_sina.download(code));
-                    //console.log('港股指数', code, name);
-                } catch (err) {
-                    throw new Error(`下载港股指数"${name}-${code}"失败：` + err);
-                }
+                await this._saveData(id, await H_Stock_Index_Day_Line_sina.download(code, name, reDownload));
+                //console.log('港股指数', code, name);
             }
         }
 
@@ -99,12 +87,8 @@ export class StockDayLineDownloader extends BaseDataModule {
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sqs.id, StockMarketType.zss.id, StockMarketType.dss.id], [true]);
 
             for (const { id, code, name, market } of code_list) {
-                try {
-                    await this._saveData(id, await Future_Day_Line_sina.download(code));
-                    //console.log('国内商品期货', code, name);
-                } catch (err) {
-                    throw new Error(`下载国内商品期货"${name}-${code}"失败：` + err);
-                }
+                await this._saveData(id, await Future_Day_Line_sina.download(code, name, reDownload));
+                //console.log('国内商品期货', code, name);
             }
         }
 
@@ -112,12 +96,8 @@ export class StockDayLineDownloader extends BaseDataModule {
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.wh.id], [true, false]);
 
             for (const { id, code, name, market } of code_list) {
-                try {
-                    await this._saveData(id, await WH_Day_Line_sina.download(code));
-                    //console.log('外汇', code, name);
-                } catch (err) {
-                    throw new Error(`下载外汇"${name}-${code}"失败：` + err);
-                }
+                await this._saveData(id, await WH_Day_Line_sina.download(code, name, reDownload));
+                //console.log('外汇', code, name);
             }
         }
     };

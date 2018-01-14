@@ -2,6 +2,7 @@ import * as moment from 'moment';
 
 import * as HttpDownloader from '../../../../tools/HttpDownloader';
 import { BaseDownloader } from '../../../../tools/BaseDownloader';
+import { GetLatestWeekData } from '../../../../tools/GetLatestWeekData';
 import { DayLineType } from '../../DayLineType';
 import { exchangeToWan, exchangeToYi } from '../../Tools';
 
@@ -15,15 +16,15 @@ import { exchangeToWan, exchangeToYi } from '../../Tools';
  */
 export class Future_Day_Line_sina extends BaseDownloader {
 
-    private _address(code: string) {
-        return `http://stock2.finance.sina.com.cn/futures/api/jsonp.php/var%20_HC02018_1_12=/InnerFuturesNewService.getDailyKLine?symbol=${code}0&_=${moment().add({ days: 1 }).format('YYYY_M_D')}`;
-    }
-
     get name() {
         return '新浪财经 国内商品期货日线数据下载器';
     }
 
-    protected _testData(data: DayLineType | any) {
+    private _address(code: string) {
+        return `http://stock2.finance.sina.com.cn/futures/api/jsonp.php/var%20_HC02018_1_12=/InnerFuturesNewService.getDailyKLine?symbol=${code}0&_=${moment().add({ days: 1 }).format('YYYY_M_D')}`;
+    }
+
+    protected _testData(data: DayLineType) {
         return /\d{4}.?\d{2}.?\d{2}/.test(data.date) &&
             data.close > 0 &&
             data.high > 0 &&
@@ -53,5 +54,11 @@ export class Future_Day_Line_sina extends BaseDownloader {
                 volume: exchangeToWan(data[6])
             };
         });
+    }
+
+    protected _process(err: Error | undefined, data: any[], [code, name, reDownload]: any[]): Promise<any[]> {
+        return err ?
+            Promise.reject(new Error(`"${this.name}" 下载 "${name}-${code}" 失败：${err.message}\n${err.stack}`)) :
+            Promise.resolve(reDownload ? GetLatestWeekData(data, 'date') : data);
     }
 }

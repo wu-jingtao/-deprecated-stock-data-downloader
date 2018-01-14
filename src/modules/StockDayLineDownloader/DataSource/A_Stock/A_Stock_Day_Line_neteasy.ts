@@ -16,11 +16,11 @@ import { exchangeToWan, exchangeToYi } from '../../Tools';
  * 下载地址：http://quotes.money.163.com/service/chddata.html?code=1300359&start=20140113&end=20180109&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP
  */
 export class A_Stock_Day_Line_neteasy extends BaseDownloader {
-    
+
     get name() {
         return '网易财经 A股与A股指数日线数据下载器';
     }
-    
+
     private _address(code: string, market: number, startDate: string) {
         return `http://quotes.money.163.com/service/chddata.html?code=${market - 1}${code}&start=${moment(startDate).format('YYYYMMDD')}&end=${moment().format('YYYYMMDD')}&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP`;
     }
@@ -44,7 +44,7 @@ export class A_Stock_Day_Line_neteasy extends BaseDownloader {
      * @param market 所属市场 上海1 深圳2
      * @param startDate 开始日期
      */
-    protected async _download(code: string, market: number, startDate: string) {
+    protected async _download(code: string, name: string, market: number, startDate: string) {
         const file = await HttpDownloader.Get(this._address(code, market, startDate));
         const data = iconv.decode(file, 'gbk');     //转码
 
@@ -61,5 +61,11 @@ export class A_Stock_Day_Line_neteasy extends BaseDownloader {
             gross_market_value: exchangeToWan(item['总市值']),
             current_market_value: exchangeToWan(item['流通市值'])
         }));
+    }
+
+    protected _process(err: Error | undefined, data: any[], [code, name]: any[]): Promise<any[]> {
+        return err ?
+            Promise.reject(new Error(`"${this.name}" 下载 "${name}-${code}" 失败：${err.message}\n${err.stack}`)) :
+            Promise.resolve(data);
     }
 }

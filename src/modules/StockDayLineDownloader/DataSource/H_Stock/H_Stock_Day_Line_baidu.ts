@@ -13,12 +13,12 @@ import { DayLineType } from '../../DayLineType';
  */
 export class H_Stock_Day_Line_baidu extends BaseDownloader {
 
-    private _address(code: string, length: number = 999999) {
-        return `https://gupiao.baidu.com/api/stocks/stockdaybar?from=pc&os_ver=1&cuid=xxx&vv=100&format=json&stock_code=hk${code}&step=3&start=&count=${length}&fq_type=no&timestamp=1515682611182`;
-    }
-
     get name() {
         return '百度股市通 港股与港股指数日线数据下载器';
+    }
+
+    private _address(code: string, length: number = 999999) {
+        return `https://gupiao.baidu.com/api/stocks/stockdaybar?from=pc&os_ver=1&cuid=xxx&vv=100&format=json&stock_code=hk${code}&step=3&start=&count=${length}&fq_type=no&timestamp=1515682611182`;
     }
 
     protected _testData(data: DayLineType | any) {
@@ -36,7 +36,7 @@ export class H_Stock_Day_Line_baidu extends BaseDownloader {
      * @param code 股票代码
      * @param length 要下载多少天的数据
      */
-    protected async _download(code: string, length?: number) {
+    protected async _download(code: string, name: string, length?: number) {
         const file = await HttpDownloader.Get(this._address(code, length));
         const data = JSON.parse(file.toString());
         return data.mashData.map((item: any) => ({
@@ -49,5 +49,11 @@ export class H_Stock_Day_Line_baidu extends BaseDownloader {
             volume: item.kline.volume / 10000,
             money: item.kline.amount / 10000
         }));
+    }
+
+    protected _process(err: Error | undefined, data: any[], [code, name]: any[]): Promise<any[]> {
+        return err ?
+            Promise.reject(new Error(`"${this.name}" 下载 "${name}-${code}" 失败：${err.message}\n${err.stack}`)) :
+            Promise.resolve(data);
     }
 }

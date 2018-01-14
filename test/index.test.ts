@@ -54,22 +54,22 @@ describe('测试下载数据', function () {
         it('同花顺 公司财务', Company_Finance.download.bind(Company_Finance, '300359'));
     });
 
-    describe('测试下载日线数据', function () {
+    describe.only('测试下载日线数据', function () {
 
-        it('网易财经 A股与A股指数日线数据', A_Stock_Day_Line_neteasy.download.bind(A_Stock_Day_Line_neteasy, '600007', 1, '1990-01-01'));
+        it('网易财经 A股与A股指数日线数据', A_Stock_Day_Line_neteasy.download.bind(A_Stock_Day_Line_neteasy, '600000', '浦发银行', 1, '1990-01-01'));
 
-        it('新浪财经 港股日线数据', H_Stock_Day_Line_sina.download.bind(H_Stock_Day_Line_sina, '00700', true));
+        it('新浪财经 港股日线数据', H_Stock_Day_Line_sina.download.bind(H_Stock_Day_Line_sina, '00700', '腾讯控股', true));
 
-        it('新浪财经 港股指数日线数据', H_Stock_Index_Day_Line_sina.download.bind(H_Stock_Index_Day_Line_sina, 'HSI'));
+        it('新浪财经 港股指数日线数据', H_Stock_Index_Day_Line_sina.download.bind(H_Stock_Index_Day_Line_sina, 'HSI', '恒生指数', false));
 
-        it('百度股市通 港股和港股指数日线数据', H_Stock_Day_Line_baidu.download.bind(H_Stock_Day_Line_baidu, '00700'));
+        it('百度股市通 港股和港股指数日线数据', H_Stock_Day_Line_baidu.download.bind(H_Stock_Day_Line_baidu, '00700', '腾讯控股'));
 
-        it('新浪财经 国内商品期货日线数据', Future_Day_Line_sina.download.bind(Future_Day_Line_sina, 'AU'));
+        it('新浪财经 国内商品期货日线数据', Future_Day_Line_sina.download.bind(Future_Day_Line_sina, 'AU', '沪金主连', false));
 
-        it('新浪财经 外汇日线数据', WH_Day_Line_sina.download.bind(WH_Day_Line_sina, 'fx_susdcny'));
+        it('新浪财经 外汇日线数据', WH_Day_Line_sina.download.bind(WH_Day_Line_sina, 'fx_susdcny', '美元人民币', false));
     });
 
-    describe.only('测试下载 后复权收盘价数据', function () {
+    describe('测试下载 后复权收盘价数据', function () {
 
         it('新浪财经 A股后复权收盘价数据', A_Stock_FQ_DayLine.download.bind(A_Stock_FQ_DayLine, '300359', 2));
     });

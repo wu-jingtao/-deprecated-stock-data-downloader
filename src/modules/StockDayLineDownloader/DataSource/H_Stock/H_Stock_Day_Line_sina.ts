@@ -93,7 +93,7 @@ export class H_Stock_Day_Line_sina extends BaseDownloader {
      * @param code 股票代码
      * @param downloadAll 是否下载全部数据
      */
-    protected async _download(code: string, downloadAll?: boolean) {
+    protected async _download(code: string, name: string, downloadAll?: boolean) {
         if (downloadAll) {
             const result: DayLineType[] = [];
             const min_year = Number.parseInt(await this._get_listing_year(code));
@@ -108,5 +108,11 @@ export class H_Stock_Day_Line_sina extends BaseDownloader {
         } else {
             return await this._download_data(code);
         }
+    }
+
+    protected _process(err: Error | undefined, data: any[], [code, name]: any[]): Promise<any[]> {
+        return err ?
+            Promise.reject(new Error(`"${this.name}" 下载 "${name}-${code}" 失败：${err.message}\n${err.stack}`)) :
+            Promise.resolve(data);
     }
 }
