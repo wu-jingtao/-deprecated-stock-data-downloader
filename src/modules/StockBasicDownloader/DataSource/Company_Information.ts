@@ -19,7 +19,7 @@ export class Company_Information extends BaseDownloader {
         return 'A股公司资料下载器';
     }
 
-    private address(code: string) {
+    private _address(code: string) {
         return `http://basic.10jqka.com.cn/${code}/company.html`;
     };
 
@@ -28,7 +28,7 @@ export class Company_Information extends BaseDownloader {
     }
 
     protected async _download(code: string) {
-        const file = await HttpDownloader.Get(this.address(code));
+        const file = await HttpDownloader.Get(this._address(code));
         const data = iconv.decode(file, 'gbk');     //转码
         const $ = cheerio.load(data);
 
@@ -80,5 +80,11 @@ export class Company_Information extends BaseDownloader {
                 };
             }))
         }];
+    }
+
+    protected _process(err: Error | undefined, data: any[], [code, name]: any[]): Promise<any[]> {
+        return err ?
+            Promise.reject(new Error(`"${this.name}" 下载 "${name}-${code}" 失败：${err.message}\n${err.stack}`)) :
+            Promise.resolve(data);
     }
 }

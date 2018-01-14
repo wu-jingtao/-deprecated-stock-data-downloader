@@ -61,7 +61,7 @@ export function normalizePercent(data?: string) {
         if ((<string>data).includes('%')) {
             return temp / 100;
         } else {
-            return temp;
+            return temp * 1;
         }
     }
 }

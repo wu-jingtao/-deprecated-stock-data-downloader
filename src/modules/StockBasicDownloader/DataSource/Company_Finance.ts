@@ -19,8 +19,8 @@ export class Company_Finance extends BaseDownloader {
     get name() {
         return 'A股财务数据下载器';
     }
-    
-    private address(code: string) {
+
+    private _address(code: string) {
         return "http://basic.10jqka.com.cn/api/stock/export.php?export=main&type=report&code=" + code;
     }
 
@@ -71,7 +71,7 @@ export class Company_Finance extends BaseDownloader {
     }
 
     protected async _download(code: string) {
-        const file = await HttpDownloader.Get(this.address(code));
+        const file = await HttpDownloader.Get(this._address(code));
         const data = this._parseData(xlsx.read(file).Sheets['Worksheet']);
 
         return data.map(item => ({
@@ -85,5 +85,11 @@ export class Company_Finance extends BaseDownloader {
             undistributed_profit_per_share: normalizeAmountToYi(item['每股未分配利润']),
             operating_cash_flow_per_share: normalizeAmountToYi(item['每股经营现金流'])
         }));
+    }
+
+    protected _process(err: Error | undefined, data: any[], [code, name]: any[]): Promise<any[]> {
+        return err ?
+            Promise.reject(new Error(`"${this.name}" 下载 "${name}-${code}" 失败：${err.message}\n${err.stack}`)) :
+            Promise.resolve(data);
     }
 }
