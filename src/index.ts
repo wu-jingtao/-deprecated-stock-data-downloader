@@ -20,6 +20,8 @@ manager.registerService(new StockCodeDownloader);
 manager.registerService(new StockBasicDownloader);
 manager.registerService(new StockDayLineDownloader);
 manager.registerService(new Stock_FQ_DayLineDownloader);
-manager.registerService(new StockTradeDetailDownloader);
+
+//这个由于下载的数据量太大，暂不下载
+//manager.registerService(new StockTradeDetailDownloader);
 
 manager.start();

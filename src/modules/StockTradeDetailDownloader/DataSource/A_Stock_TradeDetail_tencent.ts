@@ -11,7 +11,7 @@ import { exchangeToYi, exchangeToWan } from '../../StockDayLineDownloader/Tools'
  * A股成交明细数据下载器
  * 
  * 腾讯财经数据。返回`tsv`格式的数据 `GBK`编码
- * 注意，腾讯好像只提供最近一个月的数据
+ * 注意：成交明细的时间可能会发生重复，同一秒下可能会发生多笔交易
  * 
  * 相关页面：http://stockhtm.finance.qq.com/sstock/quotpage/q/300359.htm#detail
  * 下载地址：http://stock.gtimg.cn/data/index.php?appn=detail&action=download&c=sz300359&d=20180112

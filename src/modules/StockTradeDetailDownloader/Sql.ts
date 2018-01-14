@@ -1,3 +1,5 @@
+import { TradeDetailType } from "./TradeDetailType";
+
 /**
  * 创建表
  */
@@ -9,7 +11,6 @@ export const create_table = "\
         `volume` double unsigned NOT NULL COMMENT '成交量（万股）',\
         `money` double unsigned NOT NULL COMMENT '成交金额（万元）',\
         `direction` char(1) NOT NULL COMMENT '成交方向。 S：卖盘，B：买盘，M：中性盘',\
-        UNIQUE KEY `unique` (`code`,`date`),\
         KEY `code_idx` (`code`),\
         KEY `date_idx` (`date`),\
         CONSTRAINT `stock_trade_detail_code` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
@@ -17,18 +18,25 @@ export const create_table = "\
 ";
 
 /**
- * 插入或更新数据
+ * 插入数据
+ * @param code_id 代码id
+ * @param data 要插入的数据
  */
-export const insert_data = "\
-    INSERT INTO `stock`.`stock_trade_detail`\
-    (`code`,`date`,`price`,`volume`,`money`,`direction`)\
-    VALUES\
-    (?,?,?,?,?,?)\
-    ON DUPLICATE KEY UPDATE \
-    `price` = ?,\
-    `volume` = ?,\
-    `money` = ?,\
-    `direction` = ?\
+export function insert_data(code_id: number, data: TradeDetailType[]) {
+    const insert = "\
+        INSERT INTO `stock`.`stock_trade_detail`\
+        (`code`,`date`,`price`,`volume`,`money`,`direction`)\
+        VALUES ";
+
+    return insert + data.map(item => `(${code_id},'${item.date}','${item.price}','${item.volume}','${item.money}','${item.direction}')`).join(',');
+}
+
+/**
+ * 删除旧的数据
+ */
+export const delete_data = "\
+    DELETE FROM `stock`.`stock_trade_detail`\
+    WHERE `code` = ? AND date(`date`) = ?;\
 ";
 
 /**

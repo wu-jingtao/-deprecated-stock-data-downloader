@@ -18,7 +18,7 @@ export class StockTradeDetailDownloader extends BaseDataModule {
     constructor() {
         super([
             { time: "0 15 18 * * 1-5" },                //每周1-5的下午6点15分更新当天数据
-            { time: "0 0 1 * * 7", reDownload: true }   //每周末凌晨1点更新全部数据
+            { time: "0 0 1 1 * *", reDownload: true }   //每月1日更新全部数据
         ], [sql.create_table]);
     }
 
@@ -29,14 +29,14 @@ export class StockTradeDetailDownloader extends BaseDataModule {
 
     /**
      * 保存下载到的数据
+     * @param date 日期 'YYYY-MM-DD'
+     * @param data 下载到的数据
      */
-    private async _saveData(code_id: number, data: TradeDetailType[]) {
-        for (const item of data) {
-            await this._connection.asyncQuery(sql.insert_data, [
-                code_id, item.date, item.price, item.volume, item.money, item.direction,
-                item.price, item.volume, item.money, item.direction
-            ]);
-        }
+    private async _saveData(code_id: number, date: string, data: TradeDetailType[]) {
+        //由于成交明细数据中的日期会出现重复(同一秒下发生多笔交易)，所以没办法像其他数据那样更新。
+        //所以只有先删除当天的旧数据再导入当天的新数据
+        await this._connection.asyncQuery(sql.delete_data, [code_id, date]);
+        await this._connection.asyncQuery(sql.insert_data(code_id, data), [code_id, date]);
     }
 
     protected async _downloader(reDownload?: boolean) {
@@ -46,12 +46,14 @@ export class StockTradeDetailDownloader extends BaseDataModule {
             for (const { id, code, name, market } of code_list) {
                 if (reDownload) {
                     const dateList = await this._connection.asyncQuery(sql.get_stock_date_list, [id]);
-                    for (const { date } of dateList) {
-                        await this._saveData(id, await A_Stock_TradeDetail_tencent.download(code, name, market, moment(date).format('YYYY-MM-DD')));
-                        //console.log('A股', code, name, moment(date).format('YYYY-MM-DD'));
+                    for (let { date } of dateList) {
+                        date = moment(date).format('YYYY-MM-DD');
+                        await this._saveData(id, date, await A_Stock_TradeDetail_tencent.download(code, name, market, date));
+                        //console.log('A股', code, name, date);
                     }
                 } else {
-                    await this._saveData(id, await A_Stock_TradeDetail_tencent.download(code, name, market, moment().format('YYYY-MM-DD')));
+                    let date = moment().format('YYYY-MM-DD');
+                    await this._saveData(id, date, await A_Stock_TradeDetail_tencent.download(code, name, market, date));
                 }
                 //console.log('A股', code, name);
             }
