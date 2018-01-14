@@ -14,12 +14,12 @@ import { StockMarketType } from '../../../StockMarketList/StockMarketType';
  */
 export class A_Code_dfcf extends BaseDownloader {
 
-    private address = 'http://quote.eastmoney.com/stocklist.html';  //下载地址
-
     get name() {
         return '东方财富 A股代码下载器';
     }
 
+    private _address = 'http://quote.eastmoney.com/stocklist.html';  //下载地址
+    
     protected _testData(data: StockCodeType) {
         return /^[360]\d{5}$/.test(data.code) &&    //股票代码,只要A股
             data.name.length > 0 &&                 //确保公司名称不为空
@@ -27,7 +27,7 @@ export class A_Code_dfcf extends BaseDownloader {
     }
 
     protected async _download() {
-        const file = await HttpDownloader.Get(this.address);
+        const file = await HttpDownloader.Get(this._address);
         const data = iconv.decode(file, 'gbk');     //转码
 
         return Array.from($("#quotesearch ul li a[target]", data).map(function (this: CheerioElement) {
@@ -43,10 +43,10 @@ export class A_Code_dfcf extends BaseDownloader {
         }));
     }
 
-    protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
+    protected _process(err: Error | undefined, data: any[], downloadArgs: any[]): Promise<any[]> {
         if (err === undefined && data.length === 0)
-            return super._process(new Error('没有下载到数据'), data);
+            return super._process(new Error('没有下载到数据'), data, downloadArgs);
         else
-            return super._process(err, data);
+            return super._process(err, data, downloadArgs);
     }
 }

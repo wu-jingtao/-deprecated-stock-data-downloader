@@ -27,8 +27,9 @@ export abstract class BaseDownloader {
      * 可以使用该方法对下载到的数据做最后处理
      * @param err 错误消息
      * @param data 下载到的数据
+     * @param downloadArgs 传给下载器的参数
      */
-    protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
+    protected _process(err: Error | undefined, data: any[], downloadArgs: any[]): Promise<any[]> {
         return err ? Promise.reject(new Error(`"${this.name}"：${err.message}\n${err.stack}`)) : Promise.resolve(data);
     }
 
@@ -46,7 +47,7 @@ export abstract class BaseDownloader {
             data.forEach(item => downloader._testData(item) && result.push(item));
 
             return result;
-        })().then(data => downloader._process(undefined, data))
-            .catch(err => downloader._process(err, undefined as any));
+        })().then(data => downloader._process(undefined, data, args))
+            .catch(err => downloader._process(err, undefined as any, args));
     }
 }

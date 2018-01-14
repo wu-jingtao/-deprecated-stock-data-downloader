@@ -18,12 +18,12 @@ import { StockMarketType } from '../../../StockMarketList/StockMarketType';
  */
 export class SH_A_Code_sjs extends BaseDownloader {
 
-    private address = 'http://query.sse.com.cn/security/stock/downloadStockListFile.do?csrcCode=&stockCode=&areaName=&stockType=1';
-    private referer = "http://www.sse.com.cn/assortment/stock/list/share/";
-
     get name() {
         return '上交所 A股代码下载器';
     }
+
+    private _address = 'http://query.sse.com.cn/security/stock/downloadStockListFile.do?csrcCode=&stockCode=&areaName=&stockType=1';
+    private _referer = "http://www.sse.com.cn/assortment/stock/list/share/";
 
     protected _testData(data: StockCodeType) {
         return /^6\d{5}$/.test(data.code) &&        //股票代码
@@ -31,7 +31,7 @@ export class SH_A_Code_sjs extends BaseDownloader {
     }
 
     protected async _download() {
-        const file = await HttpDownloader.Get(this.address, { Referer: this.referer });
+        const file = await HttpDownloader.Get(this._address, { Referer: this._referer });
         const data = iconv.decode(file, 'gbk');     //转码
 
         return dsv.tsvParse(data).map(item => ({
@@ -42,10 +42,10 @@ export class SH_A_Code_sjs extends BaseDownloader {
         }));
     }
 
-    protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
+    protected _process(err: Error | undefined, data: any[], downloadArgs: any[]): Promise<any[]> {
         if (err === undefined && data.length === 0)
-            return super._process(new Error('没有下载到数据'), data);
+            return super._process(new Error('没有下载到数据'), data, downloadArgs);
         else
-            return super._process(err, data);
+            return super._process(err, data, downloadArgs);
     }
 }

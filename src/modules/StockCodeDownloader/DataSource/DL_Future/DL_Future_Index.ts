@@ -28,13 +28,13 @@ export class DL_Future_Index extends BaseDownloader {
 
     protected async _download() {
         const file = fs.readFileSync(path.resolve(__dirname, './DSS_2018-1-6.xls'));
-        const data = iconv.decode(file, 'gbk');     //转码
+        const data = dsv.tsvParse(iconv.decode(file, 'gbk'));     //转码
 
-        return dsv.tsvParse(data).map(item => {
+        return data.map(item => {
             const [name, code] = _.map(item, value => value && value.trim());   //去除空格
 
             return {
-                code: ((code && code.match(/[a-z]+/i)) || [''])[0],
+                code: (<any>code).match(/[a-z]+/i)[0],
                 name,
                 market: StockMarketType.dss.id,
                 isIndex: true
@@ -42,10 +42,10 @@ export class DL_Future_Index extends BaseDownloader {
         });
     }
 
-    protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
+    protected _process(err: Error | undefined, data: any[], downloadArgs: any[]): Promise<any[]> {
         if (err === undefined && data.length === 0)
-            return super._process(new Error('没有读取到满足条件的数据'), data);
+            return super._process(new Error('没有读取到满足条件的数据'), data, downloadArgs);
         else
-            return super._process(err, data);
+            return super._process(err, data, downloadArgs);
     }
 }

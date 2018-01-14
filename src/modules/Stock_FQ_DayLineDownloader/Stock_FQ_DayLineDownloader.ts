@@ -14,8 +14,8 @@ export class Stock_FQ_DayLineDownloader extends BaseDataModule {
     private _stockCodeDownloader: StockCodeDownloader;
 
     constructor() {
-        //每周1-5的下午6点15分更新数据
-        super([{ time: "0 15 18 * * 1-5" }], [sql.create_table]);
+        //每周1-6的下午6点15分更新数据
+        super([{ time: "0 15 18 * * 1-6" }], [sql.create_table]);
     }
 
     async onStart(): Promise<void> {

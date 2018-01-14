@@ -15,11 +15,11 @@ import { StockMarketType } from '../../../StockMarketList/StockMarketType';
  */
 export class SZ_A_Code_sjs extends BaseDownloader {
 
-    private address = 'http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=xlsx&CATALOGID=1110&tab2PAGENO=1&ENCODE=1&TABKEY=tab2';
-
     get name() {
         return '深交所 A股代码下载器';
     }
+
+    private _address = 'http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=xlsx&CATALOGID=1110&tab2PAGENO=1&ENCODE=1&TABKEY=tab2';
 
     protected _testData(data: StockCodeType) {
         return /^[03]\d{5}$/.test(data.code) &&     //股票代码
@@ -27,7 +27,7 @@ export class SZ_A_Code_sjs extends BaseDownloader {
     }
 
     protected async _download() {
-        const file = await HttpDownloader.Get(this.address);
+        const file = await HttpDownloader.Get(this._address);
         const data = xlsx.read(file).Sheets["A股列表"];
         const result = xlsx.utils.sheet_to_json(data) as any[];
 
@@ -39,10 +39,10 @@ export class SZ_A_Code_sjs extends BaseDownloader {
         }));
     }
 
-    protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
+    protected _process(err: Error | undefined, data: any[], downloadArgs: any[]): Promise<any[]> {
         if (err === undefined && data.length === 0)
-            return super._process(new Error('没有下载到数据'), data);
+            return super._process(new Error('没有下载到数据'), data, downloadArgs);
         else
-            return super._process(err, data);
+            return super._process(err, data, downloadArgs);
     }
 }

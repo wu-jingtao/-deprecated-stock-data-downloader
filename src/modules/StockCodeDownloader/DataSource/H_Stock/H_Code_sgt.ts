@@ -15,11 +15,11 @@ import { StockMarketType } from '../../../StockMarketList/StockMarketType';
  */
 export class H_Code_sgt extends BaseDownloader {
 
-    private address = 'http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=xlsx&CATALOGID=SGT_GGTBDQD&tab1PAGENO=1&ENCODE=1&TABKEY=tab1';  //下载地址
-
     get name() {
-        return '深交所 深港通代码列表下载器';
+        return '深交所 深港通代码下载器';
     }
+
+    private _address = 'http://www.szse.cn/szseWeb/ShowReport.szse?SHOWTYPE=xlsx&CATALOGID=SGT_GGTBDQD&tab1PAGENO=1&ENCODE=1&TABKEY=tab1';  //下载地址
 
     protected _testData(data: StockCodeType) {
         return /^\d{5}$/.test(data.code) &&     //股票代码
@@ -27,7 +27,7 @@ export class H_Code_sgt extends BaseDownloader {
     }
 
     protected async _download() {
-        const file = await HttpDownloader.Get(this.address);
+        const file = await HttpDownloader.Get(this._address);
         const data = xlsx.read(file);
         const result = xlsx.utils.sheet_to_json(data.Sheets["港股通标的证券名单"]) as any[];
 
@@ -44,10 +44,10 @@ export class H_Code_sgt extends BaseDownloader {
         });
     }
 
-    protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
+    protected _process(err: Error | undefined, data: any[], downloadArgs: any[]): Promise<any[]> {
         if (err === undefined && data.length === 0)
-            return super._process(new Error('没有下载到数据'), data);
+            return super._process(new Error('没有下载到数据'), data, downloadArgs);
         else
-            return super._process(err, data);
+            return super._process(err, data, downloadArgs);
     }
 }

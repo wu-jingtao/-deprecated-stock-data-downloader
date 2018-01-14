@@ -12,11 +12,11 @@ import { StockMarketType } from '../../../StockMarketList/StockMarketType';
  */
 export class H_Code_hgt extends BaseDownloader {
 
-    private address = 'http://www.sse.com.cn/services/hkexsc/disclo/eligiblead/';  //下载地址
-
     get name() {
-        return '上交所 沪港通代码列表下载器';
+        return '上交所 沪港通代码下载器';
     }
+
+    private _address = 'http://www.sse.com.cn/services/hkexsc/disclo/eligiblead/';  //下载地址
 
     protected _testData(data: StockCodeType) {
         return /^\d{5}$/.test(data.code) &&     //股票代码
@@ -24,7 +24,7 @@ export class H_Code_hgt extends BaseDownloader {
     }
 
     protected async _download() {
-        const file = (await HttpDownloader.Get(this.address)).toString();
+        const file = (await HttpDownloader.Get(this._address)).toString();
 
         //数据排列：序号	港股代码	英文简称	中文简称	调整内容	生效日期
         const reg_g = /\[\s+"\d+",\s+"(\d{5})",\s+"(.+?)",\s+"(.+?)",\s+"(.+?)",\s+"(\d{4}-\d{2}-\d{2})"\s+\]/g;
@@ -44,10 +44,10 @@ export class H_Code_hgt extends BaseDownloader {
         });
     }
 
-    protected _process(err: Error | undefined, data: any[]): Promise<any[]> {
+    protected _process(err: Error | undefined, data: any[], downloadArgs: any[]): Promise<any[]> {
         if (err === undefined && data.length === 0)
-            return super._process(new Error('没有下载到数据'), data);
+            return super._process(new Error('没有下载到数据'), data, downloadArgs);
         else
-            return super._process(err, data);
+            return super._process(err, data, downloadArgs);
     }
 }
