@@ -26,6 +26,8 @@ import { WH_Day_Line_sina } from '../src/modules/StockDayLineDownloader/DataSour
 import { A_Stock_FQ_DayLine_sina } from '../src/modules/Stock_FQ_DayLineDownloader/DataSource/A_Stock_FQ_DayLine_sina';
 import { H_Stock_FQ_DayLine_tencent } from '../src/modules/Stock_FQ_DayLineDownloader/DataSource/H_Stock_FQ_DayLine_tencent';
 
+import { A_Stock_TradeDetail_tencent } from '../src/modules/StockTradeDetailDownloader/DataSource/A_Stock_TradeDetail_tencent';
+
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
 
@@ -70,11 +72,17 @@ describe('测试下载数据', function () {
         it('新浪财经 外汇日线数据', WH_Day_Line_sina.download.bind(WH_Day_Line_sina, 'fx_susdcny', '美元人民币', false));
     });
 
-    describe.only('测试下载 后复权收盘价数据', function () {
+    describe('测试下载 后复权收盘价数据', function () {
 
         it('新浪财经 A股后复权收盘价数据', A_Stock_FQ_DayLine_sina.download.bind(A_Stock_FQ_DayLine_sina, '300359', '全通教育', 2, false));
 
         it('腾讯财经 港股后复权收盘价数据', H_Stock_FQ_DayLine_tencent.download.bind(H_Stock_FQ_DayLine_tencent, '00700', '腾讯控股', false));
+    });
+
+    describe.only('测试下载 成交明细数据', function () {
+
+        //注意，由于腾讯好像只提供最近一个月的数据，所以之后测试的时候可能需要修改日期
+        it('腾讯财经 港股后复权收盘价数据', A_Stock_TradeDetail_tencent.download.bind(A_Stock_TradeDetail_tencent, '300359', '全通教育', 2, ['2000-01-01', '2018-01-12', '2018-01-11']));
     });
 });
 
