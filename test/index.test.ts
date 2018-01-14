@@ -79,7 +79,7 @@ describe('测试下载数据', function () {
         it('腾讯财经 港股后复权收盘价数据', H_Stock_FQ_DayLine_tencent.download.bind(H_Stock_FQ_DayLine_tencent, '00700', '腾讯控股', false));
     });
 
-    describe.only('测试下载 成交明细数据', function () {
+    describe('测试下载 成交明细数据', function () {
 
         //注意，由于腾讯好像只提供最近一个月的数据，所以之后测试的时候可能需要修改日期
         it('腾讯财经 港股后复权收盘价数据', A_Stock_TradeDetail_tencent.download.bind(A_Stock_TradeDetail_tencent, '300359', '全通教育', 2, '2018-01-12'));

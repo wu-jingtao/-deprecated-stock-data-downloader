@@ -31,7 +31,7 @@ export class ZZ_Future_Index extends BaseDownloader {
         const data = dsv.tsvParse(iconv.decode(file, 'gbk'));     //转码
 
         return data.map(item => {
-            const [name, code] = _.map(item, value => value && value.trim());   //去除空格
+            const [name = '', code = ''] = _.map(item, value => value && value.trim());   //去除空格
 
             return {
                 code: (<any>code).match(/[a-z]+/i)[0],
