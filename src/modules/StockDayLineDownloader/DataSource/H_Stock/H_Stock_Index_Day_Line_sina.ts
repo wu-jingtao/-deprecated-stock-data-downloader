@@ -64,7 +64,7 @@ export class H_Stock_Index_Day_Line_sina extends BaseDownloader {
     protected _process(err: Error | undefined, data: any[], [code, name, reDownload]: any[]): Promise<any[]> {
         return err ?
             Promise.reject(new Error(`"${this.name}" 下载 "${name}-${code}" 失败：${err.message}\n${err.stack}`)) :
-            Promise.resolve(reDownload ? GetLatestWeekData(data, 'date') : data);
+            Promise.resolve(reDownload ? data : GetLatestWeekData(data, 'date'));
     }
 }
 

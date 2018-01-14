@@ -1,5 +1,6 @@
 import * as HttpDownloader from '../../../tools/HttpDownloader';
 import { BaseDownloader } from '../../../tools/BaseDownloader';
+import { GetLatestWeekData } from '../../../tools/GetLatestWeekData';
 import { FQ_DayLineType } from '../FQ_DayLineType';
 
 /**
@@ -25,7 +26,7 @@ export class A_Stock_FQ_DayLine extends BaseDownloader {
             data.close > 0;
     }
 
-    protected async _download(code: string, market: number) {
+    protected async _download(code: string, name: string, market: number) {
         const reg_g = /_(\d{4}_\d{2}_\d{2}):"(-?[0-9\.]+)"/g;
         const reg = /_(\d{4}_\d{2}_\d{2}):"(-?[0-9\.]+)"/;
 
@@ -40,5 +41,11 @@ export class A_Stock_FQ_DayLine extends BaseDownloader {
                 close: Number.parseFloat(temp[2]),
             }
         });
+    }
+
+    protected _process(err: Error | undefined, data: any[], [code, name, market, reDownload]: any[]): Promise<any[]> {
+        return err ?
+            Promise.reject(new Error(`"${this.name}" 下载 "${name}-${code}" 失败：${err.message}\n${err.stack}`)) :
+            Promise.resolve(reDownload ? data : GetLatestWeekData(data, 'date', 'YYYY_MM_DD'));
     }
 }

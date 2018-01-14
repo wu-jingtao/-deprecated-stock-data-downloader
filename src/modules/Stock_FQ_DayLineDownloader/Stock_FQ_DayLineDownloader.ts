@@ -14,8 +14,10 @@ export class Stock_FQ_DayLineDownloader extends BaseDataModule {
     private _stockCodeDownloader: StockCodeDownloader;
 
     constructor() {
-        //每周1-6的下午6点15分更新数据
-        super([{ time: "0 15 18 * * 1-6" }], [sql.create_table]);
+        super([
+            { time: "0 15 18 * * 1-5" },                //每周1-5的下午6点15分更新当天数据
+            { time: "0 0 1 * * 7", reDownload: true }   //每周末凌晨1点更新全部数据
+        ], [sql.create_table]);
     }
 
     async onStart(): Promise<void> {
@@ -35,17 +37,13 @@ export class Stock_FQ_DayLineDownloader extends BaseDataModule {
         }
     }
 
-    protected async _downloader() {
+    protected async _downloader(reDownload?: boolean) {
         {//A股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [false]);
 
             for (const { id, code, name, market } of code_list) {
-                try {
-                    await this._saveData(id, await A_Stock_FQ_DayLine.download(code, market));
-                    //console.log('A股', id, code, name, start_date);
-                } catch (err) {
-                    throw new Error(`下载A股后复权收盘价"${name}-${code}"失败：` + err);
-                }
+                await this._saveData(id, await A_Stock_FQ_DayLine.download(code, name, market, reDownload));
+                //console.log('A股', id, code, name, start_date);
             }
         }
     };

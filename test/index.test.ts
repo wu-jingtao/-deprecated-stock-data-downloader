@@ -54,7 +54,7 @@ describe('测试下载数据', function () {
         it('同花顺 公司财务', Company_Finance.download.bind(Company_Finance, '300359'));
     });
 
-    describe.only('测试下载日线数据', function () {
+    describe('测试下载日线数据', function () {
 
         it('网易财经 A股与A股指数日线数据', A_Stock_Day_Line_neteasy.download.bind(A_Stock_Day_Line_neteasy, '600000', '浦发银行', 1, '1990-01-01'));
 
@@ -69,9 +69,9 @@ describe('测试下载数据', function () {
         it('新浪财经 外汇日线数据', WH_Day_Line_sina.download.bind(WH_Day_Line_sina, 'fx_susdcny', '美元人民币', false));
     });
 
-    describe('测试下载 后复权收盘价数据', function () {
+    describe.only('测试下载 后复权收盘价数据', function () {
 
-        it('新浪财经 A股后复权收盘价数据', A_Stock_FQ_DayLine.download.bind(A_Stock_FQ_DayLine, '300359', 2));
+        it('新浪财经 A股后复权收盘价数据', A_Stock_FQ_DayLine.download.bind(A_Stock_FQ_DayLine, '300359', '全通教育', 2, false));
     });
 });
 
