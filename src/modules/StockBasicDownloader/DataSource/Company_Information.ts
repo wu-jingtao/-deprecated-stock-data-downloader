@@ -15,11 +15,13 @@ import { normalizeAmountToYi, normalizeAmountToWan, normalizeNull } from '../Too
  */
 export class Company_Information extends BaseDownloader {
 
-    private address = (code: string) => `http://basic.10jqka.com.cn/${code}/company.html`;
-
     get name() {
         return 'A股公司资料下载器';
     }
+
+    private address(code: string) {
+        return `http://basic.10jqka.com.cn/${code}/company.html`;
+    };
 
     protected _testData(data: CompanyInformationType) {
         return true

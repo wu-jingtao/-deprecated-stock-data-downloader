@@ -16,10 +16,12 @@ import { normalizeAmountToYi, normalizeAmountToWan, normalizePercent } from '../
  */
 export class Company_Finance extends BaseDownloader {
 
-    private address = (code: string) => "http://basic.10jqka.com.cn/api/stock/export.php?export=main&type=report&code=" + code;
-
     get name() {
         return 'A股财务数据下载器';
+    }
+    
+    private address(code: string) {
+        return "http://basic.10jqka.com.cn/api/stock/export.php?export=main&type=report&code=" + code;
     }
 
     /**
