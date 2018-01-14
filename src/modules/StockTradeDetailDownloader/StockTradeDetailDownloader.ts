@@ -46,9 +46,12 @@ export class StockTradeDetailDownloader extends BaseDataModule {
             for (const { id, code, name, market } of code_list) {
                 if (reDownload) {
                     const dateList = await this._connection.asyncQuery(sql.get_stock_date_list, [id]);
-                    await this._saveData(id, await A_Stock_TradeDetail_tencent.download(code, name, market, dateList.map((item: any) => item.date)));
+                    for (const { date } of dateList) {
+                        await this._saveData(id, await A_Stock_TradeDetail_tencent.download(code, name, market, moment(date).format('YYYY-MM-DD')));
+                        //console.log('A股', code, name, moment(date).format('YYYY-MM-DD'));
+                    }
                 } else {
-                    await this._saveData(id, await A_Stock_TradeDetail_tencent.download(code, name, market, [moment().format('YYYY-MM-DD')]));
+                    await this._saveData(id, await A_Stock_TradeDetail_tencent.download(code, name, market, moment().format('YYYY-MM-DD')));
                 }
                 //console.log('A股', code, name);
             }

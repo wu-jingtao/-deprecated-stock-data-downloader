@@ -55,27 +55,19 @@ export class A_Stock_TradeDetail_tencent extends BaseDownloader {
      * @param code 代码
      * @param name 名称
      * @param market 市场
-     * @param dateList 要下载的日期列表。传入的日期要求"YYYY-MM-DD"格式
+     * @param date 要下载的日期。传入的日期要求"YYYY-MM-DD"格式
      */
-    protected async _download(code: string, name: string, market: number, dateList: string[]) {
-        const result: TradeDetailType[] = [];
+    protected async _download(code: string, name: string, market: number, date: string) {
+        const file = await HttpDownloader.Get(this._address(code, market, date));
+        const data = dsv.tsvParse(iconv.decode(file, 'gbk'));     //转码
 
-        for (const date of dateList) {
-            const file = await HttpDownloader.Get(this._address(code, market, date));
-            const data = dsv.tsvParse(iconv.decode(file, 'gbk'));     //转码
-
-            data.forEach((item: any) => {
-                result.push({
-                    date: `${date} ${item['成交时间'].trim()}`,
-                    price: exchangeToYi(item['成交价格']),
-                    volume: (exchangeToYi(item['成交量(手)']) as any) / 100,
-                    money: exchangeToWan(item['成交额(元)']),
-                    direction: this._tradeDirection(item['性质']),
-                } as any);
-            });
-        }
-
-        return result;
+        return data.map((item: any) => ({
+            date: `${date} ${item['成交时间'].trim()}`,
+            price: exchangeToYi(item['成交价格']),
+            volume: (exchangeToYi(item['成交量(手)']) as any) / 100,
+            money: exchangeToWan(item['成交额(元)']),
+            direction: this._tradeDirection(item['性质']),
+        }));
     }
 
     protected _process(err: Error | undefined, data: any[], [code, name]: any[]): Promise<any[]> {
