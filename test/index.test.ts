@@ -23,7 +23,8 @@ import { Future_Day_Line_sina } from '../src/modules/StockDayLineDownloader/Data
 
 import { WH_Day_Line_sina } from '../src/modules/StockDayLineDownloader/DataSource/WH/WH_Day_Line_sina';
 
-import { A_Stock_FQ_DayLine } from '../src/modules/Stock_FQ_DayLineDownloader/DataSource/A_Stock_FQ_DayLine';
+import { A_Stock_FQ_DayLine_sina } from '../src/modules/Stock_FQ_DayLineDownloader/DataSource/A_Stock_FQ_DayLine_sina';
+import { H_Stock_FQ_DayLine_tencent } from '../src/modules/Stock_FQ_DayLineDownloader/DataSource/H_Stock_FQ_DayLine_tencent';
 
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
@@ -71,7 +72,9 @@ describe('测试下载数据', function () {
 
     describe.only('测试下载 后复权收盘价数据', function () {
 
-        it('新浪财经 A股后复权收盘价数据', A_Stock_FQ_DayLine.download.bind(A_Stock_FQ_DayLine, '300359', '全通教育', 2, false));
+        it('新浪财经 A股后复权收盘价数据', A_Stock_FQ_DayLine_sina.download.bind(A_Stock_FQ_DayLine_sina, '300359', '全通教育', 2, false));
+
+        it('腾讯财经 港股后复权收盘价数据', H_Stock_FQ_DayLine_tencent.download.bind(H_Stock_FQ_DayLine_tencent, '00700', '腾讯控股', false));
     });
 });
 

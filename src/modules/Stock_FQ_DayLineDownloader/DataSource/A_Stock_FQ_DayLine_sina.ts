@@ -11,7 +11,7 @@ import { FQ_DayLineType } from '../FQ_DayLineType';
  * 相关页面：http://finance.sina.com.cn/realstock/company/sz300359/nc.shtml
  * 下载地址：http://finance.sina.com.cn/realstock/newcompany/sz300359/phfq.js?_=1
  */
-export class A_Stock_FQ_DayLine extends BaseDownloader {
+export class A_Stock_FQ_DayLine_sina extends BaseDownloader {
 
     get name() {
         return '新浪财经 A股后复权收盘价数据下载器';
