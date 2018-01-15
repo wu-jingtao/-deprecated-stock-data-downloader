@@ -56,7 +56,7 @@ export abstract class BaseDataModule extends BaseServiceModule {
     async onStart(): Promise<void> {
         this._connection = this.services.MysqlConnection;
         this._statusRecorder = this.services.ModuleStatusRecorder;
-        
+
         for (const item of this._sql_create_table) {
             await this._connection.asyncQuery(item);  //创建数据表
         }
@@ -70,8 +70,21 @@ export abstract class BaseDataModule extends BaseServiceModule {
         }
 
         //设置计时器
-        this._timers = this._crontab.map(item => schedule.scheduleJob(item.time,
-            () => this._downloaderWrap(item.reDownload).catch(err => this.emit('error', err))));
+        this._timers = this._crontab.map(item => schedule.scheduleJob(item.time, async () => {
+            try {
+                //查询上次执行的状态
+                const status = await this._statusRecorder.getStatus(this);
+
+                //如果没下载过或上次下载出现过异常，则立即重新下载
+                if (status == null || status.error != null || status.startTime > status.endTime) {
+                    await this._downloaderWrap(true);
+                } else {
+                    await this._downloaderWrap(item.reDownload);
+                }
+            } catch (err) {
+                this.emit('error', err);
+            }
+        }));
     }
 
     async onStop() {
