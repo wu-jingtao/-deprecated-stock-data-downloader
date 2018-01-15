@@ -22,6 +22,7 @@ export class MysqlConnection extends BaseServiceModule {
     onStart(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.connection = mysql.createConnection({
+                multipleStatements: true,                           //允许多语句查询
                 host: process.env.MYSQL_HOST_ADDR || 'localhost',   //主机地址
                 port: process.env.MYSQL_HOST_PORT || 3306,          //连接端口
                 user: process.env.MYSQL_USERNAME || 'root',         //用户名
@@ -35,7 +36,7 @@ export class MysqlConnection extends BaseServiceModule {
                     this.connection.query("CREATE SCHEMA IF NOT EXISTS `stock` DEFAULT CHARACTER SET utf8;", err => err ? reject(err) : resolve());
                 }
             });
-            
+
             this.connection.on("end", (err) => {
                 if (err) this.emit('error', err);
 

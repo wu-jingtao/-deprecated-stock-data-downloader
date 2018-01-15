@@ -20,24 +20,29 @@ export const create_table = "\
 /**
  * 插入数据
  * @param code_id 代码id
+ * @param date 日期
  * @param data 要插入的数据
  */
-export function insert_data(code_id: number, data: TradeDetailType[]) {
-    const insert = "\
-        INSERT INTO `stock`.`stock_trade_detail`\
-        (`code`,`date`,`price`,`volume`,`money`,`direction`)\
-        VALUES ";
+export function insert_data(code_id: number, date: string, data: TradeDetailType[]) {
+    if (data.length > 0) {
+        const data_string = data.map(item => `('${code_id}','${item.date}','${item.price}','${item.volume}','${item.money}','${item.direction}')`).join(',');
 
-    return insert + data.map(item => `(${code_id},'${item.date}','${item.price}','${item.volume}','${item.money}','${item.direction}')`).join(',');
+        //由于成交明细数据中的日期会出现重复(同一秒下发生多笔交易)，所以没办法像其他数据那样更新。
+        //所以只有先删除当天的旧数据再导入当天的新数据
+        return "\
+            START TRANSACTION;\
+                DELETE FROM `stock`.`stock_trade_detail`\
+                WHERE `code` = '"+ code_id + "' AND date(`date`) = '" + date + "';\
+                \
+                INSERT INTO `stock`.`stock_trade_detail`\
+                (`code`,`date`,`price`,`volume`,`money`,`direction`)\
+                VALUES "+ data_string + ";\
+            COMMIT;\
+        ";
+    } else {
+        return 'SELECT 1';
+    }
 }
-
-/**
- * 删除旧的数据
- */
-export const delete_data = "\
-    DELETE FROM `stock`.`stock_trade_detail`\
-    WHERE `code` = ? AND date(`date`) = ?;\
-";
 
 /**
  * 获取某个股票的交易日期列表
@@ -46,4 +51,15 @@ export const get_stock_date_list = "\
     SELECT `date`\
     FROM `stock`.`stock_day_line`\
     WHERE `code` = ?;\
+";
+
+/**
+ * 获取某个股票最近一个交易日
+ */
+export const get_stock_latest_date = "\
+    SELECT `date`\
+    FROM `stock`.`stock_day_line`\
+    WHERE `code` = ?\
+    ORDER BY `date` DESC\
+    LIMIT 1;\
 ";
