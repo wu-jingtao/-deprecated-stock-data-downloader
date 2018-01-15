@@ -10,7 +10,7 @@ import { A_Stock_TradeDetail_tencent } from './DataSource/A_Stock_TradeDetail_te
 
 /**
  * 股票成交明细下载器的父类
- * 之所以要拆分成两个下载器是因为，下载全部的成交明细会花费大量的时间，如果一天内无法下载完成，这可能会影响到第二天的下载任务
+ * 之所以要拆分成两个下载器是因为，下载全部的成交明细会花费大量的时间，如果一天内无法下载完成，可能会影响到第二天的下载任务
  */
 export abstract class BaseStockTradeDetailDownloader extends BaseDataModule {
 

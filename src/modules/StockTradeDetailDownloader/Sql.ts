@@ -45,7 +45,7 @@ export function insert_data(code_id: number, date: string, data: TradeDetailType
 }
 
 /**
- * 获取某个股票的交易日期列表
+ * 获取某个股票的交易所有日期
  */
 export const get_stock_date_list = "\
     SELECT `date`\
