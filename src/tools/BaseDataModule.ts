@@ -76,11 +76,10 @@ export abstract class BaseDataModule extends BaseServiceModule {
                 const status = await this._statusRecorder.getStatus(this);
 
                 //如果没下载过或上次下载出现过异常，则立即重新下载
-                if (status == null || status.error != null || status.startTime > status.endTime) {
+                if (status == null || status.error != null || status.startTime > status.endTime)
                     await this._downloaderWrap(true);
-                } else {
+                else
                     await this._downloaderWrap(item.reDownload);
-                }
             } catch (err) {
                 this.emit('error', err);
             }
