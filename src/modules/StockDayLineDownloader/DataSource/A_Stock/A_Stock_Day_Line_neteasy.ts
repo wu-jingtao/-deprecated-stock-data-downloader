@@ -31,7 +31,7 @@ export class A_Stock_Day_Line_neteasy extends BaseDownloader {
             data.high > 0 &&
             data.low > 0 &&
             data.open > 0 &&
-            data.pre_close > 0,
+            data.pre_close > 0 &&
             (data.exchange_ratio == null ? true : data.exchange_ratio > 0) &&   //网易财经 指数没有换手率、总市值
             data.volume > 0 &&
             data.money > 0 &&
