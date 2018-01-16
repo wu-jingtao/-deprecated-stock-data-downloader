@@ -42,12 +42,13 @@ export class H_Stock_Day_Line_sina extends BaseDownloader {
     private async _get_listing_year(code: string): Promise<string> {
         const file = await HttpDownloader.Get(this._address_min_year(code));
 
+        //新浪财经如果没有数据会返回-1
         const year = (file.toString().match(/min:"(\d{4})/) || [])[1];
 
         if (/^\d{4}$/.test(year))
             return year;
         else
-            throw new Error(`获取到的港股上市年份不正确。(${year})`);
+            return '99999';
     }
 
     /**
