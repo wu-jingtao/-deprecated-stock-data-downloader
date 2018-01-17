@@ -7,6 +7,7 @@ import { FQ_DayLineType } from '../FQ_DayLineType';
  * A股后复权收盘价数据下载器
  * 
  * 新浪财经数据。返回`js`格式的数据
+ * 注意：如果某个股票停牌，新浪也会包含其当天的复权数据
  * 
  * 相关页面：http://finance.sina.com.cn/realstock/company/sz300359/nc.shtml
  * 下载地址：http://finance.sina.com.cn/realstock/newcompany/sz300359/phfq.js?_=1
