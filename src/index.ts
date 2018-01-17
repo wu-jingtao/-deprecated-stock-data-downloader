@@ -7,7 +7,7 @@ import { StockCodeDownloader } from './modules/StockCodeDownloader/StockCodeDown
 import { StockBasicDownloader } from './modules/StockBasicDownloader/StockBasicDownloader';
 import { StockDayLineDownloader } from './modules/StockDayLineDownloader/StockDayLineDownloader';
 import { Stock_FQ_DayLineDownloader } from './modules/Stock_FQ_DayLineDownloader/Stock_FQ_DayLineDownloader';
-import { StockTradeDetailDownloader, StockTradeDetailDownloader_All } from './modules/StockTradeDetailDownloader/StockTradeDetailDownloader';
+import { StockTradeDetailDownloader } from './modules/StockTradeDetailDownloader/StockTradeDetailDownloader';
 import { CreateSqlView } from './modules/CreateSqlView/CreateSqlView';
 
 class StockDataDownloader extends DockerServicesManager { }
@@ -23,8 +23,7 @@ manager.registerService(new StockDayLineDownloader);
 manager.registerService(new Stock_FQ_DayLineDownloader);
 
 //这个由于下载的数据量太大，暂不下载
-//manager.registerService(new StockTradeDetailDownloader);
-//manager.registerService(new StockTradeDetailDownloader_All);
+manager.registerService(new StockTradeDetailDownloader);
 
 manager.registerService(new CreateSqlView);
 

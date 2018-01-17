@@ -10,17 +10,16 @@ import { A_Stock_TradeDetail_tencent } from './DataSource/A_Stock_TradeDetail_te
 
 /**
  * 股票成交明细下载器的父类
- * 之所以要拆分成两个下载器是因为，下载全部的成交明细会花费大量的时间，如果一天内无法下载完成，可能会影响到第二天的下载任务
  */
-export abstract class BaseStockTradeDetailDownloader extends BaseDataModule {
+export class StockTradeDetailDownloader extends BaseDataModule {
 
     private _stockCodeDownloader: StockCodeDownloader;
 
-    /**
-     * @param crontab 供子类传递定时器数据
-     */
-    constructor(crontab: { time: string, reDownload?: boolean }) {
-        super([crontab], [sql.create_table]);
+    constructor() {
+        super([
+            { time: "0 30 19 * * 1-5" },    //每周1-5的下午7点30分更新当天数据
+            { time: "0 0 1 1 * *", reDownload: true }   //每月1日更新全部数据
+        ], [sql.create_table]);
     }
 
     async onStart(): Promise<void> {
@@ -44,8 +43,8 @@ export abstract class BaseStockTradeDetailDownloader extends BaseDataModule {
             for (const { id, code, name, market } of code_list) {
                 if (reDownload) //获取所有交易日
                     var dateList = await this._connection.asyncQuery(sql.get_stock_date_list, [id]);
-                else    //获取最近一个交易日
-                    var dateList = await this._connection.asyncQuery(sql.get_stock_latest_date, [id]);
+                else    //获取最近一周交易日
+                    var dateList = await this._connection.asyncQuery(sql.get_stock_latest_week_date, [id]);
 
                 for (let { date } of dateList) {
                     date = moment(date).format('YYYY-MM-DD');
@@ -57,24 +56,4 @@ export abstract class BaseStockTradeDetailDownloader extends BaseDataModule {
             }
         }
     };
-}
-
-export class StockTradeDetailDownloader extends BaseStockTradeDetailDownloader {
-    constructor() {
-        super({ time: "0 30 19 * * 1-5" }); //每周1-5的下午7点30分更新当天数据
-    }
-
-    protected _downloader() {   //确保总是只下载当天的数据
-        return super._downloader(false);
-    }
-}
-
-export class StockTradeDetailDownloader_All extends BaseStockTradeDetailDownloader {
-    constructor() {
-        super({ time: "0 0 1 1 * *" }); //每月1日更新全部数据
-    }
-
-    protected _downloader() {   //确保总是下载全部数据
-        return super._downloader(true);
-    }
 }

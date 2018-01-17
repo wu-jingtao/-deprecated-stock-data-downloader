@@ -54,12 +54,12 @@ export const get_stock_date_list = "\
 ";
 
 /**
- * 获取某个股票最近一个交易日
+ * 获取某个股票最近一周的交易日
  */
-export const get_stock_latest_date = "\
+export const get_stock_latest_week_date = "\
     SELECT `date`\
     FROM `stock`.`stock_day_line`\
     WHERE `code` = ?\
     ORDER BY `date` DESC\
-    LIMIT 1;\
+    LIMIT 7;\
 ";
