@@ -23,7 +23,7 @@ manager.registerService(new StockDayLineDownloader);
 manager.registerService(new Stock_FQ_DayLineDownloader);
 
 //这个由于下载的数据量太大，暂不下载
-manager.registerService(new StockTradeDetailDownloader);
+//manager.registerService(new StockTradeDetailDownloader);
 
 manager.registerService(new CreateSqlView);
 
