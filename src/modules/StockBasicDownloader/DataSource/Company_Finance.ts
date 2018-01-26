@@ -76,14 +76,14 @@ export class Company_Finance extends BaseDownloader {
 
         return data.map(item => ({
             date: item['科目\\时间'],
-            basic_earnings_per_share: normalizeAmountToYi(item['基本每股收益']),
-            net_profit: normalizeAmountToWan(item['净利润']),
-            gross_revenue: normalizeAmountToWan(item['营业总收入']),
-            net_assets_per_share: normalizeAmountToYi(item['每股净资产']),
+            basic_earnings_per_share: normalizeAmountToYi(item['基本每股收益(元)']),
+            net_profit: normalizeAmountToWan(item['净利润(元)']),
+            gross_revenue: normalizeAmountToWan(item['营业总收入(元)']),
+            net_assets_per_share: normalizeAmountToYi(item['每股净资产(元)']),
             asset_liability_ratio: normalizePercent(item['资产负债比率']),
-            capital_accumulation_fund_per_share: normalizeAmountToYi(item['每股资本公积金']),
-            undistributed_profit_per_share: normalizeAmountToYi(item['每股未分配利润']),
-            operating_cash_flow_per_share: normalizeAmountToYi(item['每股经营现金流'])
+            capital_accumulation_fund_per_share: normalizeAmountToYi(item['每股资本公积金(元)']),
+            undistributed_profit_per_share: normalizeAmountToYi(item['每股未分配利润(元)']),
+            operating_cash_flow_per_share: normalizeAmountToYi(item['每股经营现金流(元)'])
         }));
     }
 

@@ -1,7 +1,7 @@
 /**
  * 由于网页上表示空的方式各不相同，通过该方法来统一数据格式
  */
-export function normalizeNull(data?: string): string | undefined {
+export function normalizeNull(data: any): string | undefined {
     switch (data) {
         case undefined:
         case null:
@@ -12,7 +12,10 @@ export function normalizeNull(data?: string): string | undefined {
             return undefined;
 
         default:
-            return data;
+            if (typeof data !== 'string')
+                return data.toString();
+            else
+                return data;
     }
 }
 
