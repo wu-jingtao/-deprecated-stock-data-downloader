@@ -9,8 +9,6 @@ export const create_table = "\
         `market` int(11) unsigned NOT NULL COMMENT '所属市场',\
         `is_index` tinyint(4) NOT NULL COMMENT '是不是指数, true：1 , false:0',\
         PRIMARY KEY (`id`),\
-        KEY `code` (`code`),\
-        KEY `market` (`market`),\
         UNIQUE KEY `unique` (`code`,`market`,`is_index`),\
         CONSTRAINT `stock_code_market` FOREIGN KEY (`market`) REFERENCES `stock_market` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT='股票代码列表';\

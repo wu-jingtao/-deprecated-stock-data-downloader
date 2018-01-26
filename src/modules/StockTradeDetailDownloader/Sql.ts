@@ -13,8 +13,6 @@ export const create_table = "\
             成交时间 -> 注意，同一时间下，可能会发生多笔交易\
             成交方向 -> S：卖盘，B：买盘，M：中性盘\
         ',\
-        KEY `code_idx` (`code`),\
-        KEY `date_idx` (`date`),\
         PRIMARY KEY `pk` (`code`,`date`),\
         CONSTRAINT `stock_trade_detail_code` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT='股票成交明细';\
