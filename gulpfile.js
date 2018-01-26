@@ -16,5 +16,3 @@ gulp.task("copeFile", function () {
     return gulp.src('src/**/*.!(ts)')
         .pipe(gulp.dest('bin'));
 });
-
-gulp.task("compile", ["compileTS", "copeFile"]);
