@@ -6,7 +6,7 @@ export const create_table = "\
         `code` int(10) unsigned NOT NULL COMMENT '股票代码`stock_code`中对应的`id`',\
         `date` date NOT NULL COMMENT '日期',\
         `close` float unsigned NOT NULL COMMENT '后复权收盘价',\
-        UNIQUE KEY `unique_code_date` (`code`,`date`),\
+        PRIMARY KEY `pk` (`code`,`date`),\
         KEY `code_idx` (`code`),\
         KEY `date_idx` (`date`),\
         CONSTRAINT `code_fq_day_line_code` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\

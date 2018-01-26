@@ -4,9 +4,9 @@
 export interface TradeDetailType {
 
     /**
-     * 成交时间 日期 + 时间
+     * 成交时间 时间 HH:mm:ss
      */
-    date: string;
+    time: string;
 
     /**
      * 成交价格

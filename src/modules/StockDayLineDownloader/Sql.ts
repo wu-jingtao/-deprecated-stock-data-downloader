@@ -17,7 +17,7 @@ export const create_table = "\
         `current_market_value` double unsigned DEFAULT NULL COMMENT '流通市值(万元)',\
         KEY `code_idx` (`code`),\
         KEY `date_idx` (`date`),\
-        UNIQUE KEY `unique_code_date` (`code`,`date`),\
+        PRIMARY KEY `pk` (`code`,`date`),\
         CONSTRAINT `code_day_line_code` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT='股票日线数据';\
 ";

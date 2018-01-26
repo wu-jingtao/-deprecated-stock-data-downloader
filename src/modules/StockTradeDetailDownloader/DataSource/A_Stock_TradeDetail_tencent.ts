@@ -44,7 +44,7 @@ export class A_Stock_TradeDetail_tencent extends BaseDownloader {
     }
 
     protected _testData(data: TradeDetailType) {
-        return /\d{4}.?\d{2}.?\d{2}\s\d{1,2}:\d{1,2}:\d{1,2}/.test(data.date) &&
+        return /\d{1,2}:\d{1,2}:\d{1,2}/.test(data.time) &&
             data.price > 0 &&
             data.volume > 0 &&
             data.money > 0 &&
@@ -62,7 +62,7 @@ export class A_Stock_TradeDetail_tencent extends BaseDownloader {
         const data = dsv.tsvParse(iconv.decode(file, 'gbk'));     //转码
 
         return data.map((item: any) => ({
-            date: `${date} ${item['成交时间'].trim()}`,
+            time: item['成交时间'].trim(),
             price: exchangeToYi(item['成交价格']),
             volume: (exchangeToYi(item['成交量(手)']) as any) / 100,
             money: exchangeToWan(item['成交额(元)']),

@@ -33,7 +33,10 @@ export class StockTradeDetailDownloader extends BaseDataModule {
      * @param data 下载到的数据
      */
     private async _saveData(code_id: number, date: string, data: TradeDetailType[]) {
-        await this._connection.asyncQuery(sql.insert_data(code_id, date, data));
+        if (data.length > 0) {
+            const trade_detail = JSON.stringify(data.map(item => [item.time, item.price, item.volume, item.money, item.direction]));
+            await this._connection.asyncQuery(sql.insert_data, [code_id, date, trade_detail, trade_detail]);
+        }
     }
 
     protected async _downloader(reDownload?: boolean) {

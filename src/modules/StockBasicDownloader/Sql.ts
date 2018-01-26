@@ -86,7 +86,7 @@ export const create_company_finance_table = "\
         `undistributed_profit_per_share` FLOAT NOT NULL COMMENT '每股未分配利润(元)',\
         `operating_cash_flow_per_share` FLOAT NOT NULL COMMENT '每股经营现金流(元)',\
         KEY `code_idx` (`code`),\
-        UNIQUE KEY `unique` (`code`,`date`),\
+        PRIMARY KEY `pk` (`code`,`date`),\
         CONSTRAINT `stock_company_finance_code` FOREIGN KEY (`code`) REFERENCES `stock_code` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\
     ) COMMENT='A股上市公司财务数据';\
 ";
