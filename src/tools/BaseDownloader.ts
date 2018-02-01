@@ -1,9 +1,15 @@
+import log from 'log-formatter';
 import { Retry3 } from "./Retry";
 
 /**
  * 所有下载器的父类
  */
 export abstract class BaseDownloader {
+
+    /**
+     * 下载到了多少数据
+     */
+    downloadedAmount: number = 0;
 
     /**
      * 当前下载器名称
@@ -36,18 +42,30 @@ export abstract class BaseDownloader {
     /**
      * 下载数据
      */
+    download(...args: any[]) {
+        return Retry3(async () => {
+            const data = await this._download(...args);
+            return data.filter(item => this._testData(item));
+        })().then(async (data) => {
+            const result = await this._process(undefined, data, args)
+            this.downloadedAmount += data.length;
+            return data;
+        }).catch(err => this._process(err, undefined as any, args));
+    }
+
+    /**
+     * 打印下载到的数量到控制台
+     */
+    printDownloadedAmount() {
+        log.location.text(this.name, '下载到了', this.downloadedAmount, '条数据');
+    }
+
+    /**
+     * 方便使用download方法，省去了实例化对象的过程
+     */
     static download(...args: any[]) {
         const constructor = this as any;
         const downloader: BaseDownloader = new constructor();
-
-        return Retry3(async () => {
-            const data = await downloader._download(...args);
-
-            const result: any[] = [];
-            data.forEach(item => downloader._testData(item) && result.push(item));
-
-            return result;
-        })().then(data => downloader._process(undefined, data, args))
-            .catch(err => downloader._process(err, undefined as any, args));
+        return downloader.download(...args);
     }
 }

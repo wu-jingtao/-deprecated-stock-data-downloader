@@ -8,6 +8,7 @@ import { normalizeAmountToYi, normalizeAmountToWan, normalizeNull } from '../Too
 
 /**
  * A股上市公司 公司资料下载。数据来源于同花顺f10
+ * 注意：同花顺的公司资料数据经常在变化
  * 
  * 返回数据：`HTML`，`GBK`编码
  * 
@@ -24,7 +25,7 @@ export class Company_Information extends BaseDownloader {
     };
 
     protected _testData(data: CompanyInformationType) {
-        return true
+        return data.listing_date != null;   //象征性的检验一下数据。我看了看，上市日期基本上都有
     }
 
     protected async _download(code: string) {

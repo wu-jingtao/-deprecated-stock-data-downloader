@@ -41,20 +41,26 @@ export class Stock_FQ_DayLineDownloader extends BaseDataModule {
     protected async _downloader(reDownload?: boolean) {
         {//A股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [false]);
+            const downloader = new A_Stock_FQ_DayLine_sina();
 
             for (const { id, code, name, market } of code_list) {
-                await this._saveData(id, await A_Stock_FQ_DayLine_sina.download(code, name, market, reDownload));
+                await this._saveData(id, await downloader.download(code, name, market, reDownload));
                 //console.log('A股', id, code, name);
             }
+
+            downloader.printDownloadedAmount();
         }
 
         {//港股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [false]);
-
+            const downloader = new H_Stock_FQ_DayLine_tencent();
+            
             for (const { id, code, name, market } of code_list) {
-                await this._saveData(id, await H_Stock_FQ_DayLine_tencent.download(code, name, reDownload));
+                await this._saveData(id, await downloader.download(code, name, reDownload));
                 //console.log('港股', id, code, name);
             }
+
+            downloader.printDownloadedAmount();
         }
     };
 }

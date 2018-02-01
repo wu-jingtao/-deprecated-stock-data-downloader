@@ -55,50 +55,65 @@ export class StockDayLineDownloader extends BaseDataModule {
     protected async _downloader(reDownload: boolean) {
         {//A股与A股指数
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [true, false]);
+            const downloader = new A_Stock_Day_Line_neteasy();
 
             //下载开始日期
             const start_date = reDownload ? '1990-01-01' : moment().subtract({ days: 7 }).format('YYYY-MM-DD');
 
             for (const { id, code, name, market } of code_list) {
-                await this._saveData(id, await A_Stock_Day_Line_neteasy.download(code, name, market, start_date));
+                await this._saveData(id, await downloader.download(code, name, market, start_date));
                 //console.log('A股', id, code, name, start_date);
             }
+
+            downloader.printDownloadedAmount();
         }
 
         {//港股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [false]);
+            const downloader = new H_Stock_Day_Line_sina();
 
             for (const { id, code, name, market } of code_list) {
-                await this._saveData(id, await H_Stock_Day_Line_sina.download(code, name, reDownload));
+                await this._saveData(id, await downloader.download(code, name, reDownload));
                 //console.log('港股', code, name);
             }
+
+            downloader.printDownloadedAmount();
         }
 
         {//港股指数
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [true]);
+            const downloader = new H_Stock_Index_Day_Line_sina();
 
             for (const { id, code, name, market } of code_list) {
-                await this._saveData(id, await H_Stock_Index_Day_Line_sina.download(code, name, reDownload));
+                await this._saveData(id, await downloader.download(code, name, reDownload));
                 //console.log('港股指数', code, name);
             }
+
+            downloader.printDownloadedAmount();
         }
 
         {//国内商品期货
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sqs.id, StockMarketType.zss.id, StockMarketType.dss.id], [true]);
+            const downloader = new Future_Day_Line_sina();
 
             for (const { id, code, name, market } of code_list) {
-                await this._saveData(id, await Future_Day_Line_sina.download(code, name, reDownload));
+                await this._saveData(id, await downloader.download(code, name, reDownload));
                 //console.log('国内商品期货', code, name);
             }
+
+            downloader.printDownloadedAmount();
         }
 
         {//外汇
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.wh.id], [true, false]);
+            const downloader = new WH_Day_Line_sina();
 
             for (const { id, code, name, market } of code_list) {
-                await this._saveData(id, await WH_Day_Line_sina.download(code, name, reDownload));
+                await this._saveData(id, await downloader.download(code, name, reDownload));
                 //console.log('外汇', code, name);
             }
+
+            downloader.printDownloadedAmount();
         }
     };
 }

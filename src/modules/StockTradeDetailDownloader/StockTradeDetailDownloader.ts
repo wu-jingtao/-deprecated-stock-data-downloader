@@ -42,6 +42,7 @@ export class StockTradeDetailDownloader extends BaseDataModule {
     protected async _downloader(reDownload?: boolean) {
         {//A股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [false]);
+            const downloader = new A_Stock_TradeDetail_tencent();
 
             for (const { id, code, name, market } of code_list) {
                 if (reDownload) //获取所有交易日
@@ -51,10 +52,11 @@ export class StockTradeDetailDownloader extends BaseDataModule {
 
                 for (let { date } of dateList) {
                     date = moment(date).format('YYYY-MM-DD');
-                    await this._saveData(id, date, await A_Stock_TradeDetail_tencent.download(code, name, market, date));
+                    await this._saveData(id, date, await downloader.download(code, name, market, date));
                     //console.log('A股', code, name, date);
                 }
 
+                downloader.printDownloadedAmount();
                 //console.log('A股', code, name);
             }
         }
