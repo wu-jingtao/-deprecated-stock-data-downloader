@@ -13,5 +13,9 @@ export class CreateSqlView extends BaseServiceModule {
 
         await con.asyncQuery(sql.view_day_line);
         await con.asyncQuery(sql.view_fq_day_line);
+        await con.asyncQuery(sql.procedure_fq_week_line);
+        await con.asyncQuery(sql.procedure_fq_month_line);
+        await con.asyncQuery(sql.procedure_fq_quarter_line);
+        await con.asyncQuery(sql.procedure_fq_year_line);
     }
 }
