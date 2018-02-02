@@ -77,7 +77,7 @@ export class H_Stock_Day_Line_sina extends BaseDownloader {
                 volume: exchangeToWan(items.eq(4).text()),
                 money: exchangeToWan(items.eq(5).text())
             };
-        }));
+        }) as any);
     }
 
     protected _testData(data: DayLineType | any) {

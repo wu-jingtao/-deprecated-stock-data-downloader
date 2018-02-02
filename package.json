@@ -38,7 +38,7 @@
         "gulp-typescript": "^3.1.5",
         "mocha": "^3.2.0",
         "ts-node": "^3.0.4",
-        "typescript": "^2.5.2"
+        "typescript": "^2.7.1"
     },
     "dependencies": {
         "cheerio": "^1.0.0-rc.2",
