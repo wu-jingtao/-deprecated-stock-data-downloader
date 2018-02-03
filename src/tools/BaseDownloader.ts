@@ -1,5 +1,6 @@
 import log from 'log-formatter';
 import { Retry3 } from "./Retry";
+import { BaseDataModule } from './BaseDataModule';
 
 /**
  * 所有下载器的父类
@@ -17,6 +18,8 @@ export abstract class BaseDownloader {
     get name() {
         return this.constructor.name;
     }
+
+    constructor(private readonly _baseDataModule: BaseDataModule) { }
 
     /**
      * 测试下载到的每一条数据。如果某条数据不满足要求则将被丢弃
@@ -57,15 +60,15 @@ export abstract class BaseDownloader {
      * 打印下载到的数量到控制台
      */
     printDownloadedAmount() {
-        log.location.text(this.name, '下载到了', this.downloadedAmount, '条数据');
+        log.location.location.text(this._baseDataModule.name, this.name, '下载到了', this.downloadedAmount, '条数据');
     }
 
     /**
      * 方便使用download方法，省去了实例化对象的过程
      */
-    static download(...args: any[]) {
+    static download(baseDataModule: BaseDataModule, ...args: any[]) {
         const constructor = this as any;
-        const downloader: BaseDownloader = new constructor();
+        const downloader: BaseDownloader = new constructor(baseDataModule);
         return downloader.download(...args);
     }
 }

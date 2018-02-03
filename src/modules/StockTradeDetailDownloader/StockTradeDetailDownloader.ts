@@ -42,7 +42,7 @@ export class StockTradeDetailDownloader extends BaseDataModule {
     protected async _downloader(reDownload?: boolean) {
         {//A股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [false]);
-            const downloader = new A_Stock_TradeDetail_tencent();
+            const downloader = new A_Stock_TradeDetail_tencent(this);
 
             for (const { id, code, name, market } of code_list) {
                 if (reDownload) //获取所有交易日

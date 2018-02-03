@@ -80,10 +80,16 @@ export class StockBasicDownloader extends BaseDataModule {
     protected async _downloader() {
         const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [false]); //查询出所有A股代码
 
+        const companyInformation = new Company_Information(this);
+        const companyFinance = new Company_Finance(this);
+
         for (const { id, code, name, market } of code_list) {   //循环下载
-            await this._saveInformationData(id, code, (await Company_Information.download(code, name))[0]);
-            await this._saveFinanceData(id, code, await Company_Finance.download(code, name));
+            await this._saveInformationData(id, code, (await companyInformation.download(code, name))[0]);
+            await this._saveFinanceData(id, code, await companyFinance.download(code, name));
             //console.log('下载完成：' + code);    //调试使用
         }
+
+        companyInformation.printDownloadedAmount();
+        companyFinance.printDownloadedAmount();
     };
 }

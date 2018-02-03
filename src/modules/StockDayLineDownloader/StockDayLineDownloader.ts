@@ -55,7 +55,7 @@ export class StockDayLineDownloader extends BaseDataModule {
     protected async _downloader(reDownload: boolean) {
         {//A股与A股指数
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [true, false]);
-            const downloader = new A_Stock_Day_Line_neteasy();
+            const downloader = new A_Stock_Day_Line_neteasy(this);
 
             //下载开始日期
             const start_date = reDownload ? '1990-01-01' : moment().subtract({ days: 7 }).format('YYYY-MM-DD');
@@ -70,7 +70,7 @@ export class StockDayLineDownloader extends BaseDataModule {
 
         {//港股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [false]);
-            const downloader = new H_Stock_Day_Line_sina();
+            const downloader = new H_Stock_Day_Line_sina(this);
 
             for (const { id, code, name, market } of code_list) {
                 await this._saveData(id, await downloader.download(code, name, reDownload));
@@ -82,7 +82,7 @@ export class StockDayLineDownloader extends BaseDataModule {
 
         {//港股指数
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [true]);
-            const downloader = new H_Stock_Index_Day_Line_sina();
+            const downloader = new H_Stock_Index_Day_Line_sina(this);
 
             for (const { id, code, name, market } of code_list) {
                 await this._saveData(id, await downloader.download(code, name, reDownload));
@@ -94,7 +94,7 @@ export class StockDayLineDownloader extends BaseDataModule {
 
         {//国内商品期货
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sqs.id, StockMarketType.zss.id, StockMarketType.dss.id], [true]);
-            const downloader = new Future_Day_Line_sina();
+            const downloader = new Future_Day_Line_sina(this);
 
             for (const { id, code, name, market } of code_list) {
                 await this._saveData(id, await downloader.download(code, name, reDownload));
@@ -106,7 +106,7 @@ export class StockDayLineDownloader extends BaseDataModule {
 
         {//外汇
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.wh.id], [true, false]);
-            const downloader = new WH_Day_Line_sina();
+            const downloader = new WH_Day_Line_sina(this);
 
             for (const { id, code, name, market } of code_list) {
                 await this._saveData(id, await downloader.download(code, name, reDownload));

@@ -54,23 +54,23 @@ export class StockCodeDownloader extends BaseDataModule {
 
     protected async _downloader() {
         //A股
-        await this._saveData(await SH_A_Code_sjs.download());
-        await this._saveData(await SZ_A_Code_sjs.download());
+        await this._saveData(await SH_A_Code_sjs.download(this));
+        await this._saveData(await SZ_A_Code_sjs.download(this));
         await this._saveData(A_Index_Code_zx());
 
         //港股
-        await this._saveData(await H_Code_hgt.download());
-        await this._saveData(await H_Code_sgt.download());
+        await this._saveData(await H_Code_hgt.download(this));
+        await this._saveData(await H_Code_sgt.download(this));
         await this._saveData(H_Index_Code_zx());
 
         //上海期货交易所 主连列表
-        await this._saveData(await SH_Future_Index.download());
+        await this._saveData(await SH_Future_Index.download(this));
 
         //郑州商品交易所 主连列表
-        await this._saveData(await ZZ_Future_Index.download());
+        await this._saveData(await ZZ_Future_Index.download(this));
 
         //大连商品交易所 主连列表
-        await this._saveData(await DL_Future_Index.download());
+        await this._saveData(await DL_Future_Index.download(this));
 
         //外汇
         await this._saveData(WH_Code_zx());
