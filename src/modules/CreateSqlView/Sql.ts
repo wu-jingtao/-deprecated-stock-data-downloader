@@ -50,6 +50,14 @@ export const view_fq_day_line = "\
         INNER JOIN `stock`.`stock_day_line` ON `stock_code`.`id` = `stock_day_line`.`code` AND `stock_fq_day_line`.`date` = `stock_day_line`.`date`\
 ";
 
+/** 
+ * A股后复权日线视图
+*/
+export const view_a_stock_fq_day_line = "\
+    CREATE OR REPLACE VIEW `stock`.`a_stock_fq_day_line` AS\
+        SELECT * FROM `stock`.`fq_day_line` WHERE `market` IN (1, 2)\
+";
+
 /**
  * 创建后复权周线存储过程
  * 由于做成视图在查询时会对系统造成很大压力，所以做成了存储过程，使用时传入股票的code_id
@@ -60,26 +68,20 @@ export const procedure_fq_week_line = "\
     CREATE PROCEDURE `stock`.`fq_week_line`(code_id INT)\
     BEGIN\
         SELECT\
-            `stock_code`.`id` AS `id`,\
-            `stock_code`.`code` AS `code`,\
-            `stock_code`.`name` AS `name`,\
-            `stock_code`.`market` AS `market`,\
-            `stock_code`.`is_index` AS `is_index`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(`stock_day_line`.`date` ORDER BY `stock_day_line`.`date` DESC), ',', 1 ) AS `date`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`stock_fq_day_line`.`close` AS CHAR) ORDER BY  `stock_day_line`.`date` DESC), ',', 1 ) AS `close`,\
-            MAX(ROUND(`stock_day_line`.`high` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2)) AS `high`,\
-            MIN(ROUND(`stock_day_line`.`low` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2)) AS `low`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(ROUND(`stock_day_line`.`open` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2) AS CHAR) ORDER BY `stock_day_line`.`date`), ',', 1 ) as `open`,\
-            SUM(`stock_day_line`.`exchange_ratio`) AS `exchange_ratio`,\
-            SUM(`stock_day_line`.`volume`) AS `volume`,\
-            SUM(`stock_day_line`.`money`) AS `money`,\
-            `stock_day_line`.`gross_market_value` AS `gross_market_value`,\
-            `stock_day_line`.`current_market_value` AS `current_market_value`\
-        FROM `stock`.`stock_code`\
-        INNER JOIN `stock`.`stock_fq_day_line` ON `stock_code`.`id` = `stock_fq_day_line`.`code`\
-        INNER JOIN `stock`.`stock_day_line` ON `stock_code`.`id` = `stock_day_line`.`code` AND `stock_fq_day_line`.`date` = `stock_day_line`.`date`\
-        WHERE `stock_code`.`id` = code_id\
-        GROUP BY `stock_code`.`id`, YEAR(`stock_day_line`.`date`), WEEKOFYEAR(`stock_day_line`.`date`);\
+            `id`, `code`, `name`, `market`, `is_index`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS `date`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS `close`,\
+            MAX(`high`) AS `high`,\
+            MIN(`low`) AS `low`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            SUM(`exchange_ratio`) AS `exchange_ratio`,\
+            SUM(`volume`) AS `volume`,\
+            SUM(`money`) AS `money`,\
+            `gross_market_value`,\
+            `current_market_value`\
+        FROM `stock`.`fq_day_line`\
+        WHERE `id` = code_id\
+        GROUP BY YEAR(`date`), WEEKOFYEAR(`date`);\
     END\
 ";
 
@@ -91,26 +93,20 @@ export const procedure_fq_month_line = "\
     CREATE PROCEDURE `stock`.`fq_month_line`(code_id INT)\
     BEGIN\
         SELECT\
-            `stock_code`.`id` AS `id`,\
-            `stock_code`.`code` AS `code`,\
-            `stock_code`.`name` AS `name`,\
-            `stock_code`.`market` AS `market`,\
-            `stock_code`.`is_index` AS `is_index`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(`stock_day_line`.`date` ORDER BY `stock_day_line`.`date` DESC), ',', 1 ) AS `date`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`stock_fq_day_line`.`close` AS CHAR) ORDER BY  `stock_day_line`.`date` DESC), ',', 1 ) AS `close`,\
-            MAX(ROUND(`stock_day_line`.`high` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2)) AS `high`,\
-            MIN(ROUND(`stock_day_line`.`low` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2)) AS `low`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(ROUND(`stock_day_line`.`open` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2) AS CHAR) ORDER BY `stock_day_line`.`date`), ',', 1 ) as `open`,\
-            SUM(`stock_day_line`.`exchange_ratio`) AS `exchange_ratio`,\
-            SUM(`stock_day_line`.`volume`) AS `volume`,\
-            SUM(`stock_day_line`.`money`) AS `money`,\
-            `stock_day_line`.`gross_market_value` AS `gross_market_value`,\
-            `stock_day_line`.`current_market_value` AS `current_market_value`\
-        FROM `stock`.`stock_code`\
-        INNER JOIN `stock`.`stock_fq_day_line` ON `stock_code`.`id` = `stock_fq_day_line`.`code`\
-        INNER JOIN `stock`.`stock_day_line` ON `stock_code`.`id` = `stock_day_line`.`code` AND `stock_fq_day_line`.`date` = `stock_day_line`.`date`\
-        WHERE `stock_code`.`id` = code_id\
-        GROUP BY `stock_code`.`id`, YEAR(`stock_day_line`.`date`), MONTH(`stock_day_line`.`date`);\
+            `id`, `code`, `name`, `market`, `is_index`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS `date`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS `close`,\
+            MAX(`high`) AS `high`,\
+            MIN(`low`) AS `low`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            SUM(`exchange_ratio`) AS `exchange_ratio`,\
+            SUM(`volume`) AS `volume`,\
+            SUM(`money`) AS `money`,\
+            `gross_market_value`,\
+            `current_market_value`\
+        FROM `stock`.`fq_day_line`\
+        WHERE `id` = code_id\
+        GROUP BY YEAR(`date`), MONTH(`date`);\
     END\
 ";
 
@@ -122,26 +118,20 @@ export const procedure_fq_quarter_line = "\
     CREATE PROCEDURE `stock`.`fq_quarter_line`(code_id INT)\
     BEGIN\
         SELECT\
-            `stock_code`.`id` AS `id`,\
-            `stock_code`.`code` AS `code`,\
-            `stock_code`.`name` AS `name`,\
-            `stock_code`.`market` AS `market`,\
-            `stock_code`.`is_index` AS `is_index`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(`stock_day_line`.`date` ORDER BY `stock_day_line`.`date` DESC), ',', 1 ) AS `date`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`stock_fq_day_line`.`close` AS CHAR) ORDER BY  `stock_day_line`.`date` DESC), ',', 1 ) AS `close`,\
-            MAX(ROUND(`stock_day_line`.`high` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2)) AS `high`,\
-            MIN(ROUND(`stock_day_line`.`low` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2)) AS `low`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(ROUND(`stock_day_line`.`open` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2) AS CHAR) ORDER BY `stock_day_line`.`date`), ',', 1 ) as `open`,\
-            SUM(`stock_day_line`.`exchange_ratio`) AS `exchange_ratio`,\
-            SUM(`stock_day_line`.`volume`) AS `volume`,\
-            SUM(`stock_day_line`.`money`) AS `money`,\
-            `stock_day_line`.`gross_market_value` AS `gross_market_value`,\
-            `stock_day_line`.`current_market_value` AS `current_market_value`\
-        FROM `stock`.`stock_code`\
-        INNER JOIN `stock`.`stock_fq_day_line` ON `stock_code`.`id` = `stock_fq_day_line`.`code`\
-        INNER JOIN `stock`.`stock_day_line` ON `stock_code`.`id` = `stock_day_line`.`code` AND `stock_fq_day_line`.`date` = `stock_day_line`.`date`\
-        WHERE `stock_code`.`id` = code_id\
-        GROUP BY `stock_code`.`id`, YEAR(`stock_day_line`.`date`), QUARTER(`stock_day_line`.`date`);\
+            `id`, `code`, `name`, `market`, `is_index`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS `date`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS `close`,\
+            MAX(`high`) AS `high`,\
+            MIN(`low`) AS `low`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            SUM(`exchange_ratio`) AS `exchange_ratio`,\
+            SUM(`volume`) AS `volume`,\
+            SUM(`money`) AS `money`,\
+            `gross_market_value`,\
+            `current_market_value`\
+        FROM `stock`.`fq_day_line`\
+        WHERE `id` = code_id\
+        GROUP BY YEAR(`date`), QUARTER(`date`);\
     END\
 ";
 
@@ -153,25 +143,19 @@ export const procedure_fq_year_line = "\
     CREATE PROCEDURE `stock`.`fq_year_line`(code_id INT)\
     BEGIN\
         SELECT\
-            `stock_code`.`id` AS `id`,\
-            `stock_code`.`code` AS `code`,\
-            `stock_code`.`name` AS `name`,\
-            `stock_code`.`market` AS `market`,\
-            `stock_code`.`is_index` AS `is_index`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(`stock_day_line`.`date` ORDER BY `stock_day_line`.`date` DESC), ',', 1 ) AS `date`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`stock_fq_day_line`.`close` AS CHAR) ORDER BY  `stock_day_line`.`date` DESC), ',', 1 ) AS `close`,\
-            MAX(ROUND(`stock_day_line`.`high` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2)) AS `high`,\
-            MIN(ROUND(`stock_day_line`.`low` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2)) AS `low`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(ROUND(`stock_day_line`.`open` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2) AS CHAR) ORDER BY `stock_day_line`.`date`), ',', 1 ) as `open`,\
-            SUM(`stock_day_line`.`exchange_ratio`) AS `exchange_ratio`,\
-            SUM(`stock_day_line`.`volume`) AS `volume`,\
-            SUM(`stock_day_line`.`money`) AS `money`,\
-            `stock_day_line`.`gross_market_value` AS `gross_market_value`,\
-            `stock_day_line`.`current_market_value` AS `current_market_value`\
-        FROM `stock`.`stock_code`\
-        INNER JOIN `stock`.`stock_fq_day_line` ON `stock_code`.`id` = `stock_fq_day_line`.`code`\
-        INNER JOIN `stock`.`stock_day_line` ON `stock_code`.`id` = `stock_day_line`.`code` AND `stock_fq_day_line`.`date` = `stock_day_line`.`date`\
-        WHERE `stock_code`.`id` = code_id\
-        GROUP BY `stock_code`.`id`, YEAR(`stock_day_line`.`date`);\
+            `id`, `code`, `name`, `market`, `is_index`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS `date`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS `close`,\
+            MAX(`high`) AS `high`,\
+            MIN(`low`) AS `low`,\
+            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            SUM(`exchange_ratio`) AS `exchange_ratio`,\
+            SUM(`volume`) AS `volume`,\
+            SUM(`money`) AS `money`,\
+            `gross_market_value`,\
+            `current_market_value`\
+        FROM `stock`.`fq_day_line`\
+        WHERE `id` = code_id\
+        GROUP BY YEAR(`date`);\
     END\
 ";
