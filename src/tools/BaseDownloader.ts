@@ -51,8 +51,8 @@ export abstract class BaseDownloader {
             return data.filter(item => this._testData(item));
         })().then(async (data) => {
             const result = await this._process(undefined, data, args)
-            this.downloadedAmount += data.length;
-            return data;
+            this.downloadedAmount += result.length;
+            return result;
         }).catch(err => this._process(err, undefined as any, args));
     }
 

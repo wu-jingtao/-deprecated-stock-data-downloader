@@ -1,5 +1,7 @@
 import expect = require('expect.js');
 
+import { BaseDataModule } from '../src/tools/BaseDataModule';
+
 import { SH_A_Code_sjs } from '../src/modules/StockCodeDownloader/DataSource/A_Stock/SH_A_Code_sjs';
 import { SZ_A_Code_sjs } from '../src/modules/StockCodeDownloader/DataSource/A_Stock/SZ_A_Code_sjs';
 import { A_Code_dfcf } from '../src/modules/StockCodeDownloader/DataSource/A_Stock/A_Code_dfcf';
@@ -31,58 +33,98 @@ import { A_Stock_TradeDetail_tencent } from '../src/modules/StockTradeDetailDown
 describe('测试下载数据', function () {
     this.timeout(3 * 60 * 1000);
 
+    const baseDataModule = { name: 'test' } as BaseDataModule
+
     describe('测试下载股票代码', function () {
 
-        it('上交所 A股列表 数据', SH_A_Code_sjs.download.bind(SH_A_Code_sjs));
+        it('上交所 A股列表 数据', async () => {
+            expect(await SH_A_Code_sjs.download(baseDataModule)).not.empty();
+        });
 
-        it('深交所 A股列表 数据', SZ_A_Code_sjs.download.bind(SZ_A_Code_sjs));
+        it('深交所 A股列表 数据', async () => {
+            expect(await SZ_A_Code_sjs.download(baseDataModule)).not.empty();
+        });
 
-        it('东方财富 A股列表 数据', A_Code_dfcf.download.bind(A_Code_dfcf));  //同时包含上交所与深交所
+        it('东方财富 A股列表 数据', async () => {    //同时包含上交所与深交所
+            expect(await A_Code_dfcf.download(baseDataModule)).not.empty();
+        });
 
-        it('沪港通 H股列表 数据', H_Code_hgt.download.bind(H_Code_hgt));
+        it('沪港通 H股列表 数据', async () => {
+            expect(await H_Code_hgt.download(baseDataModule)).not.empty();
+        });
 
-        it('深港通 H股列表 数据', H_Code_sgt.download.bind(H_Code_sgt));
+        it('深港通 H股列表 数据', async () => {
+            expect(await H_Code_sgt.download(baseDataModule)).not.empty();
+        });
 
-        it('上海期货交易所 主连列表 数据', SH_Future_Index.download.bind(SH_Future_Index));
+        it('上海期货交易所 主连列表 数据', async () => {
+            expect(await SH_Future_Index.download(baseDataModule)).not.empty();
+        });
 
-        it('郑州商品交易所 主连列表 数据', ZZ_Future_Index.download.bind(ZZ_Future_Index));
+        it('郑州商品交易所 主连列表 数据', async () => {
+            expect(await ZZ_Future_Index.download(baseDataModule)).not.empty();
+        });
 
-        it('大连商品交易所 主连列表 数据', DL_Future_Index.download.bind(DL_Future_Index));
+        it('大连商品交易所 主连列表 数据', async () => {
+            expect(await DL_Future_Index.download(baseDataModule)).not.empty();
+        });
     });
 
     describe('测试下载基本面数据', function () {
 
-        it('同花顺 公司资料', Company_Information.download.bind(Company_Information, '300359'));
+        it('同花顺 公司资料', async () => {
+            expect(await Company_Information.download(baseDataModule, '300359')).not.empty();
+        });
 
-        it('同花顺 公司财务', Company_Finance.download.bind(Company_Finance, '300359'));
+        it('同花顺 公司财务', async () => {
+            expect(await Company_Finance.download(baseDataModule, '300359')).not.empty();
+        });
     });
 
     describe('测试下载日线数据', function () {
 
-        it('网易财经 A股与A股指数日线数据', A_Stock_Day_Line_neteasy.download.bind(A_Stock_Day_Line_neteasy, '600000', '浦发银行', 1, '1990-01-01'));
+        it('网易财经 A股与A股指数日线数据', async () => {
+            expect(await A_Stock_Day_Line_neteasy.download(baseDataModule, '600000', '浦发银行', 1, '1990-01-01')).not.empty();
+        });
 
-        it('新浪财经 港股日线数据', H_Stock_Day_Line_sina.download.bind(H_Stock_Day_Line_sina, '00700', '腾讯控股', true));
+        it('新浪财经 港股日线数据', async () => {
+            expect(await H_Stock_Day_Line_sina.download(baseDataModule, '00700', '腾讯控股', true)).not.empty();
+        });
 
-        it('新浪财经 港股指数日线数据', H_Stock_Index_Day_Line_sina.download.bind(H_Stock_Index_Day_Line_sina, 'HSI', '恒生指数', false));
+        it('新浪财经 港股指数日线数据', async () => {
+            expect(await H_Stock_Index_Day_Line_sina.download(baseDataModule, 'HSI', '恒生指数', false)).not.empty();
+        });
 
-        it('百度股市通 港股和港股指数日线数据', H_Stock_Day_Line_baidu.download.bind(H_Stock_Day_Line_baidu, '00700', '腾讯控股'));
+        it('百度股市通 港股和港股指数日线数据', async () => {
+            expect(await H_Stock_Day_Line_baidu.download(baseDataModule, '00700', '腾讯控股')).not.empty();
+        });
 
-        it('新浪财经 国内商品期货日线数据', Future_Day_Line_sina.download.bind(Future_Day_Line_sina, 'AU', '沪金主连', false));
+        it('新浪财经 国内商品期货日线数据', async () => {
+            expect(await Future_Day_Line_sina.download(baseDataModule, 'AU', '沪金主连', false)).not.empty();
+        });
 
-        it('新浪财经 外汇日线数据', WH_Day_Line_sina.download.bind(WH_Day_Line_sina, 'fx_susdcny', '美元人民币', false));
+        it('新浪财经 外汇日线数据', async () => {
+            expect(await WH_Day_Line_sina.download(baseDataModule, 'fx_susdcny', '美元人民币', false)).not.empty();
+        });
     });
 
     describe('测试下载 后复权收盘价数据', function () {
 
-        it('新浪财经 A股后复权收盘价数据', A_Stock_FQ_DayLine_sina.download.bind(A_Stock_FQ_DayLine_sina, '300359', '全通教育', 2, false));
+        it('新浪财经 A股后复权收盘价数据', async () => {
+            expect(await A_Stock_FQ_DayLine_sina.download(baseDataModule, '300359', '全通教育', 2, false)).not.empty();
+        });
 
-        it('腾讯财经 港股后复权收盘价数据', H_Stock_FQ_DayLine_tencent.download.bind(H_Stock_FQ_DayLine_tencent, '00700', '腾讯控股', false));
+        it('腾讯财经 港股后复权收盘价数据', async () => {
+            expect(await H_Stock_FQ_DayLine_tencent.download(baseDataModule, '00700', '腾讯控股', false)).not.empty();
+        });
     });
 
     describe('测试下载 成交明细数据', function () {
 
         //注意，由于腾讯好像只提供最近一个月的数据，所以之后测试的时候可能需要修改日期
-        it('腾讯财经 港股后复权收盘价数据', A_Stock_TradeDetail_tencent.download.bind(A_Stock_TradeDetail_tencent, '300359', '全通教育', 2, '2018-01-12'));
+        it('腾讯财经 A股成交明细数据', async () => {
+            expect(await A_Stock_TradeDetail_tencent.download(baseDataModule, '300359', '全通教育', 2, '2018-01-12')).not.empty();
+        });
     });
 });
 
