@@ -17,7 +17,7 @@ import { normalizeAmountToYi, normalizeAmountToWan, normalizePercent } from '../
 export class Company_Finance extends BaseDownloader {
 
     get name() {
-        return 'A股财务数据下载器';
+        return '同花顺 A股财务数据下载器';
     }
 
     private _address(code: string) {

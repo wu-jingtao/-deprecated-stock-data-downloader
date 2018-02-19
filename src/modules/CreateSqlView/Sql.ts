@@ -14,6 +14,7 @@ export const view_day_line = "\
             `stock_day_line`.`high` AS `high`,\
             `stock_day_line`.`low` AS `low`,\
             `stock_day_line`.`open` AS `open`,\
+            ROUND(`stock_day_line`.`money` / `stock_day_line`.`volume`, 2) AS `average`,\
             `stock_day_line`.`exchange_ratio` AS `exchange_ratio`,\
             `stock_day_line`.`volume` AS `volume`,\
             `stock_day_line`.`money` AS `money`,\
@@ -40,6 +41,7 @@ export const view_fq_day_line = "\
             ROUND(`stock_day_line`.`high` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2) AS `high`,\
             ROUND(`stock_day_line`.`low` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2) AS `low`,\
             ROUND(`stock_day_line`.`open` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2) AS `open`,\
+            ROUND(`stock_day_line`.`money` / `stock_day_line`.`volume` * `stock_fq_day_line`.`close` / `stock_day_line`.`close`, 2) AS `average`,\
             `stock_day_line`.`exchange_ratio` AS `exchange_ratio`,\
             `stock_day_line`.`volume` AS `volume`,\
             `stock_day_line`.`money` AS `money`,\
@@ -48,14 +50,6 @@ export const view_fq_day_line = "\
         FROM `stock`.`stock_code`\
         INNER JOIN `stock`.`stock_fq_day_line` ON `stock_code`.`id` = `stock_fq_day_line`.`code`\
         INNER JOIN `stock`.`stock_day_line` ON `stock_code`.`id` = `stock_day_line`.`code` AND `stock_fq_day_line`.`date` = `stock_day_line`.`date`\
-";
-
-/** 
- * A股后复权日线视图
-*/
-export const view_a_stock_fq_day_line = "\
-    CREATE OR REPLACE VIEW `stock`.`a_stock_fq_day_line` AS\
-        SELECT * FROM `stock`.`fq_day_line` WHERE `market` IN (1, 2)\
 ";
 
 /**
@@ -74,6 +68,7 @@ export const procedure_fq_week_line = "\
             MAX(`high`) AS `high`,\
             MIN(`low`) AS `low`,\
             SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            ROUND(SUM(`average` * `volume`) / SUM(`volume`), 2) as `average`,\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
             SUM(`money`) AS `money`,\
@@ -99,6 +94,7 @@ export const procedure_fq_month_line = "\
             MAX(`high`) AS `high`,\
             MIN(`low`) AS `low`,\
             SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            ROUND(SUM(`average` * `volume`) / SUM(`volume`), 2) as `average`,\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
             SUM(`money`) AS `money`,\
@@ -124,6 +120,7 @@ export const procedure_fq_quarter_line = "\
             MAX(`high`) AS `high`,\
             MIN(`low`) AS `low`,\
             SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            ROUND(SUM(`average` * `volume`) / SUM(`volume`), 2) as `average`,\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
             SUM(`money`) AS `money`,\
@@ -149,6 +146,7 @@ export const procedure_fq_year_line = "\
             MAX(`high`) AS `high`,\
             MIN(`low`) AS `low`,\
             SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            ROUND(SUM(`average` * `volume`) / SUM(`volume`), 2) as `average`,\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
             SUM(`money`) AS `money`,\

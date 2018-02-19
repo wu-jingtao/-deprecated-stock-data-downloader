@@ -17,7 +17,7 @@ import { normalizeAmountToYi, normalizeAmountToWan, normalizeNull } from '../Too
 export class Company_Information extends BaseDownloader {
 
     get name() {
-        return 'A股公司资料下载器';
+        return '同花顺 A股公司资料下载器';
     }
 
     private _address(code: string) {
