@@ -41,10 +41,12 @@ const connectionParams = {
     log('stock_company_information', '同步成功');
 
     if (state.lastSyncTime) {   //上次同步时间
-        await synchronizer.sync("SELECT * FROM stock.stock_day_line WHERE `date` >= ?", [state.lastSyncTime]).to();
+        const date = moment(state.lastSyncTime).subtract({ days: 7 }).format('YYYY-MM-DD'); //确保没有遗漏，同步最近七天
+
+        await synchronizer.sync("SELECT * FROM stock.stock_day_line WHERE `date` >= ?", [date]).to();
         log('stock_day_line', '同步成功');
 
-        await synchronizer.sync("SELECT * FROM stock.stock_fq_day_line WHERE `date` >= ?", [state.lastSyncTime]).to();
+        await synchronizer.sync("SELECT * FROM stock.stock_fq_day_line WHERE `date` >= ?", [date]).to();
         log('stock_fq_day_line', '同步成功');
     } else {
         await synchronizer.sync("SELECT * FROM stock.stock_day_line").to();
