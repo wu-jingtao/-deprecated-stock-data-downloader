@@ -24,7 +24,7 @@ export class StockDayLineDownloader extends BaseDataModule {
 
     constructor() {
         super([
-            { time: "0 15 18 * * 1-5" },                //每周1-5的下午6点15分更新当天数据
+            { time: "0 0 19 * * 1-5" },                 //每周1-5的下午7点更新当天数据
             { time: "0 0 12 * * 6", reDownload: true }  //每周6中午12点更新全部数据
         ], [sql.create_table]);
     }
