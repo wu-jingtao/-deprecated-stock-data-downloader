@@ -25,6 +25,7 @@ import { Future_Day_Line_sina } from '../src/modules/StockDayLineDownloader/Data
 
 import { WH_Day_Line_sina } from '../src/modules/StockDayLineDownloader/DataSource/WH/WH_Day_Line_sina';
 
+import { A_Stock_FQ_DayLine_netease } from './../src/modules/Stock_FQ_DayLineDownloader/DataSource/A_Stock_FQ_DayLine_netease';
 import { A_Stock_FQ_DayLine_sina } from '../src/modules/Stock_FQ_DayLineDownloader/DataSource/A_Stock_FQ_DayLine_sina';
 import { H_Stock_FQ_DayLine_tencent } from '../src/modules/Stock_FQ_DayLineDownloader/DataSource/H_Stock_FQ_DayLine_tencent';
 
@@ -113,6 +114,10 @@ describe('测试下载数据', function () {
         it('新浪财经 A股后复权收盘价数据', async () => {
             expect(await A_Stock_FQ_DayLine_sina.download(baseDataModule, '300359', '全通教育', 2, false)).not.empty();
             expect(await A_Stock_FQ_DayLine_sina.download(baseDataModule, '300359', '全通教育', 2, true)).not.empty();
+        });
+
+        it('网易财经 A股后复权收盘价数据', async () => {
+            expect(await A_Stock_FQ_DayLine_netease.download(baseDataModule, '300359', '全通教育', 2, false)).not.empty();
         });
 
         it('腾讯财经 港股后复权收盘价数据', async () => {

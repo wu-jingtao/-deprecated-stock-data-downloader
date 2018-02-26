@@ -46,6 +46,7 @@
         "d3-dsv": "^1.0.8",
         "expect.js": "^0.3.1",
         "iconv-lite": "^0.4.19",
+        "jsonp-node": "0.0.5",
         "lodash": "^4.17.4",
         "log-formatter": "^0.1.8",
         "moment": "^2.20.1",
