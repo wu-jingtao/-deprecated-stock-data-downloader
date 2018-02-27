@@ -29,16 +29,20 @@ export class A_Stock_FQ_DayLine_netease extends BaseDownloader {
 
     protected async _download(code: string, name: string, market: number) {
         const file = await HttpDownloader.Get(this._address(code, market));
-        const data = JSONP.parse(file.toString(), 'ne30a1754cfd3dec');
-        
+
         const result: FQ_DayLineType[] = [];
 
-        for (let index = 0; index < data.closes.length; index++) {
-            result.push({
-                close: data.closes[index],
-                date: data.times[index]
-            });
-        }
+        try {
+            //由于如果没有数据，网易会返回一个404页面
+            const data = JSONP.parse(file.toString(), 'ne30a1754cfd3dec');
+
+            for (let index = 0; index < data.closes.length; index++) {
+                result.push({
+                    close: data.closes[index],
+                    date: data.times[index]
+                });
+            }
+        } catch  { }
 
         return result;
     }
