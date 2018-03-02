@@ -16,7 +16,6 @@ import { exchangeToWan, exchangeToYi } from '../../Tools';
  * 
  * 下载地址：http://stock.finance.sina.com.cn/hkstock/history/00700.html   
  *      请求方法"POST"，参数：year：年份，season：季度
- *      如果只下载当前季度的数据可直接"GET"请求
  * 
  * 获取行情开始年份：http://stock.finance.sina.com.cn/hkstock/api/jsonp.php/var%20hk_history_data_range_00005%20%3d/HistoryTradeService.getHistoryRange?symbol=00005
  */
@@ -57,12 +56,8 @@ export class H_Stock_Day_Line_sina extends BaseDownloader {
      * @param year 年份
      * @param season 季度
      */
-    private async _download_data(code: string, year?: number, season?: number): Promise<DayLineType[]> {
-        if (year != null && season != null)
-            var file = await HttpDownloader.Post(this._address_data(code), { year, season });
-        else
-            var file = await HttpDownloader.Get(this._address_data(code));
-
+    private async _download_data(code: string, year: number, season: number): Promise<DayLineType[]> {
+        const file = await HttpDownloader.Post(this._address_data(code), { year, season });
         const data = iconv.decode(file, 'gbk');     //转码
 
         return Array.from(cheerio('table tr', data).slice(1).map((index, element) => {
@@ -107,7 +102,7 @@ export class H_Stock_Day_Line_sina extends BaseDownloader {
 
             return result;
         } else {
-            return await this._download_data(code);
+            return await this._download_data(code, moment().year(), moment().quarter());
         }
     }
 

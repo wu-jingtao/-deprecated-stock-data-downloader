@@ -1,10 +1,10 @@
-import { A_Stock_FQ_DayLine_netease } from './DataSource/A_Stock_FQ_DayLine_netease';
 import * as sql from './Sql';
 import { BaseDataModule } from '../../tools/BaseDataModule';
 import { StockCodeDownloader } from '../StockCodeDownloader/StockCodeDownloader';
 import { FQ_DayLineType } from './FQ_DayLineType';
 import { StockMarketType } from '../StockMarketList/StockMarketType';
 
+import { A_Stock_FQ_DayLine_netease } from './DataSource/A_Stock_FQ_DayLine_netease';
 import { A_Stock_FQ_DayLine_sina } from './DataSource/A_Stock_FQ_DayLine_sina';
 import { H_Stock_FQ_DayLine_tencent } from './DataSource/H_Stock_FQ_DayLine_tencent';
 

@@ -11,6 +11,7 @@ import { FQ_DayLineType } from '../FQ_DayLineType';
  * 
  * 新浪财经数据。返回`jsonp`格式的数据
  * 注意：如果某个股票停牌，新浪也会包含其当天的复权数据
+ * 经过观察，新浪的后复权数据，在有些老股票上有错误，推荐使用网易的数据
  * 
  * 相关页面：http://finance.sina.com.cn/realstock/company/sz300359/nc.shtml
  * 下载地址：http://finance.sina.com.cn/realstock/newcompany/sz300359/phfq.js?_=1
