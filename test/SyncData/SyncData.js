@@ -60,5 +60,5 @@ const connectionParams = {
 
     //保存状态信息
     fs.writeFileSync(stateFilePath, JSON.stringify(state));
-    process.exit();
-})().catch(err => log.error('同步失败', err));
+})().catch(err => log.error('同步失败', err))
+    .then(() => process.exit());
