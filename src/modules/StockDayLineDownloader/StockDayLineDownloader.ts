@@ -1,7 +1,7 @@
 import * as moment from 'moment';
-import { BaseDataModule } from '../../tools/BaseDataModule';
 
 import * as sql from './Sql';
+import { BaseDataModule } from '../../tools/BaseDataModule';
 import { StockCodeDownloader } from '../StockCodeDownloader/StockCodeDownloader';
 import { StockMarketType } from '../StockMarketList/StockMarketType';
 import { DayLineType } from './DayLineType';

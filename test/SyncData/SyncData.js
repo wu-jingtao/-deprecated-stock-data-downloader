@@ -26,7 +26,7 @@ const connectionParams = {
         var state = {};
 
     //初始化数据库连接
-    const synchronizer = await DbDataSynchronizer.init(connectionParams);
+    const synchronizer = new DbDataSynchronizer(connectionParams);
 
     await synchronizer.sync("SELECT * FROM stock.stock_market").to();
     log('stock_market', '同步成功');

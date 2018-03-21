@@ -1,6 +1,6 @@
 /**
  * 这段代码是我在"http://finance.sina.com.cn/sinafinancesdk/js/sf_sdk.js"下找到的。
- * 按照新浪那种组织包的方式，改代码位于"utils.util"包下的"this.xh5_S_KLC_D"方法。
+ * 按照新浪那种组织包的方式，该代码位于"utils.util"包下的"this.xh5_S_KLC_D"方法。
  * 
  * 说说我是怎么找到的：
  *   打开F12控制台，切换到Network下开始抓包，发现有一条数据("http://finance.sina.com.cn/realstock/company/sz300359/hisdata/klc_kl.js?d=2018_1_10")
