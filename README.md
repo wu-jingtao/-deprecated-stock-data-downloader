@@ -6,3 +6,6 @@
 * `MYSQL_HOST_PORT` 连接端口 (默认 3306)
 * `MYSQL_USERNAME` 用户名 (默认 root)
 * `MYSQL_PASSWORD` 登陆密码 (默认 root)
+
+### Docker Image
+> docker pull registry.cn-hangzhou.aliyuncs.com/wujingtao/stock-data-downloader
