@@ -7,6 +7,7 @@ import { StockMarketType } from '../StockMarketList/StockMarketType';
 import { A_Stock_FQ_DayLine_netease } from './DataSource/A_Stock_FQ_DayLine_netease';
 import { A_Stock_FQ_DayLine_sina } from './DataSource/A_Stock_FQ_DayLine_sina';
 import { H_Stock_FQ_DayLine_tencent } from './DataSource/H_Stock_FQ_DayLine_tencent';
+import { A_Stock_FQ_DayLine_eastmoney } from './DataSource/A_Stock_FQ_DayLine_eastmoney';
 
 /**
  * 后复权收盘价下载器
@@ -42,8 +43,10 @@ export class Stock_FQ_DayLineDownloader extends BaseDataModule {
     protected async _downloader(reDownload?: boolean) {
         {//A股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [false]);
+            
             //const downloader = new A_Stock_FQ_DayLine_sina(this);
-            const downloader = new A_Stock_FQ_DayLine_netease(this);
+            //const downloader = new A_Stock_FQ_DayLine_netease(this);
+            const downloader = new A_Stock_FQ_DayLine_eastmoney(this);
 
             for (const { id, code, name, market } of code_list) {
                 await this._saveData(id, await downloader.download(code, name, market, reDownload));
