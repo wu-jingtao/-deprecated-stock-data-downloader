@@ -1,5 +1,6 @@
 import * as iconv from 'iconv-lite';
 import * as cheerio from 'cheerio';
+import * as moment from 'moment';
 
 import * as HttpDownloader from '../../../tools/HttpDownloader';
 import { BaseDownloader } from '../../../tools/BaseDownloader';
@@ -40,7 +41,7 @@ export class A_Stock_FQ_DayLine_sina extends BaseDownloader {
      * 下载当天的后复权数据
      */
     private _addressToday(code: string) {
-        return `http://vip.stock.finance.sina.com.cn/corp/go.php/vMS_FuQuanMarketHistory/stockid/${code}.phtml`;
+        return `http://vip.stock.finance.sina.com.cn/corp/go.php/vMS_FuQuanMarketHistory/stockid/${code}.phtml?year=${moment().year()}&jidu=${moment().quarter()}`;
     }
 
     private async _downloadAll(code: string, market: number) {

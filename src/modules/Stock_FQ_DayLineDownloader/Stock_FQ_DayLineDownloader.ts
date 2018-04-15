@@ -44,9 +44,9 @@ export class Stock_FQ_DayLineDownloader extends BaseDataModule {
         {//A股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [false]);
             
-            //const downloader = new A_Stock_FQ_DayLine_sina(this);
+            const downloader = new A_Stock_FQ_DayLine_sina(this);
             //const downloader = new A_Stock_FQ_DayLine_netease(this);
-            const downloader = new A_Stock_FQ_DayLine_eastmoney(this);
+            //const downloader = new A_Stock_FQ_DayLine_eastmoney(this);
 
             for (const { id, code, name, market } of code_list) {
                 await this._saveData(id, await downloader.download(code, name, market, reDownload));
