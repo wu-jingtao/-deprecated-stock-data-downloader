@@ -41,7 +41,7 @@ export class Stock_FQ_DayLineDownloader extends BaseDataModule {
     }
 
     protected async _downloader(reDownload?: boolean) {
-        {//A股
+        /*{//A股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.sh.id, StockMarketType.sz.id], [false]);
             
             const downloader = new A_Stock_FQ_DayLine_sina(this);
@@ -54,7 +54,7 @@ export class Stock_FQ_DayLineDownloader extends BaseDataModule {
             }
 
             downloader.printDownloadedAmount();
-        }
+        }*/
 
         {//港股
             const code_list = await this._stockCodeDownloader.getStockCodes([StockMarketType.xg.id], [false]);

@@ -6,6 +6,8 @@ import { StockCodeDownloader } from '../StockCodeDownloader/StockCodeDownloader'
 import { StockMarketType } from '../StockMarketList/StockMarketType';
 import { DayLineType } from './DayLineType';
 
+import { A_Stock_FQ_DayLineCalculator } from '../A_Stock_FQ_DayLineCalculator/A_Stock_FQ_DayLineCalculator';
+
 import { A_Stock_Day_Line_neteasy } from './DataSource/A_Stock/A_Stock_Day_Line_neteasy';
 
 import { H_Stock_Day_Line_sina } from './DataSource/H_Stock/H_Stock_Day_Line_sina';
@@ -66,6 +68,8 @@ export class StockDayLineDownloader extends BaseDataModule {
             }
 
             downloader.printDownloadedAmount();
+
+            await A_Stock_FQ_DayLineCalculator(this._connection, this._stockCodeDownloader);
         }
 
         {//港股
