@@ -69,7 +69,7 @@ export class StockDayLineDownloader extends BaseDataModule {
 
             downloader.printDownloadedAmount();
 
-            await A_Stock_FQ_DayLineCalculator(this._connection, this._stockCodeDownloader);
+            await A_Stock_FQ_DayLineCalculator(this._connection, this._stockCodeDownloader, reDownload);
         }
 
         {//港股

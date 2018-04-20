@@ -28,7 +28,7 @@ function FQ_Calculator(data: { date: Date, close: number, pre_close: number }[])
  * 根据下载到的A股日线数据，计算出后复权数据
  * @param dbCon 
  */
-export async function A_Stock_FQ_DayLineCalculator(dbCon: MysqlConnection, stockCode: StockCodeDownloader) {
+export async function A_Stock_FQ_DayLineCalculator(dbCon: MysqlConnection, stockCode: StockCodeDownloader, reDownload: boolean) {
     try {
         log.location.text.blue.round('A_Stock_FQ_DayLineCalculator', '计算A股后复权数据 开始');
 
@@ -38,7 +38,8 @@ export async function A_Stock_FQ_DayLineCalculator(dbCon: MysqlConnection, stock
 
         for (const { id } of code_list) {
             const data = FQ_Calculator(await dbCon.asyncQuery(query_dayline, [id]));
-            for (const item of data) {  //保存数据
+            
+            for (const item of reDownload ? data : data.slice(-7)) {  //保存数据
                 await dbCon.asyncQuery(insert_data, [
                     id, item[0], item[1],
                     item[1]
