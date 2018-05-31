@@ -63,11 +63,11 @@ export const procedure_fq_week_line = "\
     BEGIN\
         SELECT\
             `id`, `code`, `name`, `market`, `is_index`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS `date`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS `close`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS DATE) AS `date`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS DECIMAL) AS `close`,\
             MAX(`high`) AS `high`,\
             MIN(`low`) AS `low`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) AS DECIMAL) as `open`,\
             ROUND(SUM(`average` * `volume`) / SUM(`volume`), 2) as `average`,\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
@@ -89,11 +89,11 @@ export const procedure_fq_month_line = "\
     BEGIN\
         SELECT\
             `id`, `code`, `name`, `market`, `is_index`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS `date`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS `close`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS DATE) AS `date`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS DECIMAL) AS `close`,\
             MAX(`high`) AS `high`,\
             MIN(`low`) AS `low`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) AS DECIMAL) as `open`,\
             ROUND(SUM(`average` * `volume`) / SUM(`volume`), 2) as `average`,\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
@@ -115,11 +115,11 @@ export const procedure_fq_quarter_line = "\
     BEGIN\
         SELECT\
             `id`, `code`, `name`, `market`, `is_index`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS `date`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS `close`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS DATE) AS `date`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS DECIMAL) AS `close`,\
             MAX(`high`) AS `high`,\
             MIN(`low`) AS `low`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) AS DECIMAL) as `open`,\
             ROUND(SUM(`average` * `volume`) / SUM(`volume`), 2) as `average`,\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
@@ -141,11 +141,11 @@ export const procedure_fq_year_line = "\
     BEGIN\
         SELECT\
             `id`, `code`, `name`, `market`, `is_index`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS `date`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS `close`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS DATE) AS `date`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(CAST(`close` AS CHAR) ORDER BY `date` DESC), ',', 1 ) AS DECIMAL) AS `close`,\
             MAX(`high`) AS `high`,\
             MIN(`low`) AS `low`,\
-            SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) as `open`,\
+            CAST(SUBSTRING_INDEX(GROUP_CONCAT(CAST(`open` AS CHAR) ORDER BY `date` ASC), ',', 1 ) AS DECIMAL) as `open`,\
             ROUND(SUM(`average` * `volume`) / SUM(`volume`), 2) as `average`,\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
