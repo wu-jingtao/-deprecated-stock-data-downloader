@@ -60,7 +60,7 @@ export const view_fq_day_line = "\
 export const procedure_fq_week_line = "\
     DROP PROCEDURE IF EXISTS `stock`.`fq_week_line`;\
     CREATE PROCEDURE `stock`.`fq_week_line`(code_id INT)\
-    BEGIN\
+    \n BEGIN\
         SELECT\
             `id`, `code`, `name`, `market`, `is_index`,\
             CAST(SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS DATE) AS `date`,\
@@ -77,7 +77,7 @@ export const procedure_fq_week_line = "\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
         GROUP BY YEAR(`date`), WEEKOFYEAR(`date`);\
-    END\
+    \n END\
 ";
 
 /**
@@ -86,7 +86,7 @@ export const procedure_fq_week_line = "\
 export const procedure_fq_month_line = "\
     DROP PROCEDURE IF EXISTS `stock`.`fq_month_line`;\
     CREATE PROCEDURE `stock`.`fq_month_line`(code_id INT)\
-    BEGIN\
+    \n BEGIN\
         SELECT\
             `id`, `code`, `name`, `market`, `is_index`,\
             CAST(SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS DATE) AS `date`,\
@@ -103,7 +103,7 @@ export const procedure_fq_month_line = "\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
         GROUP BY YEAR(`date`), MONTH(`date`);\
-    END\
+    \n END\
 ";
 
 /**
@@ -112,7 +112,7 @@ export const procedure_fq_month_line = "\
 export const procedure_fq_quarter_line = "\
     DROP PROCEDURE IF EXISTS `stock`.`fq_quarter_line`;\
     CREATE PROCEDURE `stock`.`fq_quarter_line`(code_id INT)\
-    BEGIN\
+    \n BEGIN\
         SELECT\
             `id`, `code`, `name`, `market`, `is_index`,\
             CAST(SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS DATE) AS `date`,\
@@ -129,7 +129,7 @@ export const procedure_fq_quarter_line = "\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
         GROUP BY YEAR(`date`), QUARTER(`date`);\
-    END\
+    \n END\
 ";
 
 /**
@@ -138,7 +138,7 @@ export const procedure_fq_quarter_line = "\
 export const procedure_fq_year_line = "\
     DROP PROCEDURE IF EXISTS `stock`.`fq_year_line`;\
     CREATE PROCEDURE `stock`.`fq_year_line`(code_id INT)\
-    BEGIN\
+    \n BEGIN\
         SELECT\
             `id`, `code`, `name`, `market`, `is_index`,\
             CAST(SUBSTRING_INDEX(GROUP_CONCAT(`date` ORDER BY `date` DESC), ',', 1 ) AS DATE) AS `date`,\
@@ -155,5 +155,5 @@ export const procedure_fq_year_line = "\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
         GROUP BY YEAR(`date`);\
-    END\
+    \n END\
 ";

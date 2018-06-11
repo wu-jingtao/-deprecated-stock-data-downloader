@@ -12,13 +12,15 @@ import { insert_data, create_table } from '../Stock_FQ_DayLineDownloader/Sql';
 function FQ_Calculator(data: { date: Date, close: number, pre_close: number }[]) {
     const result = [];
 
-    let pre_fq_close = data[0].close;
-    result.push([data[0].date, pre_fq_close]);
+    if (data.length > 0) {  //确保该股票有日线数据
+        let pre_fq_close = data[0].close;
+        result.push([data[0].date, pre_fq_close]);
 
-    for (let index = 1; index < data.length; index++) {
-        const element = data[index];
-        pre_fq_close *= element.close / element.pre_close;
-        result.push([element.date, pre_fq_close]);
+        for (let index = 1; index < data.length; index++) {
+            const element = data[index];
+            pre_fq_close *= element.close / element.pre_close;
+            result.push([element.date, pre_fq_close]);
+        }
     }
 
     return result;
@@ -38,7 +40,7 @@ export async function A_Stock_FQ_DayLineCalculator(dbCon: MysqlConnection, stock
 
         for (const { id } of code_list) {
             const data = FQ_Calculator(await dbCon.asyncQuery(query_dayline, [id]));
-            
+
             for (const item of reDownload ? data : data.slice(-7)) {  //保存数据
                 await dbCon.asyncQuery(insert_data, [
                     id, item[0], item[1],
