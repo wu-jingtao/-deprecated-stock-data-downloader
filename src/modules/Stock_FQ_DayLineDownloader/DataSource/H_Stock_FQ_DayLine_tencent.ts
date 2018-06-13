@@ -1,3 +1,5 @@
+import * as jsonp from 'jsonp-node';
+
 import * as HttpDownloader from '../../../tools/HttpDownloader';
 import { BaseDownloader } from '../../../tools/BaseDownloader';
 import { GetLatestWeekData } from '../../../tools/GetLatestWeekData';
@@ -27,11 +29,18 @@ export class H_Stock_FQ_DayLine_tencent extends BaseDownloader {
     }
 
     protected async _download(code: string, name: string) {
-        const file = await HttpDownloader.Get(this._address(code));
-        const data = (file.toString().match(/\{.+\}$/) || [])[0];
-        const result = JSON.parse(data);
+        let result = [];
 
-        return result.data.map(([date, close]: any) => ({ date, close }));
+        const file = await HttpDownloader.Get(this._address(code));
+
+        try {
+            const data = jsonp.parse_var(file.toString(), 'trend_hfq', true);
+            if (data.code == 0 && data.msg == 'ok') {   //确保腾讯返回的数据正确
+                result = data.data.map(([date, close]: any) => ({ date, close }));
+            }
+        } catch  { }
+        
+        return result;
     }
 
     protected _process(err: Error | undefined, data: any[], [code, name, reDownload]: any[]): Promise<any[]> {
