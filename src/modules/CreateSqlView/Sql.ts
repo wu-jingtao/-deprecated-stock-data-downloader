@@ -76,7 +76,8 @@ export const procedure_fq_week_line = "\
             `current_market_value`\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
-        GROUP BY YEAR(`date`), WEEKOFYEAR(`date`);\
+        GROUP BY YEAR(`date`), WEEKOFYEAR(`date`)\
+        ORDER BY `date` ASC;\
     \n END\
 ";
 
@@ -102,7 +103,8 @@ export const procedure_fq_month_line = "\
             `current_market_value`\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
-        GROUP BY YEAR(`date`), MONTH(`date`);\
+        GROUP BY YEAR(`date`), MONTH(`date`)\
+        ORDER BY `date` ASC;\
     \n END\
 ";
 
@@ -128,7 +130,8 @@ export const procedure_fq_quarter_line = "\
             `current_market_value`\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
-        GROUP BY YEAR(`date`), QUARTER(`date`);\
+        GROUP BY YEAR(`date`), QUARTER(`date`)\
+        ORDER BY `date` ASC;\
     \n END\
 ";
 
@@ -154,6 +157,7 @@ export const procedure_fq_year_line = "\
             `current_market_value`\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
-        GROUP BY YEAR(`date`);\
+        GROUP BY YEAR(`date`)\
+        ORDER BY `date` ASC;\
     \n END\
 ";
