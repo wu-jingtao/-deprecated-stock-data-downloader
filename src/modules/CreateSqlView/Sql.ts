@@ -72,8 +72,8 @@ export const procedure_fq_week_line = "\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
             SUM(`money`) AS `money`,\
-            `gross_market_value`,\
-            `current_market_value`\
+            ANY_VALUE(`gross_market_value`),\
+            ANY_VALUE(`current_market_value`)\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
         GROUP BY YEAR(`date`), WEEKOFYEAR(`date`)\
@@ -99,8 +99,8 @@ export const procedure_fq_month_line = "\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
             SUM(`money`) AS `money`,\
-            `gross_market_value`,\
-            `current_market_value`\
+            ANY_VALUE(`gross_market_value`),\
+            ANY_VALUE(`current_market_value`)\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
         GROUP BY YEAR(`date`), MONTH(`date`)\
@@ -126,8 +126,8 @@ export const procedure_fq_quarter_line = "\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
             SUM(`money`) AS `money`,\
-            `gross_market_value`,\
-            `current_market_value`\
+            ANY_VALUE(`gross_market_value`),\
+            ANY_VALUE(`current_market_value`)\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
         GROUP BY YEAR(`date`), QUARTER(`date`)\
@@ -153,8 +153,8 @@ export const procedure_fq_year_line = "\
             SUM(`exchange_ratio`) AS `exchange_ratio`,\
             SUM(`volume`) AS `volume`,\
             SUM(`money`) AS `money`,\
-            `gross_market_value`,\
-            `current_market_value`\
+            ANY_VALUE(`gross_market_value`),\
+            ANY_VALUE(`current_market_value`)\
         FROM `stock`.`fq_day_line`\
         WHERE `id` = code_id\
         GROUP BY YEAR(`date`)\
