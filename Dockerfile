@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/wujingtao/node:8.9.0
+FROM registry.cn-hangzhou.aliyuncs.com/wujingtao/node:latest
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     dos2unix \
