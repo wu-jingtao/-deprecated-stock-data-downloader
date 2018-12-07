@@ -1,7 +1,8 @@
-FROM registry.cn-hangzhou.aliyuncs.com/wujingtao/node:latest
+FROM node:10-stretch
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     dos2unix \
+    tzdata \
 	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -10,6 +11,7 @@ COPY src /app/src
 COPY gulpfile.js /app/gulpfile.js
 COPY package.json /app/package.json
 COPY tsconfig.json /app/tsconfig.json
+COPY .bashrc /root/.bashrc
 
 RUN npm install
 RUN npm run compile
@@ -18,8 +20,8 @@ RUN npm run compile
 RUN npm prune --production
 
 # 确保可执行
-RUN dos2unix /app/node_modules/service-starter/src/Docker/health_check.sh
-RUN chmod 755 /app/node_modules/service-starter/src/Docker/health_check.sh
+RUN dos2unix /app/node_modules/service-starter/src/Docker/health_check.sh /root/.bashrc && \
+    chmod 755 /app/node_modules/service-starter/src/Docker/health_check.sh
 
 HEALTHCHECK \
     # 每次检查的间隔时间
@@ -32,5 +34,7 @@ HEALTHCHECK \
     --retries=3 \
     # 调用程序所暴露出的健康检查接口(要使用绝对路径)
     CMD /app/node_modules/service-starter/src/Docker/health_check.sh
+
+ENV TZ=Asia/Shanghai
 
 CMD ["node", "."]
